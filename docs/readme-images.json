@@ -1,15 +1,5 @@
 {
-  "$comment": "Content of the README pictures. Render with sh1ft-w.github.io/theme/v1/readme-images (node render.mjs <this repo>). The title shot is the illustration from docs/index.html (made-up values), not a screenshot.",
-  "title": {
-    "name": "JBL Bar",
-    "eyebrow": "For Home Assistant",
-    "lead": "Your soundbar, <em>fully local.</em>",
-    "sub": "JBL soundbars with JBL One in Home Assistant: a real media player, the true power state, EQ, rear speakers and the live Dolby Atmos format. No cloud.",
-    "pills": [["Local, no cloud"], ["Platinum", "v"], ["HACS"]],
-    "logo": "docs/images/readme-icon.png",
-    "shot": { "light": "docs/images/readme-stage-light.png", "dark": "docs/images/readme-stage-dark.png", "srcW": 2000, "winW": 2000, "s": 0.34,
-      "strips": [[0, 1248]], "bar": null, "left": 590, "top": 110, "flat": true }
-  },
+  "$comment": "Content of the README card pictures. Render with sh1ft-w.github.io/theme/v1/readme-images: node render.mjs <this repo> cards. The title image is built from tools/readme-title.html (photo instead of a window shot, see the comment there).",
   "colors": {
     "light": { "bg": "#F7F5F2", "bg2": "#EFECE7", "ink": "#161412", "ink2": "#57514B", "ink3": "#8A837C", "accentText": "#C24F00", "accent": "#FF6A00", "accent2": "#FFA15C",
       "glow1": "rgba(255,106,0,0.16)", "glow2": "rgba(255,160,90,0.14)", "frame": "rgba(40,30,20,0.10)", "pillBg": "#ffffff", "pillLine": "rgba(40,30,20,0.08)", "win": "#0d0b0a", "bar": "" },

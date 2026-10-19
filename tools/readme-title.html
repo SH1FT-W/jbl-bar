@@ -1,0 +1,51 @@
+<!doctype html>
+<!--
+  README title image with the photo (docs/images/hero-photo.webp), in the style of
+  sh1ft-w.github.io/theme/v1/readme-images/title.html. render.mjs frames every shot in a window,
+  this one is borderless with a soft left edge, so it has its own template.
+  Render (2560 x 1280), from the repository root:
+    chrome-headless-shell --headless --hide-scrollbars --window-size=1280,640 --force-device-scale-factor=2 \
+      --screenshot=docs/images/readme-title-light.png "file://$PWD/tools/readme-title.html"
+    ... --screenshot=docs/images/readme-title-dark.png "file://$PWD/tools/readme-title.html?dark"
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>README title image</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #F7F5F2; --bg-2: #EFE7DD; --ink: #161412; --ink-2: #57514B; --accent-text: #E85F00; --accent: #FF6A00; --accent-2: #FFA15C;
+    --glow-1: rgba(255,106,0,0.14); --pill-bg: #ffffff; --pill-line: rgba(40,30,20,0.08); --pill-shadow: 0 4px 14px rgba(60,40,20,0.08); }
+  :root.dark { --bg: #0B0A09; --bg-2: #17120E; --ink: #F4F1EC; --ink-2: rgba(222,214,204,0.84); --accent-text: #FF8A33;
+    --glow-1: rgba(255,106,0,0.2); --pill-bg: rgba(255,255,255,0.06); --pill-line: rgba(255,255,255,0.10); --pill-shadow: none; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1280px; height: 640px; overflow: hidden; position: relative; font-family: "Inter", system-ui, sans-serif; color: var(--ink);
+    background: radial-gradient(800px 520px at 16% 30%, var(--glow-1), transparent 62%), linear-gradient(120deg, var(--bg) 0%, var(--bg-2) 100%); }
+  .photo { position: absolute; right: 0; top: 0; height: 640px; width: auto; }
+  .left { position: absolute; left: 72px; top: 0; bottom: 0; width: 520px; display: flex; flex-direction: column; justify-content: center; }
+  .brand { display: flex; align-items: center; gap: 20px; }
+  .brand img { width: 76px; height: 76px; border-radius: 19px; box-shadow: 0 10px 30px rgba(255,106,0,0.28); }
+  .brand h1 { font-family: "Archivo", system-ui, sans-serif; font-weight: 800; font-size: 72px; letter-spacing: -0.035em; line-height: 1; }
+  .eyebrow { margin-top: 18px; font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); }
+  .lead { margin-top: 26px; font-family: "Archivo", system-ui, sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.03em; line-height: 1.08; }
+  .lead em { font-style: normal; color: var(--accent-text); }
+  .sub { margin-top: 16px; font-size: 18px; line-height: 1.45; color: var(--ink-2); max-width: 430px; }
+  .pills { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill { font-family: "JetBrains Mono", monospace; font-size: 12.5px; font-weight: 500; padding: 8px 14px; border-radius: 999px; background: var(--pill-bg);
+    border: 1px solid var(--pill-line); box-shadow: var(--pill-shadow); color: var(--ink); display: inline-flex; align-items: center; gap: 8px; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .pill.v i { background: var(--accent-2); }
+</style>
+<script>if (/[?&]dark\b/.test(location.search)) document.documentElement.classList.add('dark');</script>
+</head>
+<body>
+  <img class="photo" src="../docs/images/hero-photo.webp" alt="">
+  <div class="left">
+    <div class="brand"><img src="../docs/images/readme-icon.png" alt=""><h1>JBL Bar</h1></div>
+    <div class="eyebrow">For Home Assistant</div>
+    <div class="lead">Your soundbar, <em>fully local.</em></div>
+    <div class="sub">JBL soundbars with JBL One in Home Assistant: a real media player, the true power state, EQ, rear speakers and the live Dolby Atmos format. No cloud.</div>
+    <div class="pills"><span class="pill"><i></i>Local, no cloud</span><span class="pill v"><i></i>Platinum</span><span class="pill"><i></i>HACS</span></div>
+  </div>
+</body>
+</html>

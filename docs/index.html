@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#0B0A09" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="JBL Bar for Home Assistant">
 <meta property="og:description" content="Local control for JBL soundbars with JBL One. Fast, complete, no cloud.">
-<meta property="og:image" content="https://sh1ft-w.github.io/jbl-bar/logo.png">
+<meta property="og:image" content="https://sh1ft-w.github.io/jbl-bar/images/readme-title-light.png">
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,33 +103,10 @@ section.tint { background: var(--bg-2); }
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--card); box-shadow: var(--shadow); font-weight: 600; color: var(--ink-2); font-size: 13px; }
 .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: inline-block; }
 
-/* Bühne: stilisierte Soundbar mit Karte (bleibt in beiden Themes dunkel) */
-/* Zeichnung im Stil einer Bar 1000: flache Stoff-Soundbar, abnehmbare Rears an den Enden, Subwoofer dahinter. Nur Formen, kein Logo. */
-.rig { position: relative; padding: calc(clamp(64px, 12vw, 128px) / 0.82 - clamp(38px, 5.4vw, 58px) + 8px) 0 34px; }
-.rig::after { content: ""; position: absolute; left: 4%; right: 2%; bottom: 22px; height: 26px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,0.7), transparent); filter: blur(4px); z-index: 0; }
-.fabric { background-color: #161413;
-  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.35)); }
-.woofer { position: absolute; right: 0; bottom: 44px; filter: brightness(0.85); width: clamp(64px, 12vw, 128px); aspect-ratio: 0.82; border-radius: 10px; z-index: 1;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), inset 0 -18px 30px rgba(0,0,0,0.45), 0 20px 40px -18px rgba(0,0,0,0.9); }
-.woofer::before { content: ""; position: absolute; left: 3px; right: 3px; top: -7px; height: 9px; border-radius: 8px 8px 2px 2px; background: linear-gradient(180deg, #34302d, #1d1b19); }
-.woofer::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -5px; height: 5px; border-radius: 0 0 4px 4px; background: #070606; }
-.sb { position: relative; z-index: 2; display: flex; align-items: stretch; width: 93%; height: clamp(38px, 5.4vw, 58px); }
-.sb > * { position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -10px 18px rgba(0,0,0,0.45), 0 26px 40px -22px rgba(0,0,0,0.95); }
-.sb > *::before { content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 6px; background: linear-gradient(180deg, #2f2b28, #1a1816); border-radius: inherit; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-.sb .body { flex: 1; border-radius: 3px; min-width: 0; }
-.sb .end { width: 13%; flex: none; }
-.sb .end.l { border-radius: 999px 3px 3px 999px; margin-right: 14px; transform: translate(-4px, -4px) rotate(-1.5deg); }
-.sb .end.r { border-radius: 3px 999px 999px 3px; margin-left: 2px; }
-.sb .end.r::after { content: ""; position: absolute; left: -2px; top: 0; bottom: 0; width: 2px; background: #050404; }
-.sb .end b { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%); font: 500 11px/1 var(--mono); color: #a39a90; white-space: nowrap; }
-.sb .end i { position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #ff8a33; box-shadow: 0 0 8px rgba(255,138,51,0.9); }
-.sb .pins { position: absolute; left: -9px; top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
-.sb .pins span { width: 6px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #8a6a2c, #e0b660); box-shadow: 0 0 4px rgba(224,182,96,0.4); }
-.sb .display { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 3px 10px; border-radius: 4px; background: #040303; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
-  font: 500 clamp(8px, 1.1vw, 11px)/1.3 var(--mono); letter-spacing: 0.14em; color: #ffd2ad; text-shadow: 0 0 8px rgba(255,140,60,0.8); white-space: nowrap; }
-
-.stage { position: relative; margin: clamp(48px, 7vw, 84px) auto 0; max-width: 1000px; border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px);
+/* Bühne: Szene (KI-Bild) mit Karten darunter (bleibt in beiden Themes dunkel) */
+.scene { display: block; width: calc(100% + 2 * clamp(16px, 4vw, 48px)); max-width: none; margin: 0 calc(-1 * clamp(16px, 4vw, 48px)); aspect-ratio: 1062 / 500; object-fit: cover; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent); mask-image: linear-gradient(180deg, #000 72%, transparent); }
+.stage { position: relative; margin: clamp(48px, 7vw, 84px) auto 0; max-width: 1000px; border-radius: var(--radius-lg); padding: 0 clamp(16px, 4vw, 48px) clamp(28px, 5vw, 56px);
   background: radial-gradient(ellipse at 50% 0%, #2a1a0e, #0d0b0a 70%); box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255,255,255,0.06); color: #f4f1ec; }
 /* Das Logo ist dunkel auf transparent: im Dunkelmodus hell zeichnen */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand img { filter: invert(1); } }
@@ -326,16 +303,9 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
       <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
     </p>
 
-    <div class="stage reveal d3" role="img" aria-label="Illustration: a stylised soundbar with detachable rear speakers at both ends and a subwoofer behind it, below it a media player card and a list of entity values. The values are made up.">
-      <div class="rig" aria-hidden="true">
-        <div class="woofer fabric"></div>
-        <div class="sb">
-          <div class="end l fabric"><i></i><b>L 84 %</b></div>
-          <div class="body fabric"><span class="pins"><span></span><span></span></span><span class="display">TV &middot; DOLBY ATMOS</span></div>
-          <div class="end r fabric"><b>R 79 %</b></div>
-        </div>
-      </div>
-      <div class="cards">
+    <div class="stage reveal d3" role="img" aria-label="Illustration: a soundbar with its subwoofer below a TV in warm evening light, below it a media player card and a list of entity values. AI-generated scene, made-up values.">
+      <img class="scene" src="images/hero-scene.webp" width="2124" height="1000" fetchpriority="high" alt="">
+      <div class="cards" style="margin-top: clamp(-28px, -2vw, -12px); position: relative;">
         <div class="hc">
           <div class="top">
             <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3"/><path d="M6 12h.01M10 12h.01"/></svg></span>
@@ -350,13 +320,13 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
           <div class="rows">
             <div><span><span class="en">Audio format</span><span class="de">Audioformat</span></span><b class="hot">ATMOS / DDP / 6ch / 48 kHz</b></div>
             <div><span><span class="en">EQ preset</span><span class="de">EQ-Preset</span></span><b>JBL SIGNATURE</b></div>
-            <div><span><span class="en">Night mode</span><span class="de">Nachtmodus</span></span><b><span class="en">On</span><span class="de">An</span></b></div>
+            <div><span><span class="en">Night mode</span><span class="de">Nachtmodus</span></span><b><span class="en">Off</span><span class="de">Aus</span></b></div>
             <div><span><span class="en">Audio sync</span><span class="de">Audio-Sync</span></span><b>40 ms</b></div>
             <div><span><span class="en">Sleep timer</span><span class="de">Sleep-Timer</span></span><b>30 min</b></div>
           </div>
         </div>
       </div>
-      <p class="fict"><span class="en">Illustration with made-up values, not a screenshot.</span><span class="de">Illustration mit erfundenen Werten, kein Screenshot.</span></p>
+      <p class="fict"><span class="en">Illustration: AI-generated scene and made-up values, not a screenshot.</span><span class="de">Illustration: KI-generierte Szene und erfundene Werte, kein Screenshot.</span></p>
     </div>
   </div>
 </section>
