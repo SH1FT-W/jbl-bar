@@ -1,0 +1,42 @@
+JBL Bar for Home Assistant
+Copyright 2026 SH1FT-W
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Third-party material
+--------------------
+
+custom_components/jbl_bar/certs/ (cert.pem, key.pem)
+  The client certificate used by the JBL One app to talk to the soundbar's local API.
+  Taken from https://github.com/MrBearPresident/JBL_Soundbar
+  MIT License, Copyright (c) 2025 Jerre Latruwe
+  The full license text is in custom_components/jbl_bar/certs/LICENSE and reproduced below.
+
+  MIT License
+
+  Copyright (c) 2025 Jerre Latruwe
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+Trademarks
+----------
+
+JBL is a trademark of Harman International Industries, Incorporated. This project is
+independent and is not affiliated with, endorsed by or sponsored by Harman International,
+JBL or Linkplay.

@@ -1,0 +1,14 @@
+{
+  "domain": "jbl_bar",
+  "name": "JBL Bar",
+  "codeowners": ["@SH1FT-W"],
+  "config_flow": true,
+  "dependencies": ["http"],
+  "documentation": "https://github.com/SH1FT-W/jbl-bar",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/SH1FT-W/jbl-bar/issues",
+  "requirements": [],
+  "version": "26.10.2",
+  "zeroconf": ["_jbl-product._tcp.local."]
+}

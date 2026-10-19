@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-de="JBL Bar für Home Assistant">JBL Bar for Home Assistant</title>
+<script src="https://sh1ft-w.github.io/bar.js" data-project="jbl-bar" defer></script>
+<meta name="description" content="JBL Bar brings JBL soundbars with JBL One into Home Assistant, locally: a real media player, true power state, 7-band EQ, sound switches, rear speakers and the live Dolby Atmos format. No cloud.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F7F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0A09" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="JBL Bar for Home Assistant">
+<meta property="og:description" content="Local control for JBL soundbars with JBL One. Fast, complete, no cloud.">
+<meta property="og:image" content="https://sh1ft-w.github.io/jbl-bar/logo.png">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Shared SH1FT-W design (tokens, glass navigation, light/dark, DE/EN, reveal) -->
+<link rel="stylesheet" href="https://sh1ft-w.github.io/theme/v1/theme.css">
+<script src="https://sh1ft-w.github.io/theme/v1/theme.js"></script>
+<style>
+/* JBL-Bar-Palette: helles Grau bei Tag, fast Schwarz bei Nacht, ein Akzent in JBL-Orange */
+:root {
+  --accent: #D95A00; --accent-ink: #C24F00; --on-accent: #1A0A00;
+  --orange: #FF6A00; --orange-ink: #C24F00; --orange-tint: rgba(255,106,0,0.12); --orange-glow: rgba(255,106,0,0.38);
+  --font: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --display: "Archivo", "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --bg: #F7F5F2; --bg-2: #EFECE7; --card: #FFFFFF; --card-2: #F6F3EF;
+  --ink: #161412; --ink-2: #57514B; --ink-3: rgba(22,20,18,0.52);
+  --line: rgba(40,30,20,0.11); --chip: rgba(60,40,20,0.06);
+  --glass: rgba(255,253,250,0.7); --glass-line: rgba(255,255,255,0.75);
+  --shadow: 0 1px 2px rgba(40,25,10,0.05), 0 12px 32px -14px rgba(40,25,10,0.2);
+  --shadow-lg: 0 2px 6px rgba(40,25,10,0.05), 0 48px 100px -36px rgba(40,25,10,0.38);
+  --radius: 26px; --radius-lg: 36px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --accent: #FF7A1A; --accent-ink: #FF8A33;
+  --orange-ink: #FF8A33; --orange-tint: rgba(255,106,0,0.16); --orange-glow: rgba(255,106,0,0.32);
+  --bg: #0B0A09; --bg-2: #121110; --card: #1A1816; --card-2: #22201D;
+  --ink: #F4F1EC; --ink-2: rgba(222,214,204,0.84); --ink-3: rgba(222,214,204,0.52);
+  --line: rgba(244,241,236,0.1); --chip: rgba(244,241,236,0.07);
+  --glass: rgba(26,24,22,0.62); --glass-line: rgba(255,255,255,0.08);
+  --shadow: 0 14px 34px -16px rgba(0,0,0,0.6); --shadow-lg: 0 48px 100px -36px rgba(0,0,0,0.85);
+} }
+:root[data-theme="dark"] {
+  --accent: #FF7A1A; --accent-ink: #FF8A33;
+  --orange-ink: #FF8A33; --orange-tint: rgba(255,106,0,0.16); --orange-glow: rgba(255,106,0,0.32);
+  --bg: #0B0A09; --bg-2: #121110; --card: #1A1816; --card-2: #22201D;
+  --ink: #F4F1EC; --ink-2: rgba(222,214,204,0.84); --ink-3: rgba(222,214,204,0.52);
+  --line: rgba(244,241,236,0.1); --chip: rgba(244,241,236,0.07);
+  --glass: rgba(26,24,22,0.62); --glass-line: rgba(255,255,255,0.08);
+  --shadow: 0 14px 34px -16px rgba(0,0,0,0.6); --shadow-lg: 0 48px 100px -36px rgba(0,0,0,0.85);
+}
+
+a { color: var(--accent-ink); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+.narrow { max-width: 780px; }
+p { margin: 0; }
+.muted { color: var(--ink-2); }
+.center { text-align: center; }
+.center .lead { margin-left: auto; margin-right: auto; max-width: 680px; }
+code, .k { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.brand { font-family: var(--display); font-weight: 800; }
+
+/* Knöpfe */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px; border-radius: 999px;
+  font-family: inherit; font-size: 15px; font-weight: 600; line-height: 1; background: var(--orange); color: var(--on-accent); border: 0; cursor: pointer;
+  box-shadow: 0 12px 28px -12px var(--orange-glow); transition: transform .2s ease, filter .2s ease;
+}
+.btn:hover { text-decoration: none; filter: brightness(1.06); transform: translateY(-1px); }
+.btn.ghost { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+.btn.small { height: 36px; padding: 0 16px; font-size: 14px; }
+
+/* Schrift */
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 18px; }
+.eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 4px var(--orange-tint); }
+h1, h2, h3 { margin: 0; color: var(--ink); font-family: var(--display); font-weight: 800; text-wrap: balance; }
+h1 { font-size: clamp(44px, 8vw, 100px); line-height: 0.96; letter-spacing: -0.04em; font-weight: 900; }
+h1 em, h2 em { font-style: normal; color: var(--orange); }
+h2 { font-size: clamp(34px, 5vw, 60px); line-height: 1.03; letter-spacing: -0.035em; }
+h3 { font-size: 20px; line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+.lead { font-size: clamp(18px, 2vw, 22px); line-height: 1.5; color: var(--ink-2); margin: 22px 0 0; }
+.lead strong { color: var(--ink); font-weight: 600; }
+
+section { padding: clamp(72px, 9vw, 120px) 0; position: relative; }
+section.tint { background: var(--bg-2); }
+.head { margin-bottom: clamp(36px, 5vw, 60px); }
+.cap { margin-top: 20px; font-size: 15px; color: var(--ink-3); text-align: center; }
+
+/* Hero */
+.hero { padding: clamp(56px, 9vw, 112px) 0 clamp(64px, 8vw, 104px); text-align: center; overflow: hidden; }
+.hero .glow { position: absolute; inset: -20% -10% auto; height: 90%; pointer-events: none;
+  background: radial-gradient(40% 36% at 30% 30%, rgba(255,106,0,0.2), transparent 70%), radial-gradient(36% 34% at 72% 24%, rgba(255,160,90,0.18), transparent 70%);
+  filter: blur(50px); }
+.hero .wrap { position: relative; }
+.hero .lead { max-width: 640px; margin-left: auto; margin-right: auto; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 34px; }
+.meta { margin-top: 22px; font-size: 14px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 8px 14px; justify-content: center; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--card); box-shadow: var(--shadow); font-weight: 600; color: var(--ink-2); font-size: 13px; }
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: inline-block; }
+
+/* Bühne: stilisierte Soundbar mit Karte (bleibt in beiden Themes dunkel) */
+.stage { position: relative; margin: clamp(48px, 7vw, 84px) auto 0; max-width: 1000px; border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px);
+  background: radial-gradient(ellipse at 50% 0%, #2a1a0e, #0d0b0a 70%); box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255,255,255,0.06); color: #f4f1ec; }
+.bar { position: relative; height: clamp(46px, 7vw, 70px); border-radius: 999px; background: linear-gradient(180deg, #2b2826, #141210 60%, #0a0908);
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.9), 0 40px 120px -30px rgba(255,106,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12); overflow: hidden; }
+.bar::before { content: ""; position: absolute; inset: 9px 22px; border-radius: 999px; background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1.1px, transparent 1.4px); background-size: 7px 7px; }
+.bar .display { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 4px 14px; border-radius: 6px; background: #050403; font: 500 clamp(10px, 1.4vw, 13px)/1.3 var(--mono); letter-spacing: 0.14em; color: #ffd2ad; text-shadow: 0 0 10px rgba(255,140,60,0.8); white-space: nowrap; }
+.bar .logo { position: absolute; right: 7%; top: 50%; transform: translateY(-50%); width: clamp(22px, 3vw, 30px); height: auto; border-radius: 5px; filter: invert(1); opacity: .55; }
+/* Das Logo ist dunkel auf transparent: im Dunkelmodus hell zeichnen */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand img { filter: invert(1); } }
+:root[data-theme="dark"] .brand img { filter: invert(1); }
+.btns { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); }
+.btns small { display: block; font-size: 12px; color: #a39a90; margin-bottom: 8px; }
+.rears { display: flex; justify-content: space-between; margin-top: 14px; padding: 0 6%; }
+.rear { width: clamp(42px, 7vw, 64px); height: 14px; border-radius: 999px; background: linear-gradient(180deg, #2b2826, #100e0c); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); position: relative; }
+.rear b { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font: 500 11px/1 var(--mono); color: #a39a90; white-space: nowrap; }
+.cards { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; margin-top: clamp(40px, 5vw, 56px); text-align: left; }
+.hc { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 22px; padding: 20px 22px; min-width: 0; }
+.hc .top { display: flex; align-items: center; gap: 12px; }
+.hc .ico { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,106,0,0.18); color: #ff8a33; }
+.hc .ico svg { width: 20px; height: 20px; }
+.hc .name { font-weight: 600; font-size: 15px; }
+.hc .state { font-size: 13px; color: #a39a90; }
+.hc .power { margin-left: auto; width: 42px; height: 24px; border-radius: 999px; background: #ff6a00; position: relative; flex: none; }
+.hc .power::after { content: ""; position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+.vol { display: flex; align-items: center; gap: 12px; margin-top: 18px; font: 500 13px/1 var(--mono); color: #a39a90; }
+.vol .track { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); position: relative; }
+.vol .track i { position: absolute; inset: 0 auto 0 0; width: 33%; border-radius: 4px; background: #ff6a00; }
+.srcs { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+.srcs span { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.06); color: #c9c0b5; }
+.srcs span.on { background: #f4f1ec; color: #0b0a09; }
+.rows { display: grid; gap: 0; margin-top: 4px; }
+.rows div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 14px; }
+.rows div:first-child { border-top: 0; }
+.rows span { color: #a39a90; min-width: 0; }
+.rows b { font-weight: 500; text-align: right; color: #f4f1ec; overflow-wrap: anywhere; }
+.rows b.hot { color: #ff9a4d; }
+.fict { margin-top: 16px; font-size: 12px; color: #8a8178; text-align: center; }
+
+/* Bento: Gerade neu */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.b { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 26px 28px 28px; min-width: 0; }
+.b .tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-ink); background: var(--orange-tint); padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; }
+.b h3 { margin-bottom: 8px; }
+.b p { color: var(--ink-2); font-size: 16px; }
+.b code { font-size: 14px; background: var(--chip); padding: 2px 6px; border-radius: 6px; color: var(--ink); }
+.b.s4 { grid-column: span 4; } .b.s6 { grid-column: span 6; } .b.s8 { grid-column: span 8; }
+
+/* Funktionen */
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.tile { background: var(--card); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); min-width: 0; }
+.tile h3 { margin-bottom: 8px; }
+.tile p { color: var(--ink-2); font-size: 16px; }
+.tile .ico { width: 46px; height: 46px; border-radius: 15px; background: var(--orange-tint); color: var(--accent-ink); display: grid; place-items: center; margin-bottom: 18px; }
+.tile .ico svg { width: 23px; height: 23px; }
+
+/* EQ-Illustration */
+.split { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(36px, 6vw, 80px); align-items: center; }
+.points { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 16px; }
+.points li { display: grid; gap: 2px; }
+.points b { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); }
+.points span { color: var(--ink-2); font-size: 16px; }
+.eq { background: var(--card); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: clamp(22px, 4vw, 36px); min-width: 0; }
+.eq-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.eq-head b { font-family: var(--display); font-size: 18px; }
+.presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+.presets span { font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 999px; background: var(--chip); color: var(--ink-2); }
+.presets span.on { background: var(--orange); color: var(--on-accent); }
+.bands { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 26px; height: 190px; }
+.band { display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 10px; min-width: 0; }
+.band .col { position: relative; width: 8px; border-radius: 4px; background: var(--chip); height: 100%; }
+.band .col::before { content: ""; position: absolute; left: -6px; right: -6px; top: 50%; height: 1px; background: var(--line); }
+.band .col i { position: absolute; left: 0; right: 0; border-radius: 4px; background: var(--orange); }
+.band .col u { position: absolute; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--card); box-shadow: 0 0 0 3px var(--orange), 0 4px 10px rgba(0,0,0,0.2); }
+.band small { font: 500 11px/1 var(--mono); color: var(--ink-3); white-space: nowrap; }
+.eq-foot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 26px; }
+.eq-foot div { background: var(--card-2); border-radius: 16px; padding: 12px 14px; min-width: 0; }
+.eq-foot > div > span { display: block; font-size: 12px; color: var(--ink-3); }
+.eq-foot b { font-weight: 600; font-size: 15px; }
+
+/* Entitäten-Tabelle */
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; font-size: 15px; }
+.tbl th, .tbl td { text-align: left; padding: 14px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+.tbl thead th { border-top: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-ink); background: var(--card-2); }
+.tbl td:first-child { font-weight: 600; white-space: nowrap; }
+.tbl code { font-size: 13px; background: var(--chip); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.tbl td:last-child { color: var(--ink-2); }
+
+/* Wie es funktioniert */
+.flow { display: grid; gap: 12px; max-width: 900px; margin: 0 auto; }
+.lane { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; background: var(--card); border-radius: 22px; box-shadow: var(--shadow); padding: 18px 22px; }
+.lane .end b { display: block; font-family: var(--display); font-size: 16px; }
+.lane .end span { font-size: 14px; color: var(--ink-2); }
+.lane .end.r { text-align: right; }
+.arrow { display: grid; justify-items: center; gap: 4px; font: 500 12px/1.2 var(--mono); color: var(--accent-ink); text-align: center; }
+.arrow svg { width: 120px; height: 14px; }
+
+/* Installation */
+.install { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
+.panel { background: var(--card); border-radius: var(--radius); padding: clamp(26px, 4vw, 42px); box-shadow: var(--shadow); min-width: 0; }
+.panel h3 { margin-bottom: 6px; }
+.panel code { font-size: 14px; background: var(--chip); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.repo { margin-top: 10px; display: flex; align-items: center; gap: 8px; background: var(--chip); border-radius: 18px; padding: 8px 8px 8px 18px; }
+.repo code { flex: 1; min-width: 0; font-size: 15px; background: none; padding: 0; color: var(--ink); overflow-wrap: anywhere; }
+.copy { flex: none; height: 34px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--card); color: var(--ink); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+.steps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 20px; counter-reset: s; }
+.steps li { position: relative; padding-left: 50px; color: var(--ink-2); }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -3px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--orange-tint); color: var(--accent-ink); font-weight: 700; font-size: 15px; }
+.steps li b { color: var(--ink); font-weight: 600; }
+.req { list-style: none; padding: 0; margin: 20px 0 0; }
+.req li { display: flex; gap: 14px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--line); font-size: 16px; }
+.req li:first-child { border-top: 0; padding-top: 6px; }
+.req .name { color: var(--ink); font-weight: 600; flex: 1; min-width: 0; }
+.tg { flex: none; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: var(--orange-tint); color: var(--accent-ink); }
+.tg.opt { background: var(--chip); color: var(--ink-3); }
+.note { margin-top: 20px; font-size: 14px; color: var(--ink-3); }
+.full { grid-column: 1 / -1; }
+
+/* FAQ */
+.faq { display: grid; gap: 10px; }
+.faq details { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); padding: 0 22px; }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 0; font-family: var(--display); font-weight: 700; font-size: 17px; display: flex; gap: 12px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; margin-left: auto; font-size: 22px; color: var(--accent-ink); font-weight: 600; }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { padding: 0 0 18px; color: var(--ink-2); font-size: 16px; }
+.faq code { font-size: 13px; background: var(--chip); padding: 2px 6px; border-radius: 6px; }
+
+/* Schluss, Fuß */
+.finale { text-align: center; }
+.finale h2 { font-size: clamp(40px, 6.5vw, 84px); }
+footer { border-top: 1px solid var(--line); padding: 44px 0 56px; font-size: 14px; color: var(--ink-3); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 20px 32px; align-items: center; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 26px; }
+footer nav a { color: var(--ink-2); font-weight: 500; }
+footer .fine { flex-basis: 100%; line-height: 1.6; }
+
+@media (max-width: 960px) {
+  .split, .install, .cards { grid-template-columns: 1fr; }
+  .grid3 { grid-template-columns: 1fr 1fr; }
+  .b.s4, .b.s8 { grid-column: span 6; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  :root { --radius: 22px; --radius-lg: 28px; }
+  .nav { padding: 0 8px 0 14px; }
+  .nav .btn { margin-left: auto; }
+  .grid3 { grid-template-columns: 1fr; }
+  .b.s4, .b.s6, .b.s8 { grid-column: span 12; }
+  .tile, .b { padding: 24px; }
+  .panel { padding: 24px 20px; }
+  .repo { flex-wrap: wrap; padding: 12px 14px; gap: 10px; }
+  .repo code { flex-basis: 100%; font-size: clamp(12px, 3.4vw, 14px); }
+  .copy { margin-left: auto; }
+  .bar .logo { display: none; }
+  .bands { height: 160px; gap: 4px; }
+  .band small { font-size: 9px; }
+  .eq-foot { grid-template-columns: 1fr 1fr; }
+  .lane { grid-template-columns: 1fr; gap: 8px; text-align: left; }
+  .lane .end.r { text-align: left; }
+  .arrow { justify-items: start; text-align: left; }
+  .arrow svg { width: 80px; }
+  .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; }
+  .tbl thead { display: none; }
+  .tbl tr { border-top: 1px solid var(--line); padding: 12px 16px; }
+  .tbl tr:first-child { border-top: 0; }
+  .tbl td { border: 0; padding: 2px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="navwrap">
+  <nav class="nav" aria-label="Site">
+    <a class="brand" href="#top"><img src="logo.png" alt="">JBL Bar</a>
+    <div class="nav-links">
+      <a href="#new"><span class="en">New</span><span class="de">Neu</span></a>
+      <a href="#features"><span class="en">Features</span><span class="de">Funktionen</span></a>
+      <a href="#entities"><span class="en">Entities</span><span class="de">Entitäten</span></a>
+      <a href="#migrate" class="opt"><span class="en">Migration</span><span class="de">Umstieg</span></a>
+      <a href="#faq" class="opt"><span class="en">Good to know</span><span class="de">Gut zu wissen</span></a>
+      <a href="https://github.com/SH1FT-W/jbl-bar">GitHub</a>
+    </div>
+    <button class="iconbtn" id="theme" type="button" aria-label="Light or dark">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-l="de">DE</button><button type="button" data-l="en">EN</button></div>
+    <a class="btn small" href="#install"><span class="en">Install</span><span class="de">Installieren</span></a>
+  </nav>
+</div>
+
+<section class="hero" id="top">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="en">JBL soundbars in Home Assistant</span><span class="de">JBL-Soundbars in Home Assistant</span></p>
+    <h1 class="reveal d1"><span class="en">Your soundbar,<br><em>fully local.</em></span><span class="de">Deine Soundbar,<br><em>ganz lokal.</em></span></h1>
+    <p class="lead reveal d2"><span class="en">JBL Bar talks to your soundbar the way the JBL One app does: <strong>a real media player, the true power state, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Fast, complete, no cloud.</span><span class="de">JBL Bar spricht mit deiner Soundbar wie die JBL-One-App: <strong>ein echter Mediaplayer, der echte Ein/Aus-Zustand, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Schnell, vollständig, ohne Cloud.</span></p>
+    <div class="cta reveal d3">
+      <a class="btn" href="#install"><span class="en">Install with HACS</span><span class="de">Mit HACS installieren</span></a>
+      <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar#readme"><span class="en">Read the README</span><span class="de">Zur Anleitung</span></a>
+    </div>
+    <p class="meta reveal d3">
+      <span class="pill"><i></i><span id="jbl-version">Version 26.10.2</span></span>
+      <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
+    </p>
+
+    <div class="stage reveal d3" role="img" aria-label="Illustration: a stylised soundbar with two rear speakers, below it a media player card and a list of entity values. The values are made up.">
+      <div class="bar"><span class="display">TV &middot; DOLBY ATMOS</span><img class="logo" src="logo.png" alt=""></div>
+      <div class="rears"><span class="rear"><b>L 84 %</b></span><span class="rear"><b>R 79 %</b></span></div>
+      <div class="cards">
+        <div class="hc">
+          <div class="top">
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="3"/><path d="M6 12h.01M10 12h.01"/></svg></span>
+            <div><div class="name">JBL Bar 1000</div><div class="state"><span class="en">On &middot; playing from TV</span><span class="de">An &middot; spielt vom TV</span></div></div>
+            <span class="power" aria-hidden="true"></span>
+          </div>
+          <div class="vol"><span>VOL</span><span class="track"><i></i></span><span>33 %</span></div>
+          <div class="srcs"><span class="on">TV</span><span>HDMI</span><span>Bluetooth</span></div>
+          <div class="btns"><small><span class="en">Remote buttons</span><span class="de">Fernbedienungstasten</span></small><div class="srcs" style="margin-top:0"><span><span class="en">Atmos level</span><span class="de">Atmos-Stufe</span></span><span>Bass</span><span>Moment</span><span><span class="en">Calibrate</span><span class="de">Kalibrieren</span></span></div></div>
+        </div>
+        <div class="hc">
+          <div class="rows">
+            <div><span><span class="en">Audio format</span><span class="de">Audioformat</span></span><b class="hot">ATMOS / DDP / 6ch / 48 kHz</b></div>
+            <div><span><span class="en">EQ preset</span><span class="de">EQ-Preset</span></span><b>JBL SIGNATURE</b></div>
+            <div><span><span class="en">Night mode</span><span class="de">Nachtmodus</span></span><b><span class="en">On</span><span class="de">An</span></b></div>
+            <div><span><span class="en">Audio sync</span><span class="de">Audio-Sync</span></span><b>40 ms</b></div>
+            <div><span><span class="en">Sleep timer</span><span class="de">Sleep-Timer</span></span><b>30 min</b></div>
+          </div>
+        </div>
+      </div>
+      <p class="fict"><span class="en">Illustration with made-up values, not a screenshot.</span><span class="de">Illustration mit erfundenen Werten, kein Screenshot.</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="new" class="tint">
+  <div class="wrap">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">Just arrived</span><span class="de">Gerade neu</span></p>
+      <h2><span class="en">Sturdier, quieter,<br>and counted by the calendar.</span><span class="de">Robuster, leiser,<br>und nach Kalender gezählt.</span></h2>
+      <p class="lead"><span class="en">The latest releases make the integration tougher against odd firmware answers and lighter on the bar while it sleeps.</span><span class="de">Die letzten Releases machen die Integration robuster gegen seltsame Antworten der Firmware und schonen die Bar im Standby.</span></p>
+    </div>
+    <div class="bento">
+      <div class="b s6 reveal"><span class="tag">26.10.2</span><h3><span class="en">Quiet in standby</span><span class="de">Ruhig im Standby</span></h3><p><span class="en">While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away.</span><span class="de">Solange die Bar schläft, fragt Home Assistant nur, ob sie an ist. Beim Einschalten werden Wiedergabe und Einstellungen sofort gelesen.</span></p></div>
+      <div class="b s6 reveal d1"><span class="tag">26.10.2</span><h3><span class="en">Odd lists, no error</span><span class="de">Seltsame Listen, kein Fehler</span></h3><p><span class="en">Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash.</span><span class="de">Unbekannte Einträge in den EQ-Preset- oder Rear-Listen der Bar werden übersprungen, gültige bleiben. Ein fehlendes EQ-Band gibt eine klare Meldung statt eines Absturzes.</span></p></div>
+      <div class="b s4 reveal"><span class="tag">26.10.2</span><h3><span class="en">Host names work</span><span class="de">Hostnamen gehen</span></h3><p><span class="en">Set up with a host name instead of an IP? The audio format events now get through too.</span><span class="de">Mit Hostnamen statt IP eingerichtet? Die Audioformat-Ereignisse kommen jetzt trotzdem an.</span></p></div>
+      <div class="b s4 reveal d1"><span class="tag">1.0.1</span><h3><span class="en">Diagnostics</span><span class="de">Diagnose</span></h3><p><span class="en">One download for bug reports, without IP address, MAC address or serial number.</span><span class="de">Ein Download für Fehlerberichte, ohne IP-, MAC-Adresse und Seriennummer.</span></p></div>
+      <div class="b s4 reveal d2"><span class="tag">26.10.1</span><h3><span class="en">Calendar versions</span><span class="de">Kalender-Versionen</span></h3><p><span class="en">Releases count year.month.number: <code>26.10.2</code> is the second release of October 2026.</span><span class="de">Releases zählen Jahr.Monat.Nummer: <code>26.10.2</code> ist das zweite Release im Oktober 2026.</span></p></div>
+    </div>
+    <p class="cap reveal"><span class="en">Everything that changed, release by release: the <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">changelog</a>.</span><span class="de">Alles, was sich geändert hat, Release für Release: das <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">Changelog</a>.</span></p>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">What it does</span><span class="de">Was sie kann</span></p>
+      <h2><span class="en">Everything the app can.<br>Right in Home Assistant.</span><span class="de">Alles, was die App kann.<br>Direkt in Home Assistant.</span></h2>
+      <p class="lead"><span class="en">Every command was read from the JBL One app and tried out on a Bar 1000, one by one.</span><span class="de">Jeder Befehl stammt aus der JBL-One-App und ist an einer Bar 1000 Stück für Stück ausprobiert.</span></p>
+    </div>
+    <div class="grid3">
+      <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><h3><span class="en">A real media player</span><span class="de">Ein echter Mediaplayer</span></h3><p><span class="en">On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, skip, title, artist and cover art while streaming.</span><span class="de">An/aus, Lautstärke, Stumm, Quelle (TV, HDMI, Bluetooth), Play/Pause, Vor/Zurück, Titel, Interpret und Cover beim Streamen.</span></p></div>
+      <div class="tile reveal d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg></div><h3><span class="en">True power state</span><span class="de">Echter Ein/Aus-Zustand</span></h3><p><span class="en">Read straight from the bar instead of guessed from what is playing.</span><span class="de">Direkt von der Bar gelesen statt aus dem Wiedergabemedium geraten.</span></p></div>
+      <div class="tile reveal d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2l3-8 4 16 3-10 2 4h6"/></svg></div><h3><span class="en">Dolby Atmos, live</span><span class="de">Dolby Atmos, live</span></h3><p><span class="en">See whether Atmos is coming in and in which format, pushed instantly by a UPnP event.</span><span class="de">Sieht, ob gerade Atmos ankommt und in welchem Format, per UPnP-Ereignis sofort.</span></p></div>
+      <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></div><h3><span class="en">Sound switches</span><span class="de">Klang-Schalter</span></h3><p><span class="en">Night mode, Smart mode, PureVoice and feedback tones, each one a switch.</span><span class="de">Nachtmodus, Smart Mode, PureVoice und Bestätigungstöne, jeweils als Schalter.</span></p></div>
+      <div class="tile reveal d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div><h3><span class="en">Audio sync and sleep timer</span><span class="de">Audio-Sync und Sleep-Timer</span></h3><p><span class="en">Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours.</span><span class="de">Ton bis 250 ms verzögern, Ausschalten nach 15 Minuten bis 2 Stunden.</span></p></div>
+      <div class="tile reveal d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="5" height="12" rx="2"/><rect x="16" y="6" width="5" height="12" rx="2"/><path d="M10 12h4"/></svg></div><h3><span class="en">Rear speakers</span><span class="de">Rear-Speaker</span></h3><p><span class="en">Battery, charging, docked and connected, each rear as its own device under the bar.</span><span class="de">Akku, Laden, Angedockt und Verbunden, jeder Rear als eigenes Gerät unter der Bar.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="eq" class="tint">
+  <div class="wrap split">
+    <div class="reveal">
+      <p class="eyebrow"><span class="en">Sound</span><span class="de">Klang</span></p>
+      <h2><span class="en">Seven bands.<br>Your own preset.</span><span class="de">Sieben Bänder.<br>Dein eigenes Preset.</span></h2>
+      <ul class="points">
+        <li><b><span class="en">Presets</span><span class="de">Presets</span></b><span><span class="en">JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own, as a select.</span><span class="de">JBL SIGNATURE, VOCAL, ENERGETIC, CHILL und das eigene, als Auswahl.</span></span></li>
+        <li><b><span class="en">Every band</span><span class="de">Jedes Band</span></b><span><span class="en">125 Hz to 8 kHz from −6 to +6 dB (125 Hz down to −9 dB). Changing a band creates your own preset.</span><span class="de">125 Hz bis 8 kHz von −6 bis +6 dB (125 Hz bis −9 dB). Ein geändertes Band legt das eigene Preset an.</span></span></li>
+        <li><b><span class="en">Remote buttons</span><span class="de">Fernbedienungstasten</span></b><span><span class="en">Atmos level, bass, Moment, room calibration and rear speakers as buttons.</span><span class="de">Atmos-Stufe, Bass, Moment, Raumkalibrierung und Rear-Speaker als Tasten.</span></span></li>
+        <li><b><span class="en">Adapts to your model</span><span class="de">Passt sich dem Modell an</span></b><span><span class="en">Features a bar does not know are detected and never created.</span><span class="de">Funktionen, die eine Bar nicht kennt, werden erkannt und gar nicht erst angelegt.</span></span></li>
+      </ul>
+    </div>
+    <div class="eq reveal d1" role="img" aria-label="Illustration of a seven band equalizer with presets, made-up values.">
+      <div class="eq-head"><b><span class="en">EQ preset</span><span class="de">EQ-Preset</span></b><span class="pill"><i></i><span class="en">Own preset</span><span class="de">Eigenes Preset</span></span></div>
+      <div class="presets"><span>JBL SIGNATURE</span><span>VOCAL</span><span>ENERGETIC</span><span>CHILL</span><span class="on"><span class="en">Custom</span><span class="de">Eigenes</span></span></div>
+      <div class="bands" id="bands"></div>
+      <div class="eq-foot">
+        <div><span><span class="en">Audio sync</span><span class="de">Audio-Sync</span></span><b>40 ms</b></div>
+        <div><span>Smart mode</span><b><span class="en">On</span><span class="de">An</span></b></div>
+        <div><span>PureVoice</span><b><span class="en">On</span><span class="de">An</span></b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="entities">
+  <div class="wrap">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">Entities</span><span class="de">Entitäten</span></p>
+      <h2><span class="en">The IDs you already use.</span><span class="de">Die IDs, die du schon nutzt.</span></h2>
+      <p class="lead"><span class="en">All IDs start with the device name, for example <code>switch.jbl_bar_1000_nightmode</code>. Names in English and German.</span><span class="de">Alle IDs beginnen mit dem Gerätenamen, zum Beispiel <code>switch.jbl_bar_1000_nightmode</code>. Namen auf Deutsch und Englisch.</span></p>
+    </div>
+    <div class="reveal">
+      <table class="tbl">
+        <thead><tr><th><span class="en">Platform</span><span class="de">Plattform</span></th><th><span class="en">Entity</span><span class="de">Entität</span></th><th><span class="en">Note</span><span class="de">Hinweis</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="en">Media player</span><span class="de">Mediaplayer</span></td><td><code>media_player.jbl_bar_1000</code></td><td><span class="en">Main control</span><span class="de">Hauptsteuerung</span></td></tr>
+          <tr><td><span class="en">Switch</span><span class="de">Schalter</span></td><td><code>power</code> <code>nightmode</code> <code>smart_mode</code> <code>pure_voice</code> <code>feedback_tone</code></td><td></td></tr>
+          <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>volume</code></td><td><span class="en">0 to 100 %, 3 % steps like on the bar</span><span class="de">0 bis 100 %, 3-%-Stufen wie an der Bar</span></td></tr>
+          <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>125hz</code> … <code>8000hz</code></td><td><span class="en">−6 to +6 dB, changing creates your own preset</span><span class="de">−6 bis +6 dB, Ändern legt das eigene Preset an</span></td></tr>
+          <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>audio_sync</code></td><td>0 … 250 ms</td></tr>
+          <tr><td><span class="en">Select</span><span class="de">Auswahl</span></td><td><code>eq_preset</code> <code>sleep_timer</code></td><td><span class="en">Remaining time as an attribute</span><span class="de">Restzeit als Attribut</span></td></tr>
+          <tr><td>Sensor</td><td><code>source</code> <code>audio_format</code> <code>atmos_level</code></td><td></td></tr>
+          <tr><td>Sensor</td><td><code>left_battery</code> <code>right_battery</code></td><td><span class="en">Per rear speaker</span><span class="de">Je Rear-Speaker</span></td></tr>
+          <tr><td><span class="en">Binary sensor</span><span class="de">Binärsensor</span></td><td><code>atmos_active</code> <code>left/right_charging</code> <code>_docked</code> <code>_online</code></td><td></td></tr>
+          <tr><td><span class="en">Button</span><span class="de">Taste</span></td><td><code>atmos</code> <code>bass</code> <code>moment</code> <code>calibration</code> <code>rear</code></td><td><span class="en">The remote's buttons</span><span class="de">Tasten der Fernbedienung</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="tint">
+  <div class="wrap">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">How it works</span><span class="de">Wie es funktioniert</span></p>
+      <h2><span class="en">Three local channels.<br>No cloud in between.</span><span class="de">Drei lokale Wege.<br>Keine Cloud dazwischen.</span></h2>
+      <p class="lead"><span class="en">State every 10 seconds, settings once a minute and right after every change. In standby only the power state.</span><span class="de">Zustand alle 10 Sekunden, Einstellungen einmal pro Minute und direkt nach jeder Änderung. Im Standby nur der Ein/Aus-Zustand.</span></p>
+    </div>
+    <div class="flow">
+      <div class="lane reveal"><div class="end"><b>Home Assistant</b><span>HTTPS + <span class="en">app certificate</span><span class="de">App-Zertifikat</span></span></div><div class="arrow"><svg viewBox="0 0 120 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h112M108 2l6 5-6 5"/></svg>httpapi.asp</div><div class="end r"><b><span class="en">State and settings</span><span class="de">Zustand und Einstellungen</span></b><span><span class="en">power, EQ, source, switches</span><span class="de">Ein/Aus, EQ, Quelle, Schalter</span></span></div></div>
+      <div class="lane reveal d1"><div class="end"><b>Home Assistant</b><span>UPnP / SOAP</span></div><div class="arrow"><svg viewBox="0 0 120 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h112M108 2l6 5-6 5"/></svg>:59152</div><div class="end r"><b><span class="en">Playback</span><span class="de">Wiedergabe</span></b><span><span class="en">title, cover, volume, mute</span><span class="de">Titel, Cover, Lautstärke, Stumm</span></span></div></div>
+      <div class="lane reveal d2"><div class="end"><b>Home Assistant</b><span><span class="en">event route</span><span class="de">Ereignis-Route</span></span></div><div class="arrow"><svg viewBox="0 0 120 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M118 7H6M12 2L6 7l6 5"/></svg>:49152</div><div class="end r"><b><span class="en">Instant events</span><span class="de">Sofort-Ereignisse</span></b><span><span class="en">audio format, Dolby Atmos</span><span class="de">Audioformat, Dolby Atmos</span></span></div></div>
+    </div>
+    <p class="cap reveal"><span class="en">The bar only answers clients that present the JBL One app's client certificate. It comes from <a href="https://github.com/MrBearPresident/JBL_Soundbar">MrBearPresident/JBL_Soundbar</a> (MIT License), thanks for the groundwork.</span><span class="de">Die Bar antwortet nur Clients mit dem Client-Zertifikat der JBL-One-App. Es stammt aus <a href="https://github.com/MrBearPresident/JBL_Soundbar">MrBearPresident/JBL_Soundbar</a> (MIT-Lizenz), danke für die Vorarbeit.</span></p>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">Install</span><span class="de">Installation</span></p>
+      <h2><span class="en">Three steps.<br>The bar finds itself.</span><span class="de">Drei Schritte.<br>Die Bar findet sich selbst.</span></h2>
+    </div>
+    <div class="install">
+      <div class="panel reveal">
+        <h3><span class="en">With HACS</span><span class="de">Mit HACS</span></h3>
+        <p class="muted"><span class="en">As a custom repository.</span><span class="de">Als benutzerdefiniertes Repository.</span></p>
+        <ol class="steps">
+          <li class="en">In HACS, add a custom repository of type <b>Integration</b>:</li>
+          <li class="de">Füge in HACS ein benutzerdefiniertes Repository vom Typ <b>Integration</b> hinzu:</li>
+        </ol>
+        <div class="repo"><code id="repo">https://github.com/SH1FT-W/jbl-bar</code><button class="copy" type="button" data-copy="repo"><span class="en">Copy</span><span class="de">Kopieren</span></button></div>
+        <ol class="steps" style="counter-reset: s 1">
+          <li class="en"><b>Download JBL Bar</b> and restart Home Assistant.</li>
+          <li class="en"><b>Add the bar.</b> It shows up under Settings, Devices &amp; services, Discovered. Otherwise add the JBL Bar integration and enter its IP address.</li>
+          <li class="de"><b>Lade JBL Bar herunter</b> und starte Home Assistant neu.</li>
+          <li class="de"><b>Füge die Bar hinzu.</b> Sie erscheint unter Einstellungen, Geräte &amp; Dienste, Entdeckt. Sonst die Integration JBL Bar hinzufügen und die IP-Adresse eingeben.</li>
+        </ol>
+        <p class="note"><span class="en">New IP address later? Three dots, Reconfigure.</span><span class="de">Später eine neue IP-Adresse? Drei Punkte, Neu konfigurieren.</span></p>
+      </div>
+      <div class="panel reveal d1">
+        <h3><span class="en">What you need</span><span class="de">Was du brauchst</span></h3>
+        <p class="muted"><span class="en">No cloud account, no YAML.</span><span class="de">Kein Cloud-Konto, kein YAML.</span></p>
+        <ul class="req">
+          <li><span class="name">Home Assistant 2026.9+</span><span class="tg"><span class="en">Required</span><span class="de">Nötig</span></span></li>
+          <li><span class="name"><span class="en">A JBL Bar with JBL One in the same network</span><span class="de">Eine JBL Bar mit JBL One im selben Netz</span></span><span class="tg"><span class="en">Required</span><span class="de">Nötig</span></span></li>
+          <li><span class="name"><span class="en">Internal URL as an IP address, for the audio format</span><span class="de">Interne URL als IP-Adresse, für das Audioformat</span></span><span class="tg opt"><span class="en">Recommended</span><span class="de">Empfohlen</span></span></li>
+        </ul>
+        <p class="note"><span class="en">Tested on a Bar 1000 (firmware 25.52). Bar 300, 500, 700, 800, 1300 and the MK2 models speak the same interface.</span><span class="de">Getestet an einer Bar 1000 (Firmware 25.52). Bar 300, 500, 700, 800, 1300 und die MK2-Modelle sprechen dieselbe Schnittstelle.</span></p>
+      </div>
+      <div class="panel full reveal" id="migrate">
+        <h3><span class="en">Coming from <code>jbl_integration</code></span><span class="de">Umstieg von <code>jbl_integration</code></span></h3>
+        <ol class="steps">
+          <li class="en"><b>Delete the old integration</b> and remove it in HACS. This frees its entity IDs.</li>
+          <li class="en"><b>Install JBL Bar</b> and restart Home Assistant.</li>
+          <li class="en"><b>Add the bar.</b> All previous IDs are back; new are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.</li>
+          <li class="de"><b>Alte Integration löschen</b> und in HACS entfernen. Dadurch werden die Entity-IDs frei.</li>
+          <li class="de"><b>JBL Bar installieren</b> und Home Assistant neu starten.</li>
+          <li class="de"><b>Bar hinzufügen.</b> Alle bisherigen IDs sind wieder da; neu sind Mediaplayer, Audio-Sync, Sleep-Timer, Bestätigungstöne, Quelle und die Atmos-Sensoren.</li>
+        </ol>
+        <p class="note"><span class="en">Only the raw values that were disabled by default (<code>play_medium</code>, <code>transport_state</code>, …) and the source and volume buttons are gone. The media player does that now.</span><span class="de">Weggefallen sind nur die standardmäßig deaktivierten Rohwerte (<code>play_medium</code>, <code>transport_state</code>, …) und die Quellen- und Lautstärke-Tasten. Das macht jetzt der Mediaplayer.</span></p>
+      </div>
+      <div class="panel full reveal">
+        <h3><span class="en">Without HACS</span><span class="de">Ohne HACS</span></h3>
+        <p class="muted"><span class="en">Download the <a href="https://github.com/SH1FT-W/jbl-bar/releases/latest">latest release</a>, copy its <code>custom_components/jbl_bar</code> folder into <code>/config/custom_components/</code>, restart Home Assistant and add the bar.</span><span class="de">Lade das <a href="https://github.com/SH1FT-W/jbl-bar/releases/latest">neueste Release</a> herunter, kopiere den Ordner <code>custom_components/jbl_bar</code> nach <code>/config/custom_components/</code>, starte Home Assistant neu und füge die Bar hinzu.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="tint">
+  <div class="wrap narrow">
+    <div class="head center reveal">
+      <p class="eyebrow"><span class="en">Good to know</span><span class="de">Gut zu wissen</span></p>
+      <h2><span class="en">What the firmware<br>does its own way.</span><span class="de">Was die Firmware<br>auf ihre Art macht.</span></h2>
+    </div>
+    <div class="faq reveal">
+      <details open><summary><span class="en">Why does the sleep timer not start?</span><span class="de">Warum startet der Sleep-Timer nicht?</span></summary><p><span class="en">The bar only accepts it while it is on. In standby it ignores the timer.</span><span class="de">Die Bar nimmt ihn nur im Betrieb an. Im Standby ignoriert sie den Timer.</span></p></details>
+      <details><summary><span class="en">Where is the rear volume?</span><span class="de">Wo ist die Rear-Lautstärke?</span></summary><p><span class="en">It does not change while the rear speakers are docked to the bar, so there is no entity for it (yet).</span><span class="de">Sie ändert sich nicht, solange die Rear-Speaker an der Bar angedockt sind, deshalb gibt es dafür (noch) keine Entität.</span></p></details>
+      <details><summary><span class="en">Can I set the Atmos level directly?</span><span class="de">Kann ich die Atmos-Stufe direkt setzen?</span></summary><p><span class="en">No, the firmware only cycles it with the button. JBL Bar offers that button.</span><span class="de">Nein, die Firmware schaltet sie nur per Taste durch. JBL Bar bietet diese Taste an.</span></p></details>
+      <details><summary><span class="en">Why did the bar wake up on HDMI?</span><span class="de">Warum wacht die Bar bei HDMI auf?</span></summary><p><span class="en">Choosing the HDMI source wakes the bar even when nothing is connected to the HDMI input.</span><span class="de">Die Quelle HDMI weckt die Bar auch dann, wenn am HDMI-Eingang nichts hängt.</span></p></details>
+      <details><summary><span class="en">Why does a change from the remote take a moment?</span><span class="de">Warum dauert eine Änderung per Fernbedienung einen Moment?</span></summary><p><span class="en">The state is polled every 10 seconds. Only the audio format arrives instantly as an event.</span><span class="de">Der Zustand wird alle 10 Sekunden abgefragt. Nur das Audioformat kommt sofort per Ereignis.</span></p></details>
+      <details><summary><span class="en">All entities are unavailable. What now?</span><span class="de">Alle Entitäten sind nicht verfügbar. Was nun?</span></summary><p><span class="en">The bar does not answer at its IP address. Check in your router whether it got a new one and enter it with Reconfigure. A single dropout, for example while going to standby, is bridged.</span><span class="de">Die Bar antwortet nicht unter ihrer IP-Adresse. Im Router nachsehen, ob sie eine neue bekommen hat, und über Neu konfigurieren eintragen. Ein einzelner Aussetzer, etwa beim Wechsel in den Standby, wird überbrückt.</span></p></details>
+      <details><summary><span class="en">The audio format stays empty.</span><span class="de">Das Audioformat bleibt leer.</span></summary><p><span class="en">The bar cannot reach Home Assistant. Check the internal URL in the network settings (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.</span><span class="de">Die Bar erreicht Home Assistant nicht. Interne URL in den Netzwerk-Einstellungen prüfen (IP-Adresse, kein Hostname) und ob eine Firewall Port 8123 aus dem Netz der Bar sperrt.</span></p></details>
+      <details><summary><span class="en">How do I report a bug?</span><span class="de">Wie melde ich einen Fehler?</span></summary><p><span class="en">Download the diagnostics (Settings, Devices &amp; services, JBL Bar, three dots) and attach them to a <a href="https://github.com/SH1FT-W/jbl-bar/issues">GitHub issue</a>. IP address, MAC address and serial number are left out.</span><span class="de">Diagnose herunterladen (Einstellungen, Geräte &amp; Dienste, JBL Bar, drei Punkte) und an ein <a href="https://github.com/SH1FT-W/jbl-bar/issues">GitHub-Issue</a> hängen. IP-, MAC-Adresse und Seriennummer sind nicht enthalten.</span></p></details>
+    </div>
+  </div>
+</section>
+
+<section class="finale">
+  <div class="wrap narrow reveal">
+    <p class="eyebrow">JBL Bar</p>
+    <h2><span class="en">Turn it up.<br><em>Locally.</em></span><span class="de">Lauter machen.<br><em>Lokal.</em></span></h2>
+    <p class="lead"><span class="en">One integration, every setting, no cloud.</span><span class="de">Eine Integration, jede Einstellung, keine Cloud.</span></p>
+    <div class="cta">
+      <a class="btn" href="#install"><span class="en">Install JBL Bar</span><span class="de">JBL Bar installieren</span></a>
+      <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar/releases"><span class="en">Releases</span><span class="de">Releases</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand"><img src="logo.png" alt="">JBL Bar</span>
+    <nav>
+      <a href="https://github.com/SH1FT-W/jbl-bar#readme">README</a>
+      <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/SH1FT-W/jbl-bar/releases">Releases</a>
+      <a href="https://github.com/SH1FT-W/jbl-bar/issues"><span class="en">Issues</span><span class="de">Fehler melden</span></a>
+      <a href="https://hacs.xyz">HACS</a>
+      <a href="https://github.com/SH1FT-W/jbl-bar">GitHub</a>
+      <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/LICENSE"><span class="en">Apache 2.0 License</span><span class="de">Apache-2.0-Lizenz</span></a>
+    </nav>
+    <p class="fine"><span class="en">JBL Bar is an independent project and is not affiliated with, endorsed by or sponsored by Harman International, JBL, Linkplay, Home Assistant or Nabu Casa. JBL is a trademark of Harman International Industries, Incorporated. The client certificate comes from MrBearPresident/JBL_Soundbar under the MIT License.</span><span class="de">JBL Bar ist ein unabhängiges Projekt und gehört weder zu Harman International, JBL, Linkplay, Home Assistant noch Nabu Casa und wird von ihnen nicht unterstützt. JBL ist eine Marke von Harman International Industries, Incorporated. Das Client-Zertifikat stammt aus MrBearPresident/JBL_Soundbar unter der MIT-Lizenz.</span></p>
+  </div>
+</footer>
+
+<script>
+  // Kopieren der Repo-Adresse
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    var label = b.innerHTML;
+    b.addEventListener('click', function () {
+      var t = document.getElementById(b.dataset.copy).textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () {
+        b.innerHTML = '<span class="en">Copied</span><span class="de">Kopiert</span>';
+        setTimeout(function () { b.innerHTML = label; }, 1600);
+      }, function () {});
+    });
+  });
+
+  // Versionszeile: manifest.json aus dem Repo, sonst das letzte GitHub-Release; der Text oben ist der Fallback.
+  (function () {
+    var el = document.getElementById('jbl-version');
+    function show(v) { if (v && el) el.textContent = 'Version ' + v; }
+    fetch('https://raw.githubusercontent.com/SH1FT-W/jbl-bar/main/custom_components/jbl_bar/manifest.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (j && j.version) show(String(j.version)); else throw 0; })
+      .catch(function () {
+        fetch('https://api.github.com/repos/SH1FT-W/jbl-bar/releases/latest')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (j) { show(j && String(j.tag_name || '').replace(/^v/, '')); })
+          .catch(function () {});
+      });
+  })();
+
+  // EQ-Illustration: sieben Bänder mit erfundenen Werten (dB, -6 … +6)
+  (function () {
+    var host = document.getElementById('bands'); if (!host) return;
+    var bands = [['125', 3], ['250', 2], ['500', 0], ['1k', -1], ['2k', 1], ['4k', 2], ['8k', 3]];
+    bands.forEach(function (b) {
+      var pct = 50 - (b[1] / 6) * 50; // Position des Knopfs von oben
+      var top = Math.min(pct, 50), h = Math.abs(50 - pct);
+      host.insertAdjacentHTML('beforeend',
+        '<div class="band"><div class="col"><i style="top:' + top + '%;height:' + h + '%"></i><u style="top:' + pct + '%"></u></div><small>' + b[0] + '</small></div>');
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "entity": {
+    "binary_sensor": { "atmos_active": { "default": "mdi:dolby" } },
+    "button": {
+      "atmos": { "default": "mdi:dolby" },
+      "bass": { "default": "mdi:speaker" },
+      "moment": { "default": "mdi:star-outline" },
+      "calibration": { "default": "mdi:tune-vertical" },
+      "rear": { "default": "mdi:surround-sound" }
+    },
+    "number": {
+      "volume": { "default": "mdi:volume-high" },
+      "eq_band": { "default": "mdi:equalizer" },
+      "audio_sync": { "default": "mdi:timer-sync-outline" }
+    },
+    "select": {
+      "eq_preset": { "default": "mdi:tune-variant" },
+      "sleep_timer": { "default": "mdi:power-sleep" }
+    },
+    "sensor": {
+      "source": { "default": "mdi:import" },
+      "audio_format": { "default": "mdi:waveform" },
+      "atmos_level": { "default": "mdi:dolby" }
+    },
+    "switch": {
+      "power": { "default": "mdi:power" },
+      "night_mode": { "default": "mdi:weather-night" },
+      "smart_mode": { "default": "mdi:auto-fix" },
+      "pure_voice": { "default": "mdi:account-voice" },
+      "feedback_tone": { "default": "mdi:bell-ring-outline" }
+    }
+  }
+}

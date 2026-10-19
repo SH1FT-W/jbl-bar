@@ -1,0 +1,78 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "JBL Bar",
+        "description": "IP-Adresse der Soundbar (JBL-One-App: Einstellungen → Produktinfo).",
+        "data": { "host": "IP-Adresse" }
+      },
+      "confirm": { "description": "{name} ({host}) hinzufügen?" },
+      "reconfigure": { "data": { "host": "IP-Adresse" } }
+    },
+    "error": {
+      "cannot_connect": "Unter dieser Adresse antwortet keine Soundbar.",
+      "not_jbl": "Das Gerät antwortet nicht wie eine JBL-One-Soundbar."
+    },
+    "abort": {
+      "already_configured": "Diese Soundbar ist schon eingerichtet.",
+      "cannot_connect": "Die Soundbar antwortet nicht.",
+      "not_jbl": "Keine JBL-One-Soundbar.",
+      "reconfigure_successful": "Adresse geändert.",
+      "wrong_device": "Unter dieser Adresse antwortet eine andere Soundbar."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "atmos_active": { "name": "Dolby Atmos" },
+      "rear_charging": { "name": "Lädt" },
+      "rear_docked": { "name": "Angedockt" },
+      "rear_online": { "name": "Verbunden" }
+    },
+    "button": {
+      "atmos": { "name": "Atmos-Stufe" },
+      "bass": { "name": "Bass" },
+      "moment": { "name": "Moment" },
+      "calibration": { "name": "Raum einmessen" },
+      "rear": { "name": "Rear-Speaker" }
+    },
+    "number": {
+      "volume": { "name": "Lautstärke" },
+      "eq_band": { "name": "EQ {band}" },
+      "audio_sync": { "name": "Audio-Sync" }
+    },
+    "select": {
+      "eq_preset": { "name": "EQ-Preset" },
+      "sleep_timer": {
+        "name": "Sleep-Timer",
+        "state": { "0": "Aus", "15": "15 Min.", "30": "30 Min.", "45": "45 Min.", "60": "1 Std.", "90": "1,5 Std.", "120": "2 Std." },
+        "state_attributes": { "remaining_minutes": { "name": "Restminuten" } }
+      }
+    },
+    "sensor": {
+      "source": {
+        "name": "Quelle",
+        "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "Keine", "other": "Andere" }
+      },
+      "audio_format": { "name": "Audioformat" },
+      "atmos_level": { "name": "Atmos-Stufe" },
+      "rear_battery": { "name": "Akku" }
+    },
+    "switch": {
+      "power": { "name": "Ein/Aus" },
+      "night_mode": { "name": "Nachtmodus" },
+      "smart_mode": { "name": "Smart Mode" },
+      "pure_voice": { "name": "PureVoice" },
+      "feedback_tone": { "name": "Bestätigungstöne" }
+    },
+    "media_player": {
+      "bar": { "state_attributes": { "audio_format": { "name": "Audioformat" } } }
+    }
+  },
+  "exceptions": {
+    "not_ready": { "message": "{host} antwortet nicht: {error}" },
+    "unreachable": { "message": "Die Soundbar antwortet nicht: {error}" },
+    "update_failed": { "message": "Die Soundbar hat unerwartet geantwortet: {error}" },
+    "command_failed": { "message": "Die Soundbar hat den Befehl nicht angenommen: {error}" }
+  }
+}

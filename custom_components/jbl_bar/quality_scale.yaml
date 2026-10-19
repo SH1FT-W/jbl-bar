@@ -1,0 +1,112 @@
+# Integration Quality Scale, selbst geprüft (keine Core-Integration, die Stufe ist nicht offiziell).
+# Regeln: https://developers.home-assistant.io/docs/core/integration-quality-scale/rules
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: Keine eigenen Aktionen; alles läuft über die Standard-Aktionen der Plattformen.
+  appropriate-polling:
+    status: done
+    comment: Zustand alle 10 s, Einstellungen jede Minute; Audioformat kommt per UPnP-Ereignis.
+  brands: done
+  common-modules:
+    status: done
+    comment: DataUpdateCoordinator in coordinator.py, gemeinsame Basis in entity.py.
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency:
+    status: exempt
+    comment: Keine externen Abhängigkeiten; eigener Client in api.py auf aiohttp.
+  docs-actions:
+    status: exempt
+    comment: Keine eigenen Aktionen.
+  docs-triggers:
+    status: exempt
+    comment: Keine eigenen Auslöser.
+  docs-conditions:
+    status: exempt
+    comment: Keine eigenen Bedingungen.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup:
+    status: done
+    comment: CoordinatorEntity meldet sich selbst an und ab.
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup:
+    status: done
+    comment: getDeviceInfo vor dem Einrichten, sonst ConfigEntryNotReady.
+  unique-config-entry:
+    status: done
+    comment: Eindeutig über die WLAN-MAC der Bar.
+
+  # Silver
+  action-exceptions:
+    status: done
+    comment: Befehlsfehler werden als übersetzte HomeAssistantError gemeldet (entity.py _run).
+  config-entry-unloading: done
+  docs-configuration-parameters:
+    status: exempt
+    comment: Kein Options-Flow.
+  docs-installation-parameters: done
+  entity-unavailable: done
+  integration-owner: done
+  log-when-unavailable:
+    status: done
+    comment: Der Coordinator loggt Ausfall und Rückkehr je einmal; ein einzelner Aussetzer wird überbrückt.
+  parallel-updates: done
+  reauthentication-flow:
+    status: exempt
+    comment: Die Bar verlangt keine Anmeldung.
+  test-coverage: done
+
+  # Gold
+  devices:
+    status: done
+    comment: Bar als Gerät, Rear-Speaker als eigene Geräte über die Bar (via_device).
+  diagnostics: done
+  discovery-update-info:
+    status: done
+    comment: Zeroconf trägt eine neue IP-Adresse in den bestehenden Eintrag ein.
+  discovery:
+    status: done
+    comment: Zeroconf _jbl-product._tcp.
+  docs-data-update: done
+  docs-examples:
+    status: exempt
+    comment: Standard-Mediaplayer und Schalter; keine eigenen Automationsbausteine, für die Beispiele nötig wären.
+  docs-known-limitations: done
+  docs-supported-devices: done
+  docs-supported-functions: done
+  docs-troubleshooting: done
+  docs-use-cases: done
+  dynamic-devices:
+    status: done
+    comment: Rear-Speaker, die die Bar später meldet, werden ohne Neuladen angelegt.
+  entity-category: done
+  entity-device-class: done
+  entity-disabled-by-default:
+    status: exempt
+    comment: Keine lauten oder selten gebrauchten Entitäten; die Rohwerte der alten Integration gibt es nicht mehr.
+  entity-translations: done
+  exception-translations: done
+  icon-translations: done
+  reconfiguration-flow: done
+  repair-issues:
+    status: exempt
+    comment: Es gibt keinen Zustand, den der Nutzer selbst beheben müsste; Nichterreichbarkeit zeigt „nicht verfügbar“.
+  stale-devices:
+    status: done
+    comment: Rear-Speaker, die die Bar nicht mehr meldet, lassen sich löschen (async_remove_config_entry_device).
+
+  # Platinum
+  async-dependency:
+    status: done
+    comment: Eigener asynchroner Client (api.py) auf aiohttp.
+  inject-websession:
+    status: done
+    comment: Nutzt HAs Session (async_get_clientsession).
+  strict-typing: done

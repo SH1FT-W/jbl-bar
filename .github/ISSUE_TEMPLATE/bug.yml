@@ -1,0 +1,56 @@
+name: Bug report
+description: Something in JBL Bar does not work as described.
+labels: ["bug"]
+body:
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.10.1"
+    validations:
+      required: true
+  - type: input
+    id: jbl_bar_version
+    attributes:
+      label: JBL Bar version
+      description: Settings > Devices & services > JBL Bar, or HACS.
+      placeholder: "26.10.2"
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Soundbar model and firmware
+      description: For example Bar 1000, firmware 25.52. The firmware version is shown in the JBL One app or on the device page in Home Assistant.
+      placeholder: "Bar 1000, 25.52"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happens instead
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Settings > Devices & services > JBL Bar > three dots > Download diagnostics. The file contains no IP address, MAC address or serial number. Drag it here.
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Debug log lines (logger custom_components.jbl_bar set to debug), rear speakers attached or not, how the bar is connected to the TV.

@@ -1,0 +1,78 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "JBL Bar",
+        "description": "IP address of the soundbar (JBL One app: Settings → Product info).",
+        "data": { "host": "IP address" }
+      },
+      "confirm": { "description": "Add {name} ({host})?" },
+      "reconfigure": { "data": { "host": "IP address" } }
+    },
+    "error": {
+      "cannot_connect": "The soundbar does not answer at this address.",
+      "not_jbl": "This device does not answer like a JBL One soundbar."
+    },
+    "abort": {
+      "already_configured": "This soundbar is already set up.",
+      "cannot_connect": "The soundbar does not answer.",
+      "not_jbl": "Not a JBL One soundbar.",
+      "reconfigure_successful": "Address updated.",
+      "wrong_device": "A different soundbar answers at this address."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "atmos_active": { "name": "Dolby Atmos" },
+      "rear_charging": { "name": "Charging" },
+      "rear_docked": { "name": "Docked" },
+      "rear_online": { "name": "Connected" }
+    },
+    "button": {
+      "atmos": { "name": "Atmos level" },
+      "bass": { "name": "Bass" },
+      "moment": { "name": "Moment" },
+      "calibration": { "name": "Calibrate room" },
+      "rear": { "name": "Rear speakers" }
+    },
+    "number": {
+      "volume": { "name": "Volume" },
+      "eq_band": { "name": "EQ {band}" },
+      "audio_sync": { "name": "Audio sync" }
+    },
+    "select": {
+      "eq_preset": { "name": "EQ preset" },
+      "sleep_timer": {
+        "name": "Sleep timer",
+        "state": { "0": "Off", "15": "15 min", "30": "30 min", "45": "45 min", "60": "1 h", "90": "1.5 h", "120": "2 h" },
+        "state_attributes": { "remaining_minutes": { "name": "Remaining minutes" } }
+      }
+    },
+    "sensor": {
+      "source": {
+        "name": "Source",
+        "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "None", "other": "Other" }
+      },
+      "audio_format": { "name": "Audio format" },
+      "atmos_level": { "name": "Atmos level" },
+      "rear_battery": { "name": "Battery" }
+    },
+    "switch": {
+      "power": { "name": "Power" },
+      "night_mode": { "name": "Night mode" },
+      "smart_mode": { "name": "Smart mode" },
+      "pure_voice": { "name": "PureVoice" },
+      "feedback_tone": { "name": "Feedback tones" }
+    },
+    "media_player": {
+      "bar": { "state_attributes": { "audio_format": { "name": "Audio format" } } }
+    }
+  },
+  "exceptions": {
+    "not_ready": { "message": "{host} does not answer: {error}" },
+    "unreachable": { "message": "The soundbar does not answer: {error}" },
+    "update_failed": { "message": "The soundbar sent an unexpected answer: {error}" },
+    "command_failed": { "message": "The soundbar did not accept the command: {error}" }
+  }
+}
