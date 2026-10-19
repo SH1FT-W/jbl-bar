@@ -1,5 +1,9 @@
 # Changelog
 
+## 26.10.3 – 19.10.2026
+
+- **Fix:** If Home Assistant starts while the bar is in standby, the settings and the rear speakers (battery, docked, connected) are read right away again instead of staying unavailable until the bar is switched on. In standby the settings are refreshed once a minute; playback is still not polled.
+
 ## 26.10.2 – 19.10.2026
 
 - **Fix:** Unknown entries in the bar's lists (EQ presets, rear speakers) no longer cause an error while reading the settings; valid entries are kept.

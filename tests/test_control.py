@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from common import FakeBar
+from common import HOST, FakeBar
 from custom_components.jbl_bar.api import JBLBarError
+from custom_components.jbl_bar.const import DOMAIN
 
 
 async def call(hass: HomeAssistant, domain: str, service: str, entity_id: str, **data) -> None:
@@ -136,12 +139,24 @@ async def test_eq_band_out_of_range(hass: HomeAssistant, bar: FakeBar, setup) ->
     assert bar.commands("setActiveEQ") == []
 
 
+async def test_start_in_standby_reads_settings(hass: HomeAssistant, bar: FakeBar) -> None:
+    """Startet HA, während die Bar im Standby ist, sind Einstellungen und Rear-Akkus trotzdem da."""
+    bar.state["power"] = "1"
+    entry = MockConfigEntry(domain=DOMAIN, unique_id="02:00:00:00:00:01", data={CONF_HOST: HOST}, title="JBL BAR 1000")
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get(PLAYER).state == "off"
+    assert hass.states.get("sensor.jbl_bar_1000_left_battery").state not in ("unavailable", "unknown")
+
+
 async def test_standby_polls_only_power(hass: HomeAssistant, bar: FakeBar, setup) -> None:
-    """Im Standby fragt HA nur noch den Ein/Aus-Zustand; nach dem Einschalten sofort alles inkl. Einstellungen."""
+    """Im Standby fragt HA meist nur den Ein/Aus-Zustand; nach dem Einschalten sofort alles inkl. Einstellungen."""
     coordinator = setup.runtime_data
     bar.state["power"] = "1"
     await coordinator.async_refresh()
     assert hass.states.get(PLAYER).state == "off"
+    coordinator._cycle = 1  # zwischen zwei langsamen Runden
     bar.calls.clear()
     await coordinator.async_refresh()
     assert [name for name, _ in bar.calls] == ["getPowerState"]

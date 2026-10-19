@@ -122,6 +122,7 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         self.unsupported: set[str] = set()
         self._cycle = 0
         self._slow_due = True
+        self._standby = False
         self._sid: str | None = None
         self._misses = 0
         # Registry-ID der Bar – die Rear-Speaker hängen daran.
@@ -166,10 +167,17 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             # Achtung, verdreht: "0" = an, "1" = Standby (an der Bar 1000 ausprobiert, 07.10.2026).
             state.power = str(power.get("power_state")) == "0"
             if not state.power:
-                # Standby: nur noch Ein/Aus fragen; Wiedergabe und Einstellungen gleich nach dem Einschalten lesen
+                # Standby: keine Wiedergabe abfragen, Einstellungen (u. a. Rear-Akkus) nur im langsamen Takt –
+                # sonst bleiben sie nach einem HA-Neustart im Standby „nicht verfügbar“.
                 self._misses = 0
-                self._slow_due = True
+                self._standby = True
+                if slow:
+                    await self._update_settings(state)
                 return state
+            if self._standby:
+                # Gerade eingeschaltet: Einstellungen sofort lesen
+                self._standby = False
+                slow = True
             player, streaming, selected = await asyncio.gather(
                 self.client.command("getPlayerStatus"),
                 self._ask("getStreamingStatus"),
