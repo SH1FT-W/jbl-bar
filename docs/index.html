@@ -104,21 +104,38 @@ section.tint { background: var(--bg-2); }
 .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: inline-block; }
 
 /* Bühne: stilisierte Soundbar mit Karte (bleibt in beiden Themes dunkel) */
+/* Zeichnung im Stil einer Bar 1000: flache Stoff-Soundbar, abnehmbare Rears an den Enden, Subwoofer dahinter. Nur Formen, kein Logo. */
+.rig { position: relative; padding: calc(clamp(64px, 12vw, 128px) / 0.82 - clamp(38px, 5.4vw, 58px) + 8px) 0 34px; }
+.rig::after { content: ""; position: absolute; left: 4%; right: 2%; bottom: 22px; height: 26px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,0.7), transparent); filter: blur(4px); z-index: 0; }
+.fabric { background-color: #161413;
+  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.35)); }
+.woofer { position: absolute; right: 0; bottom: 44px; filter: brightness(0.85); width: clamp(64px, 12vw, 128px); aspect-ratio: 0.82; border-radius: 10px; z-index: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), inset 0 -18px 30px rgba(0,0,0,0.45), 0 20px 40px -18px rgba(0,0,0,0.9); }
+.woofer::before { content: ""; position: absolute; left: 3px; right: 3px; top: -7px; height: 9px; border-radius: 8px 8px 2px 2px; background: linear-gradient(180deg, #34302d, #1d1b19); }
+.woofer::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -5px; height: 5px; border-radius: 0 0 4px 4px; background: #070606; }
+.sb { position: relative; z-index: 2; display: flex; align-items: stretch; width: 93%; height: clamp(38px, 5.4vw, 58px); }
+.sb > * { position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -10px 18px rgba(0,0,0,0.45), 0 26px 40px -22px rgba(0,0,0,0.95); }
+.sb > *::before { content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 6px; background: linear-gradient(180deg, #2f2b28, #1a1816); border-radius: inherit; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.sb .body { flex: 1; border-radius: 3px; min-width: 0; }
+.sb .end { width: 13%; flex: none; }
+.sb .end.l { border-radius: 999px 3px 3px 999px; margin-right: 14px; transform: translate(-4px, -4px) rotate(-1.5deg); }
+.sb .end.r { border-radius: 3px 999px 999px 3px; margin-left: 2px; }
+.sb .end.r::after { content: ""; position: absolute; left: -2px; top: 0; bottom: 0; width: 2px; background: #050404; }
+.sb .end b { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%); font: 500 11px/1 var(--mono); color: #a39a90; white-space: nowrap; }
+.sb .end i { position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #ff8a33; box-shadow: 0 0 8px rgba(255,138,51,0.9); }
+.sb .pins { position: absolute; left: -9px; top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
+.sb .pins span { width: 6px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #8a6a2c, #e0b660); box-shadow: 0 0 4px rgba(224,182,96,0.4); }
+.sb .display { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 3px 10px; border-radius: 4px; background: #040303; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  font: 500 clamp(8px, 1.1vw, 11px)/1.3 var(--mono); letter-spacing: 0.14em; color: #ffd2ad; text-shadow: 0 0 8px rgba(255,140,60,0.8); white-space: nowrap; }
+
 .stage { position: relative; margin: clamp(48px, 7vw, 84px) auto 0; max-width: 1000px; border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px);
   background: radial-gradient(ellipse at 50% 0%, #2a1a0e, #0d0b0a 70%); box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255,255,255,0.06); color: #f4f1ec; }
-.bar { position: relative; height: clamp(46px, 7vw, 70px); border-radius: 999px; background: linear-gradient(180deg, #2b2826, #141210 60%, #0a0908);
-  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.9), 0 40px 120px -30px rgba(255,106,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12); overflow: hidden; }
-.bar::before { content: ""; position: absolute; inset: 9px 22px; border-radius: 999px; background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1.1px, transparent 1.4px); background-size: 7px 7px; }
-.bar .display { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 4px 14px; border-radius: 6px; background: #050403; font: 500 clamp(10px, 1.4vw, 13px)/1.3 var(--mono); letter-spacing: 0.14em; color: #ffd2ad; text-shadow: 0 0 10px rgba(255,140,60,0.8); white-space: nowrap; }
-.bar .logo { position: absolute; right: 7%; top: 50%; transform: translateY(-50%); width: clamp(22px, 3vw, 30px); height: auto; border-radius: 5px; filter: invert(1); opacity: .55; }
 /* Das Logo ist dunkel auf transparent: im Dunkelmodus hell zeichnen */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand img { filter: invert(1); } }
 :root[data-theme="dark"] .brand img { filter: invert(1); }
 .btns { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); }
 .btns small { display: block; font-size: 12px; color: #a39a90; margin-bottom: 8px; }
-.rears { display: flex; justify-content: space-between; margin-top: 14px; padding: 0 6%; }
-.rear { width: clamp(42px, 7vw, 64px); height: 14px; border-radius: 999px; background: linear-gradient(180deg, #2b2826, #100e0c); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); position: relative; }
-.rear b { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font: 500 11px/1 var(--mono); color: #a39a90; white-space: nowrap; }
 .cards { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; margin-top: clamp(40px, 5vw, 56px); text-align: left; }
 .hc { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 22px; padding: 20px 22px; min-width: 0; }
 .hc .top { display: flex; align-items: center; gap: 12px; }
@@ -257,7 +274,6 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
   .repo { flex-wrap: wrap; padding: 12px 14px; gap: 10px; }
   .repo code { flex-basis: 100%; font-size: clamp(12px, 3.4vw, 14px); }
   .copy { margin-left: auto; }
-  .bar .logo { display: none; }
   .bands { height: 160px; gap: 4px; }
   .band small { font-size: 9px; }
   .eq-foot { grid-template-columns: 1fr 1fr; }
@@ -310,9 +326,15 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
       <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
     </p>
 
-    <div class="stage reveal d3" role="img" aria-label="Illustration: a stylised soundbar with two rear speakers, below it a media player card and a list of entity values. The values are made up.">
-      <div class="bar"><span class="display">TV &middot; DOLBY ATMOS</span><img class="logo" src="logo.png" alt=""></div>
-      <div class="rears"><span class="rear"><b>L 84 %</b></span><span class="rear"><b>R 79 %</b></span></div>
+    <div class="stage reveal d3" role="img" aria-label="Illustration: a stylised soundbar with detachable rear speakers at both ends and a subwoofer behind it, below it a media player card and a list of entity values. The values are made up.">
+      <div class="rig" aria-hidden="true">
+        <div class="woofer fabric"></div>
+        <div class="sb">
+          <div class="end l fabric"><i></i><b>L 84 %</b></div>
+          <div class="body fabric"><span class="pins"><span></span><span></span></span><span class="display">TV &middot; DOLBY ATMOS</span></div>
+          <div class="end r fabric"><b>R 79 %</b></div>
+        </div>
+      </div>
       <div class="cards">
         <div class="hc">
           <div class="top">

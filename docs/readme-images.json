@@ -8,7 +8,7 @@
     "pills": [["Local, no cloud"], ["Platinum", "v"], ["HACS"]],
     "logo": "docs/images/readme-icon.png",
     "shot": { "light": "docs/images/readme-stage-light.png", "dark": "docs/images/readme-stage-dark.png", "srcW": 2000, "winW": 2000, "s": 0.34,
-      "strips": [[0, 1048]], "bar": null, "left": 590, "top": 142, "flat": true }
+      "strips": [[0, 1248]], "bar": null, "left": 590, "top": 110, "flat": true }
   },
   "colors": {
     "light": { "bg": "#F7F5F2", "bg2": "#EFECE7", "ink": "#161412", "ink2": "#57514B", "ink3": "#8A837C", "accentText": "#C24F00", "accent": "#FF6A00", "accent2": "#FFA15C",
