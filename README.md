@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-title-dark.png" />
-  <img src="docs/images/readme-title-light.png" alt="JBL Bar: Your soundbar, fully local. A soundbar with its subwoofer below a TV in warm evening light, with a media player card (on, playing from TV, volume 33 percent) and a card with the audio format ATMOS / DDP / 6ch / 48 kHz. AI-generated scene, made-up values." />
+  <img src="docs/images/readme-title-light.png" alt="JBL Bar: Your soundbar, fully local. A soundbar with its subwoofer below a TV in warm evening light (AI-generated scene)." />
 </picture>
 
 <p>Local control for JBL soundbars with JBL One in Home Assistant.<br/>
