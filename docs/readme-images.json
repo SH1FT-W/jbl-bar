@@ -1,10 +1,40 @@
 {
   "$comment": "Content of the README card pictures. Render with sh1ft-w.github.io/theme/v1/readme-images: node render.mjs <this repo> cards. The title image is built from tools/readme-title.html (photo instead of a window shot, see the comment there).",
   "colors": {
-    "light": { "bg": "#F7F5F2", "bg2": "#EFECE7", "ink": "#161412", "ink2": "#57514B", "ink3": "#8A837C", "accentText": "#C24F00", "accent": "#FF6A00", "accent2": "#FFA15C",
-      "glow1": "rgba(255,106,0,0.16)", "glow2": "rgba(255,160,90,0.14)", "frame": "rgba(40,30,20,0.10)", "pillBg": "#ffffff", "pillLine": "rgba(40,30,20,0.08)", "win": "#0d0b0a", "bar": "" },
-    "dark": { "bg": "#0B0A09", "bg2": "#161412", "ink": "#F4F1EC", "ink2": "rgba(222,214,204,0.84)", "ink3": "rgba(222,214,204,0.52)", "accentText": "#FF8A33", "accent": "#FF6A00", "accent2": "#FFA15C",
-      "glow1": "rgba(255,106,0,0.22)", "glow2": "rgba(255,160,90,0.10)", "frame": "rgba(255,255,255,0.10)", "pillBg": "rgba(255,255,255,0.06)", "pillLine": "rgba(255,255,255,0.10)", "win": "#0d0b0a", "bar": "" }
+    "light": {
+      "bg": "#F7F5F2",
+      "bg2": "#EFECE7",
+      "ink": "#161412",
+      "ink2": "#57514B",
+      "ink3": "#8A837C",
+      "accentText": "#C24F00",
+      "accent": "#FF6A00",
+      "accent2": "#FFA15C",
+      "glow1": "rgba(255,106,0,0.16)",
+      "glow2": "rgba(255,160,90,0.14)",
+      "frame": "rgba(40,30,20,0.10)",
+      "pillBg": "#ffffff",
+      "pillLine": "rgba(40,30,20,0.08)",
+      "win": "#0d0b0a",
+      "bar": "linear-gradient(#ffffff, #f3f5f9)"
+    },
+    "dark": {
+      "bg": "#0B0A09",
+      "bg2": "#161412",
+      "ink": "#F4F1EC",
+      "ink2": "rgba(222,214,204,0.84)",
+      "ink3": "rgba(222,214,204,0.52)",
+      "accentText": "#FF8A33",
+      "accent": "#FF6A00",
+      "accent2": "#FFA15C",
+      "glow1": "rgba(255,106,0,0.22)",
+      "glow2": "rgba(255,160,90,0.10)",
+      "frame": "rgba(255,255,255,0.10)",
+      "pillBg": "rgba(255,255,255,0.06)",
+      "pillLine": "rgba(255,255,255,0.10)",
+      "win": "#0d0b0a",
+      "bar": "linear-gradient(#2a2d33, #22252a)"
+    }
   },
   "fonts": {
     "display": "\"Archivo\", -apple-system, system-ui, sans-serif",
@@ -14,33 +44,159 @@
   },
   "cards": {
     "new": [
-      { "icon": "power-sleep", "title": "Quiet in standby", "ver": "26.10.2", "text": "While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away." },
-      { "icon": "playlist-check", "title": "Odd lists, no error", "ver": "26.10.2", "text": "Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash." },
-      { "icon": "dns-outline", "title": "Host names work", "ver": "26.10.2", "text": "Set up with a host name instead of an IP address? The audio format events now get through too, the sender check resolves the name on startup." },
-      { "icon": "calendar-outline", "title": "Calendar versions", "ver": "26.10.1", "text": "Year, month and the release of that month: 26.10.2 is the second release of October 2026. The jump from 1.0.1 is intended, updates show up as usual." }
+      {
+        "icon": "power-sleep",
+        "title": "Quiet in standby",
+        "ver": "26.10.2",
+        "text": "While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away."
+      },
+      {
+        "icon": "playlist-check",
+        "title": "Odd lists, no error",
+        "ver": "26.10.2",
+        "text": "Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash."
+      },
+      {
+        "icon": "dns-outline",
+        "title": "Host names work",
+        "ver": "26.10.2",
+        "text": "Set up with a host name instead of an IP address? The audio format events now get through too, the sender check resolves the name on startup."
+      },
+      {
+        "icon": "calendar-outline",
+        "title": "Calendar versions",
+        "ver": "26.10.1",
+        "text": "Year, month and the release of that month: 26.10.2 is the second release of October 2026. The jump from 1.0.1 is intended, updates show up as usual."
+      }
     ],
     "features": [
-      { "icon": "play-circle-outline", "title": "A real media player", "text": "On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming." },
-      { "icon": "power", "title": "True power state", "text": "Read straight from the bar instead of guessed from what is playing." },
-      { "icon": "tune-vertical", "title": "7-band EQ and presets", "text": "JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own." },
-      { "icon": "weather-night", "title": "Sound switches", "text": "Night mode, Smart mode, PureVoice and feedback tones, each one a switch." },
-      { "icon": "timer-outline", "title": "Audio sync and sleep timer", "text": "Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours." },
-      { "icon": "speaker-multiple", "title": "Rear speakers", "text": "Battery, charging, docked and connected, each rear as its own device under the bar." },
-      { "icon": "dolby", "title": "Dolby Atmos and audio format", "text": "See whether Atmos is coming in and in which format, for example ATMOS / DDP / 6ch / 48 kHz, pushed instantly by a UPnP event." },
-      { "icon": "rocket-launch-outline", "title": "Adapts and starts instantly", "text": "Features a model does not know are never created. The event subscription runs in the background, Home Assistant does not wait for it." }
+      {
+        "icon": "play-circle-outline",
+        "title": "A real media player",
+        "text": "On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming."
+      },
+      {
+        "icon": "power",
+        "title": "True power state",
+        "text": "Read straight from the bar instead of guessed from what is playing."
+      },
+      {
+        "icon": "tune-vertical",
+        "title": "7-band EQ and presets",
+        "text": "JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own."
+      },
+      {
+        "icon": "weather-night",
+        "title": "Sound switches",
+        "text": "Night mode, Smart mode, PureVoice and feedback tones, each one a switch."
+      },
+      {
+        "icon": "timer-outline",
+        "title": "Audio sync and sleep timer",
+        "text": "Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours."
+      },
+      {
+        "icon": "speaker-multiple",
+        "title": "Rear speakers",
+        "text": "Battery, charging, docked and connected, each rear as its own device under the bar."
+      },
+      {
+        "icon": "dolby",
+        "title": "Dolby Atmos and audio format",
+        "text": "See whether Atmos is coming in and in which format, for example ATMOS / DDP / 6ch / 48 kHz, pushed instantly by a UPnP event."
+      },
+      {
+        "icon": "rocket-launch-outline",
+        "title": "Adapts and starts instantly",
+        "text": "Features a model does not know are never created. The event subscription runs in the background, Home Assistant does not wait for it."
+      }
     ],
     "entities": [
-      { "icon": "speaker", "title": "Media player", "text": "media_player.jbl_bar_1000 is the main control: power, volume, mute, source, playback and now playing." },
-      { "icon": "toggle-switch-outline", "title": "Switches", "text": "power, nightmode, smart_mode, pure_voice and feedback_tone." },
-      { "icon": "volume-high", "title": "Volume and EQ bands", "text": "volume from 0 to 100 % in 3 % steps like on the bar. 125hz to 8000hz from -6 to +6 dB (125 Hz down to -9 dB), changing a band creates your own preset." },
-      { "icon": "form-dropdown", "title": "Audio sync and selects", "text": "audio_sync from 0 to 250 ms. eq_preset and sleep_timer as selects, the remaining time as an attribute." },
-      { "icon": "information-outline", "title": "Sensors", "text": "source, audio_format and atmos_level, plus left_battery and right_battery per rear speaker." },
-      { "icon": "remote", "title": "Binary sensors and buttons", "text": "atmos_active, left/right charging, docked and online. Buttons for the remote: atmos, bass, moment, calibration and rear." }
+      {
+        "icon": "speaker",
+        "title": "Media player",
+        "text": "media_player.jbl_bar_1000 is the main control: power, volume, mute, source, playback and now playing."
+      },
+      {
+        "icon": "toggle-switch-outline",
+        "title": "Switches",
+        "text": "power, nightmode, smart_mode, pure_voice and feedback_tone."
+      },
+      {
+        "icon": "volume-high",
+        "title": "Volume and EQ bands",
+        "text": "volume from 0 to 100 % in 3 % steps like on the bar. 125hz to 8000hz from -6 to +6 dB (125 Hz down to -9 dB), changing a band creates your own preset."
+      },
+      {
+        "icon": "form-dropdown",
+        "title": "Audio sync and selects",
+        "text": "audio_sync from 0 to 250 ms. eq_preset and sleep_timer as selects, the remaining time as an attribute."
+      },
+      {
+        "icon": "information-outline",
+        "title": "Sensors",
+        "text": "source, audio_format and atmos_level, plus left_battery and right_battery per rear speaker."
+      },
+      {
+        "icon": "remote",
+        "title": "Binary sensors and buttons",
+        "text": "atmos_active, left/right charging, docked and online. Buttons for the remote: atmos, bass, moment, calibration and rear."
+      }
     ],
-    "how": { "cols": 3, "items": [
-      { "icon": "lock-outline", "title": "HTTPS + certificate", "text": "State, settings, EQ and source through the bar's local API, every 10 seconds." },
-      { "icon": "music-note-outline", "title": "UPnP / SOAP", "text": "Title, cover, volume and mute through the bar's media renderer." },
-      { "icon": "lightning-bolt-outline", "title": "UPnP events", "text": "The bar pushes the audio format to Home Assistant the moment it changes." }
-    ] }
+    "how": {
+      "cols": 3,
+      "items": [
+        {
+          "icon": "lock-outline",
+          "title": "HTTPS + certificate",
+          "text": "State, settings, EQ and source through the bar's local API, every 10 seconds."
+        },
+        {
+          "icon": "music-note-outline",
+          "title": "UPnP / SOAP",
+          "text": "Title, cover, volume and mute through the bar's media renderer."
+        },
+        {
+          "icon": "lightning-bolt-outline",
+          "title": "UPnP events",
+          "text": "The bar pushes the audio format to Home Assistant the moment it changes."
+        }
+      ]
+    }
+  },
+  "title": {
+    "name": "JBL Bar",
+    "eyebrow": "For Home Assistant",
+    "lead": "Your soundbar, <em>fully local.</em>",
+    "sub": "A real media player, the true power state, EQ, sound switches, rear speakers and the live Dolby Atmos format, the way the JBL One app talks to the bar. Fast, complete, no cloud.",
+    "pills": [
+      [
+        "Local, no cloud"
+      ],
+      [
+        "JBL One protocol",
+        "v"
+      ],
+      [
+        "HACS"
+      ]
+    ],
+    "logo": "docs/images/readme-icon.png",
+    "shot": {
+      "light": "docs/images/title-shot-light.png",
+      "dark": "docs/images/title-shot-dark.png",
+      "srcW": 3200,
+      "winW": 3200,
+      "s": 0.28,
+      "strips": [
+        [
+          0,
+          2000
+        ]
+      ],
+      "bar": "Home Assistant › JBL Bar",
+      "left": 600,
+      "top": 70
+    }
   }
 }

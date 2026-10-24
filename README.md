@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-title-dark.png" />
-  <img src="docs/images/readme-title-light.png" alt="JBL Bar: Your soundbar, fully local. A soundbar with its subwoofer below a TV in warm evening light (AI-generated scene)." />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-title-dark.webp" />
+  <img src="docs/images/readme-title-light.webp" alt="JBL Bar: Your soundbar, fully local. The feature overview of the project page in a window." />
 </picture>
 
 <p>Local control for JBL soundbars with JBL One in Home Assistant.<br/>
@@ -34,28 +34,37 @@ It replaces the HACS integration `jbl_integration` and **keeps its entity IDs**,
 <sub><b>JUST ARRIVED</b></sub>
 ## Sturdier, quieter, and counted by the calendar.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-cards-new-dark.png" />
-  <img src="docs/images/readme-cards-new-light.png" alt="Quiet in standby (26.10.2): while the bar sleeps, Home Assistant only asks whether it is on, switch it on and playback and settings are read right away. Odd lists, no error (26.10.2): unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay, a missing EQ band gives a clear message instead of a crash. Host names work (26.10.2): set up with a host name instead of an IP address, the audio format events now get through too. Calendar versions (26.10.1): year, month and the release of that month, 26.10.2 is the second release of October 2026." />
-</picture>
+<!-- cards:new -->
+<table>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-sleep-dark.svg"><img src="docs/images/icons/power-sleep-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Quiet in standby</b> <code>26.10.2</code><br>While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/playlist-check-dark.svg"><img src="docs/images/icons/playlist-check-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Odd lists, no error</b> <code>26.10.2</code><br>Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dns-outline-dark.svg"><img src="docs/images/icons/dns-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Host names work</b> <code>26.10.2</code><br>Set up with a host name instead of an IP address? The audio format events now get through too, the sender check resolves the name on startup.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/calendar-outline-dark.svg"><img src="docs/images/icons/calendar-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Calendar versions</b> <code>26.10.1</code><br>Year, month and the release of that month: 26.10.2 is the second release of October 2026. The jump from 1.0.1 is intended, updates show up as usual.</td></tr>
+</table>
+<!-- /cards:new -->
 
 Every change, release by release, in the [changelog](CHANGELOG.md).
 
 <a id="features"></a>
 ## Features
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-cards-features-dark.png" />
-  <img src="docs/images/readme-cards-features-light.png" alt="A real media player: on and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming. True power state: read straight from the bar instead of guessed from what is playing. 7-band EQ and presets: JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own. Sound switches: night mode, Smart mode, PureVoice and feedback tones. Audio sync and sleep timer: delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours. Rear speakers: battery, charging, docked and connected, each rear as its own device. Dolby Atmos and audio format: whether Atmos is coming in and in which format, pushed instantly by a UPnP event. Adapts and starts instantly: features a model does not know are never created, the event subscription runs in the background." />
-</picture>
+<!-- cards:features -->
+<table>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/play-circle-outline-dark.svg"><img src="docs/images/icons/play-circle-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>A real media player</b><br>On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-dark.svg"><img src="docs/images/icons/power-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>True power state</b><br>Read straight from the bar instead of guessed from what is playing.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/tune-vertical-dark.svg"><img src="docs/images/icons/tune-vertical-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>7-band EQ and presets</b><br>JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/weather-night-dark.svg"><img src="docs/images/icons/weather-night-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Sound switches</b><br>Night mode, Smart mode, PureVoice and feedback tones, each one a switch.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/timer-outline-dark.svg"><img src="docs/images/icons/timer-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Audio sync and sleep timer</b><br>Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/speaker-multiple-dark.svg"><img src="docs/images/icons/speaker-multiple-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Rear speakers</b><br>Battery, charging, docked and connected, each rear as its own device under the bar.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dolby-dark.svg"><img src="docs/images/icons/dolby-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Dolby Atmos and audio format</b><br>See whether Atmos is coming in and in which format, for example ATMOS / DDP / 6ch / 48 kHz, pushed instantly by a UPnP event.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/rocket-launch-outline-dark.svg"><img src="docs/images/icons/rocket-launch-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Adapts and starts instantly</b><br>Features a model does not know are never created. The event subscription runs in the background, Home Assistant does not wait for it.</td></tr>
+</table>
+<!-- /cards:features -->
 
 <a id="entities"></a>
 ## Entities
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-cards-entities-dark.png" />
-  <img src="docs/images/readme-cards-entities-light.png" alt="Media player: media_player.jbl_bar_1000 is the main control. Switches: power, nightmode, smart_mode, pure_voice and feedback_tone. Volume and EQ bands: volume from 0 to 100 percent in 3 percent steps, 125hz to 8000hz from -6 to +6 dB (125 Hz down to -9 dB), changing a band creates your own preset. Audio sync and selects: audio_sync from 0 to 250 ms, eq_preset and sleep_timer with the remaining time as an attribute. Sensors: source, audio_format, atmos_level, left_battery and right_battery. Binary sensors and buttons: atmos_active, left and right charging, docked and online; buttons atmos, bass, moment, calibration and rear." />
-</picture>
+<!-- cards:entities -->
+<table>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/speaker-dark.svg"><img src="docs/images/icons/speaker-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Media player</b><br>media_player.jbl_bar_1000 is the main control: power, volume, mute, source, playback and now playing.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/toggle-switch-outline-dark.svg"><img src="docs/images/icons/toggle-switch-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Switches</b><br>power, nightmode, smart_mode, pure_voice and feedback_tone.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/volume-high-dark.svg"><img src="docs/images/icons/volume-high-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Volume and EQ bands</b><br>volume from 0 to 100 % in 3 % steps like on the bar. 125hz to 8000hz from -6 to +6 dB (125 Hz down to -9 dB), changing a band creates your own preset.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/form-dropdown-dark.svg"><img src="docs/images/icons/form-dropdown-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Audio sync and selects</b><br>audio_sync from 0 to 250 ms. eq_preset and sleep_timer as selects, the remaining time as an attribute.</td></tr>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/information-outline-dark.svg"><img src="docs/images/icons/information-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Sensors</b><br>source, audio_format and atmos_level, plus left_battery and right_battery per rear speaker.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/remote-dark.svg"><img src="docs/images/icons/remote-light.svg" width="26" height="26" alt=""></picture></td><td width="46%" valign="top"><b>Binary sensors and buttons</b><br>atmos_active, left/right charging, docked and online. Buttons for the remote: atmos, bass, moment, calibration and rear.</td></tr>
+</table>
+<!-- /cards:entities -->
 
 All IDs start with the device name, for example `switch.jbl_bar_1000_nightmode`, and are the same as in `jbl_integration`. Entity names are available in English and German.
 
@@ -146,10 +155,11 @@ When you open an [issue](https://github.com/SH1FT-W/jbl-bar/issues), please atta
 
 ## How it works
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-cards-how-dark.png" />
-  <img src="docs/images/readme-cards-how-light.png" alt="HTTPS + certificate: state, settings, EQ and source through the bar's local API, every 10 seconds. UPnP / SOAP: title, cover, volume and mute through the bar's media renderer. UPnP events: the bar pushes the audio format to Home Assistant the moment it changes." />
-</picture>
+<!-- cards:how -->
+<table>
+<tr><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lock-outline-dark.svg"><img src="docs/images/icons/lock-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="29%" valign="top"><b>HTTPS + certificate</b><br>State, settings, EQ and source through the bar's local API, every 10 seconds.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/music-note-outline-dark.svg"><img src="docs/images/icons/music-note-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="29%" valign="top"><b>UPnP / SOAP</b><br>Title, cover, volume and mute through the bar's media renderer.</td><td width="34" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lightning-bolt-outline-dark.svg"><img src="docs/images/icons/lightning-bolt-outline-light.svg" width="26" height="26" alt=""></picture></td><td width="29%" valign="top"><b>UPnP events</b><br>The bar pushes the audio format to Home Assistant the moment it changes.</td></tr>
+</table>
+<!-- /cards:how -->
 
 The integration polls the state every 10 seconds, the settings once a minute and right after every change. In standby it only asks for the power state.
 
