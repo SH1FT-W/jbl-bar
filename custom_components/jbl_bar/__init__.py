@@ -5,6 +5,7 @@ from __future__ import annotations
 from ipaddress import ip_address
 import logging
 import socket
+import time
 
 from aiohttp import web
 from homeassistant.components.http import KEY_HASS
@@ -36,6 +37,8 @@ PLATFORMS = [
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 NOTIFY_PATH = f"/api/{DOMAIN}/notify/{{entry_id}}"
 MAX_NOTIFY_BYTES = 64 * 1024
+# Shortest gap between two lookups of the bar's host name triggered by NOTIFYs from an unknown IP
+RESOLVE_INTERVAL = 60.0
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -50,7 +53,9 @@ async def _handle_notify(request: web.Request) -> web.Response:
     if entry is None or entry.domain != DOMAIN or entry.state is not ConfigEntryState.LOADED:
         return web.Response(status=404)
     coordinator: JBLBarCoordinator = entry.runtime_data
-    if request.remote not in coordinator.host_ips:
+    if request.remote not in coordinator.host_ips and request.remote not in await _async_refresh_host_ips(
+        hass, coordinator
+    ):
         return web.Response(status=403)
     if (request.content_length or 0) > MAX_NOTIFY_BYTES:
         return web.Response(status=413)
@@ -82,6 +87,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: JBLBarConfigEntry) -> bo
     coordinator = JBLBarCoordinator(hass, entry, client, device)
     await coordinator.async_config_entry_first_refresh()
     # Ist der Host ein Name statt einer IP, kommen die NOTIFYs trotzdem von einer IP: die merken wir uns
+    coordinator.host_ips_resolved = time.monotonic()
     coordinator.host_ips = await hass.async_add_executor_job(_resolve_ips, host)
     entry.runtime_data = coordinator
     coordinator.device_id = (
@@ -126,6 +132,23 @@ def _resolve_ips(host: str) -> frozenset[str]:
         _LOGGER.warning("%s lässt sich nicht auflösen; Ereignisse der Bar werden abgelehnt, bis das klappt", host)
         return frozenset()
     return frozenset(str(info[4][0]) for info in infos)
+
+
+async def _async_refresh_host_ips(hass: HomeAssistant, coordinator: JBLBarCoordinator) -> frozenset[str]:
+    """Resolve a host name again (its IP may have changed via DHCP), at most once per RESOLVE_INTERVAL.
+
+    An IP entry needs no lookup: if the bar's IP changes, zeroconf updates the entry and HA reloads it.
+    """
+    host = coordinator.client.host
+    now = time.monotonic()
+    if host in coordinator.host_ips or now - coordinator.host_ips_resolved < RESOLVE_INTERVAL:
+        return coordinator.host_ips
+    # Set before the lookup so that concurrent NOTIFYs do not start more lookups
+    coordinator.host_ips_resolved = now
+    # A failed lookup (empty result) keeps the known addresses, otherwise the bar itself would be locked out
+    if ips := await hass.async_add_executor_job(_resolve_ips, host):
+        coordinator.host_ips = ips
+    return coordinator.host_ips
 
 
 def _own_ip(host: str) -> str:

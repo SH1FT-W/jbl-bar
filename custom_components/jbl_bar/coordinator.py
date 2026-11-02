@@ -22,7 +22,16 @@ from .api import (
     format_stream_info,
     parse_harman_state,
 )
-from .const import DOMAIN, EQ_CUSTOM_ID, EVENT_TIMEOUT, MAX_MISSES, SCAN_INTERVAL, SLOW_EVERY, SOURCE_ALIASES
+from .const import (
+    DOMAIN,
+    EQ_CUSTOM_ID,
+    EVENT_RETRY,
+    EVENT_TIMEOUT,
+    MAX_MISSES,
+    SCAN_INTERVAL,
+    SLOW_EVERY,
+    SOURCE_ALIASES,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -129,6 +138,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         self.device_id: str | None = None
         # IP-Adressen, von denen NOTIFYs der Bar angenommen werden (der Host kann auch ein Name sein).
         self.host_ips: frozenset[str] = frozenset({client.host})
+        # Monotonic time of the last lookup of host_ips (limits lookups triggered by NOTIFYs from unknown IPs).
+        self.host_ips_resolved = 0.0
 
     @property
     def unique_id(self) -> str:
@@ -367,7 +378,11 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
     # ---------- Ereignisse (UPnP GENA) ----------
 
     async def async_run_events(self, callback_url: str) -> None:
-        """Abo halten, solange der Eintrag lebt; bei Fehlern alle 5 Min. neu versuchen (Abfrage läuft weiter)."""
+        """Hold the subscription while the entry lives.
+
+        Renewed a minute before the timeout the bar granted (at half of it for short ones). On errors there is
+        no subscription left, so its timeout does not matter: retry after EVENT_RETRY (polling keeps running).
+        """
         try:
             while True:
                 try:
@@ -379,8 +394,11 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
                 except JBLBarError as err:
                     _LOGGER.debug("Ereignis-Abo bei %s: %s", self.client.host, err)
                     self._sid = None
-                    timeout = EVENT_TIMEOUT
-                await asyncio.sleep(max(30, timeout - 60))
+                    delay = EVENT_RETRY
+                else:
+                    # Floor of 5 s: a bar granting 0 or less must not cause a renewal every second
+                    delay = max(5, timeout - min(60, timeout // 2))
+                await asyncio.sleep(delay)
         finally:
             if self._sid:
                 sid, self._sid = self._sid, None

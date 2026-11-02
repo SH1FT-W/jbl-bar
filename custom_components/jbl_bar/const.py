@@ -15,6 +15,8 @@ SLOW_EVERY: Final = 6
 MAX_MISSES: Final = 1
 # GENA-Abo der Bar: 300 s, eine Minute vor Ablauf erneuern.
 EVENT_TIMEOUT: Final = 300
+# Without a subscription (bar unreachable, SUBSCRIBE refused) try again after 5 minutes; polling keeps running.
+EVENT_RETRY: Final = 300
 
 # Quellen, die `setMediaSource` annimmt, und ihre Anzeigenamen (auch Rückweg aus `getStreamingStatus`).
 SOURCES: Final = {"TV": "TV", "HDMI": "HDMI", "BT": "Bluetooth"}

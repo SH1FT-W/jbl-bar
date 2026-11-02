@@ -1,5 +1,15 @@
 # Changelog
 
+## 26.11.1 – 02.11.2026
+
+- **Fix:** If the bar is set up with a host name and its IP address changes (DHCP), its UPnP events (audio format)
+  get through again without reloading the integration: an event from an unknown address makes the integration look
+  up the name again (at most once a minute). Bars set up with an IP address were already covered (zeroconf updates
+  the address and reloads the entry).
+- **Fix:** The UPnP event subscription is renewed before the timeout the bar granted runs out, also for short
+  timeouts (before, anything under 90 seconds lapsed before the renewal). After a failed subscription the next
+  attempt now comes after 5 minutes as documented (was 4).
+
 ## 26.10.3 – 19.10.2026
 
 - **Fix:** If Home Assistant starts while the bar is in standby, the settings and the rear speakers (battery, docked, connected) are read right away again instead of staying unavailable until the bar is switched on. In standby the settings are refreshed once a minute; playback is still not polled.
