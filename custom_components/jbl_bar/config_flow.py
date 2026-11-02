@@ -4,15 +4,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_HOST
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import format_mac
+from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig, NumberSelectorMode
 from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 import voluptuous as vol
 
 from .api import JBLBarClient, JBLBarConnectionError, JBLBarError, create_ssl_context
-from .const import DOMAIN
+from .const import CONF_ANNOUNCE_VOLUME, DOMAIN
 
 
 class JBLBarConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -23,6 +25,11 @@ class JBLBarConfigFlow(ConfigFlow, domain=DOMAIN):
     def __init__(self) -> None:
         self._host: str | None = None
         self._name: str | None = None
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        return JBLBarOptionsFlow()
 
     async def _probe(self, host: str) -> dict[str, Any]:
         client = JBLBarClient(
@@ -102,3 +109,23 @@ class JBLBarConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema({vol.Required(CONF_HOST, default=entry.data[CONF_HOST]): str}),
             errors=errors,
         )
+
+
+class JBLBarOptionsFlow(OptionsFlow):
+    """Options: volume for announcements (0 = keep the current volume). Read at every announcement, no reload."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data={CONF_ANNOUNCE_VOLUME: int(user_input[CONF_ANNOUNCE_VOLUME])})
+        schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_ANNOUNCE_VOLUME, default=self.config_entry.options.get(CONF_ANNOUNCE_VOLUME, 0)
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=0, max=100, step=1, unit_of_measurement="%", mode=NumberSelectorMode.SLIDER
+                    )
+                )
+            }
+        )
+        return self.async_show_form(step_id="init", data_schema=schema)

@@ -49,8 +49,8 @@ rules:
     comment: Befehlsfehler werden als übersetzte HomeAssistantError gemeldet (entity.py _run).
   config-entry-unloading: done
   docs-configuration-parameters:
-    status: exempt
-    comment: Kein Options-Flow.
+    status: done
+    comment: Options-Flow mit der Ansage-Lautstärke, im README unter Announcements beschrieben.
   docs-installation-parameters: done
   entity-unavailable: done
   integration-owner: done

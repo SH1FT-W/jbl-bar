@@ -22,6 +22,16 @@
       "wrong_device": "A different soundbar answers at this address."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Announcements",
+        "description": "Announcements (for example with tts.speak) interrupt what the bar is playing. Afterwards the source (TV, HDMI or Bluetooth), volume, mute and standby come back; other streams are not resumed.",
+        "data": { "announce_volume": "Announcement volume" },
+        "data_description": { "announce_volume": "Volume for announcements. 0 keeps the current volume." }
+      }
+    }
+  },
   "entity": {
     "binary_sensor": {
       "atmos_active": { "name": "Dolby Atmos" },

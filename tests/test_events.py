@@ -181,7 +181,8 @@ async def _run_events(
 
     # Only the coordinator module sees the fake sleep, HA's own tasks keep the real one
     monkeypatch.setattr(
-        "custom_components.jbl_bar.coordinator.asyncio", SimpleNamespace(sleep=fake_sleep, gather=asyncio.gather)
+        "custom_components.jbl_bar.coordinator.asyncio",
+        SimpleNamespace(sleep=fake_sleep, gather=asyncio.gather, Lock=asyncio.Lock),
     )
     entry = MockConfigEntry(domain="jbl_bar", unique_id="02:00:00:00:00:01", data={CONF_HOST: client.host})
     entry.add_to_hass(hass)

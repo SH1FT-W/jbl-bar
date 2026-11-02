@@ -30,3 +30,10 @@ EQ_CUSTOM_ID: Final = "0"
 SLEEP_OPTIONS: Final = (0, 15, 30, 45, 60, 90, 120)
 
 AUDIO_SYNC_MAX: Final = 250
+
+# Announcements (media_player.play_media with announce): option for an own volume, 0 = keep the current volume.
+CONF_ANNOUNCE_VOLUME: Final = "announce_volume"
+# Wait this long for the bar to start playing, then at most this long for the end; checked every ANNOUNCE_POLL s.
+ANNOUNCE_START_TIMEOUT: Final = 15.0
+ANNOUNCE_MAX: Final = 600.0
+ANNOUNCE_POLL: Final = 1.0

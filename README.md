@@ -36,6 +36,7 @@ It replaces the HACS integration `jbl_integration` and **keeps its entity IDs**,
 
 <!-- cards:new -->
 <table>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/volume-high-dark.svg"><img src="docs/images/icons/volume-high-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Announcements</b> <code>26.11.1</code><br>tts.speak and play_media with announce play on the bar. Afterwards source, volume, mute and standby come back. Optional own announcement volume.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dns-outline-dark.svg"><img src="docs/images/icons/dns-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Events after an IP change</b> <code>26.11.1</code><br>A new IP address from the router no longer blocks the audio format events, and the subscription is renewed in time.</td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-sleep-dark.svg"><img src="docs/images/icons/power-sleep-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Quiet in standby</b> <code>26.10.2</code><br>While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/playlist-check-dark.svg"><img src="docs/images/icons/playlist-check-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Odd lists, no error</b> <code>26.10.2</code><br>Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash.</td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dns-outline-dark.svg"><img src="docs/images/icons/dns-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Host names work</b> <code>26.10.2</code><br>Set up with a host name instead of an IP address? The audio format events now get through too, the sender check resolves the name on startup.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/calendar-outline-dark.svg"><img src="docs/images/icons/calendar-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Calendar versions</b> <code>26.10.1</code><br>Year, month and the release of that month: 26.10.2 is the second release of October 2026. The jump from 1.0.1 is intended, updates show up as usual.</td></tr>
 </table>
@@ -48,7 +49,7 @@ Every change, release by release, in the [changelog](CHANGELOG.md).
 
 <!-- cards:features -->
 <table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/play-circle-outline-dark.svg"><img src="docs/images/icons/play-circle-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>A real media player</b><br>On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-dark.svg"><img src="docs/images/icons/power-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>True power state</b><br>Read straight from the bar instead of guessed from what is playing.</td></tr>
+<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/play-circle-outline-dark.svg"><img src="docs/images/icons/play-circle-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>A real media player</b><br>On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming. Plays URLs, media sources and announcements.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-dark.svg"><img src="docs/images/icons/power-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>True power state</b><br>Read straight from the bar instead of guessed from what is playing.</td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/tune-vertical-dark.svg"><img src="docs/images/icons/tune-vertical-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>7-band EQ and presets</b><br>JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/weather-night-dark.svg"><img src="docs/images/icons/weather-night-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Sound switches</b><br>Night mode, Smart mode, PureVoice and feedback tones, each one a switch.</td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/timer-outline-dark.svg"><img src="docs/images/icons/timer-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Audio sync and sleep timer</b><br>Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/speaker-multiple-dark.svg"><img src="docs/images/icons/speaker-multiple-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Rear speakers</b><br>Battery, charging, docked and connected, each rear as its own device under the bar.</td></tr>
 <tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dolby-dark.svg"><img src="docs/images/icons/dolby-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Dolby Atmos and audio format</b><br>See whether Atmos is coming in and in which format, for example ATMOS / DDP / 6ch / 48 kHz, pushed instantly by a UPnP event.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/rocket-launch-outline-dark.svg"><img src="docs/images/icons/rocket-launch-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Adapts and starts instantly</b><br>Features a model does not know are never created. The event subscription runs in the background, Home Assistant does not wait for it.</td></tr>
@@ -115,6 +116,33 @@ Requires Home Assistant 2026.9 or newer.
 > [!TIP]
 > For the audio format the bar has to reach Home Assistant: in Home Assistant's network settings the internal URL should be an IP address (the default on most installations).
 
+## Announcements
+
+The media player plays URLs and media sources, so text to speech works like on any speaker:
+
+```yaml
+action: tts.speak
+target:
+  entity_id: tts.home_assistant_cloud
+data:
+  media_player_entity_id: media_player.jbl_bar_1000
+  message: The washing machine is done.
+```
+
+Announcements (`tts.speak`, or `media_player.play_media` with `announce: true`) wake the bar from standby and unmute
+it if needed. When the announcement is over (at most 10 minutes), the bar gets back its source (TV, HDMI or Bluetooth),
+volume, mute and standby. A second announcement waits for the first one. Without `announce`, the bar keeps playing the
+stream and stays on network playback.
+
+**Options** (**Settings > Devices & services > JBL Bar > Configure**):
+
+| Option | Meaning |
+|---|---|
+| Announcement volume | Volume for announcements, 0 to 100 %. 0 (default) keeps the current volume. |
+
+The bar fetches the audio from Home Assistant: its internal URL has to be reachable from the bar (as for the audio
+format events).
+
 ## Migration from `jbl_integration`
 
 1. Delete the old integration and remove it in HACS. This frees its entity IDs.
@@ -130,12 +158,14 @@ Only the raw values that were disabled by default (`play_medium`, `transport_sta
 - **Atmos level** can only be cycled with the button. The firmware has no way to set it directly.
 - **Source HDMI** wakes the bar even when nothing is connected to the HDMI input.
 - **Tested on the Bar 1000 only.** The other models of the series speak the same interface; features a model does not know are not created.
+- **Announcements** interrupt whatever the bar plays, including the TV sound. The end of an announcement is detected by polling the bar once a second. Changes made during an announcement (source, volume, power) are overwritten by the restore. If Home Assistant restarts or the integration reloads during an announcement, nothing is restored.
 - **Polling every 10 seconds.** Changes made on the bar itself (remote control) therefore show up with up to 10 seconds delay; only the audio format arrives instantly as an event.
 
 ## Troubleshooting
 
 - **All entities "unavailable".** The bar does not answer at its IP address. Check in your router whether it got a new one and enter it with **three dots > Reconfigure**. A single dropout (for example while going to standby) is bridged.
 - **Audio format stays empty.** The bar cannot reach Home Assistant. Check the internal URL in the network settings (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.
+- **Announcement silent or source does not come back right away.** The bar fetches the audio from Home Assistant's internal URL; check it as for the audio format. The source comes back once the bar reports the end of the announcement (at the latest after 10 minutes, or after 15 seconds if it never started).
 - **Rear speakers missing.** They appear as soon as the bar reports them, also later on. Rears the bar no longer knows can be deleted on their device page.
 - **Diagnostics:** **Settings > Devices & services > JBL Bar > three dots > Download diagnostics**. IP address, MAC address and serial number are left out.
 - **Debug log:**
@@ -157,7 +187,7 @@ When you open an [issue](https://github.com/SH1FT-W/jbl-bar/issues), please atta
 
 <!-- cards:how -->
 <table>
-<tr><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lock-outline-dark.svg"><img src="docs/images/icons/lock-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>HTTPS + certificate</b><br>State, settings, EQ and source through the bar's local API, every 10 seconds.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/music-note-outline-dark.svg"><img src="docs/images/icons/music-note-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP / SOAP</b><br>Title, cover, volume and mute through the bar's media renderer.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lightning-bolt-outline-dark.svg"><img src="docs/images/icons/lightning-bolt-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP events</b><br>The bar pushes the audio format to Home Assistant the moment it changes.</td></tr>
+<tr><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lock-outline-dark.svg"><img src="docs/images/icons/lock-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>HTTPS + certificate</b><br>State, settings, EQ and source through the bar's local API, every 10 seconds.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/music-note-outline-dark.svg"><img src="docs/images/icons/music-note-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP / SOAP</b><br>Title, cover, volume, mute and playback of URLs through the bar's media renderer.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lightning-bolt-outline-dark.svg"><img src="docs/images/icons/lightning-bolt-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP events</b><br>The bar pushes the audio format to Home Assistant the moment it changes.</td></tr>
 </table>
 <!-- /cards:how -->
 

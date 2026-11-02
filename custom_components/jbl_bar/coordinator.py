@@ -23,6 +23,9 @@ from .api import (
     parse_harman_state,
 )
 from .const import (
+    ANNOUNCE_MAX,
+    ANNOUNCE_POLL,
+    ANNOUNCE_START_TIMEOUT,
     DOMAIN,
     EQ_CUSTOM_ID,
     EVENT_RETRY,
@@ -31,6 +34,7 @@ from .const import (
     SCAN_INTERVAL,
     SLOW_EVERY,
     SOURCE_ALIASES,
+    SOURCES,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -84,6 +88,16 @@ class JBLBarState:
         """Verstärkung der Bänder des aktiven Presets."""
         preset = self.eq_presets.get(self.eq_active_id or "")
         return preset.gains if preset else []
+
+
+@dataclass(slots=True)
+class AnnounceRestore:
+    """What an announcement changed and has to put back afterwards."""
+
+    power_off: bool = False
+    source: str | None = None
+    volume: int | None = None
+    mute: bool = False
 
 
 def _on(value: Any) -> bool:
@@ -140,6 +154,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         self.host_ips: frozenset[str] = frozenset({client.host})
         # Monotonic time of the last lookup of host_ips (limits lookups triggered by NOTIFYs from unknown IPs).
         self.host_ips_resolved = 0.0
+        # One playback at a time: held from the start of an announcement until its restore is done.
+        self._playback_lock = asyncio.Lock()
 
     @property
     def unique_id(self) -> str:
@@ -374,6 +390,142 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             state.eq_active_id = EQ_CUSTOM_ID
 
         await self._write(lambda: self.client.command("setActiveEQ", payload), change)
+
+    # ---------- Playback and announcements (UPnP AVTransport) ----------
+
+    async def async_play_url(self, url: str, mime: str, title: str) -> None:
+        """Play a URL; the bar switches to network playback and stays there."""
+        async with self._playback_lock:
+            await self._write(lambda: self.client.play_url(url, mime, title), lambda _state: None)
+
+    async def async_announce(self, url: str, mime: str, title: str, volume: int | None) -> None:
+        """Play an announcement, then put source, volume, mute and standby back in the background.
+
+        Returns once the bar accepted the announcement, so errors reach the caller. The restore runs as a
+        background task and holds the playback lock until it is done, so a second announcement waits for it.
+        """
+        await self._playback_lock.acquire()
+        restore = AnnounceRestore()
+        try:
+            restore = await self._announce_restore()
+            await self._start_announcement(restore, url, mime, title, volume)
+        except BaseException:
+            try:
+                await self._restore_after_announcement(restore)
+            finally:
+                self._playback_lock.release()
+            raise
+        self.config_entry.async_create_background_task(
+            self.hass, self._finish_announcement(restore), f"{DOMAIN}_announce_{self.client.host}"
+        )
+
+    async def _announce_restore(self) -> AnnounceRestore:
+        """What to put back after an announcement: power and source read fresh from the bar (volume and mute follow
+        at start). The polled state may still show a previous announcement; it only counts if a read fails."""
+        power, source = self.data.power, self.data.source
+        try:
+            power = str((await self.client.command("getPowerState")).get("power_state")) == "0"
+        except JBLBarError as err:
+            _LOGGER.debug("Announcement on %s: power state not read: %s", self.client.host, err)
+        if selected := await self._ask("getMediaSourceStatus"):
+            source = _source(selected.get("media_source")) or source
+        return AnnounceRestore(
+            power_off=power is False,
+            # Only TV, HDMI and Bluetooth can be selected again with setMediaSource
+            source=source if source in SOURCES else None,
+        )
+
+    async def _start_announcement(
+        self, restore: AnnounceRestore, url: str, mime: str, title: str, volume: int | None
+    ) -> None:
+        """Wake the bar, read volume and mute fresh, unmute, set the announcement volume and start playback.
+
+        Volume and mute are read now and not taken from the polled state: in standby they are never polled (after
+        a restart they are unknown), and during a previous announcement the poll may have seen its values.
+        """
+        if restore.power_off:
+            await self.client.command("setPowerState", {"power_state": "0"})
+        current_volume, current_mute = self.data.volume, self.data.muted
+        try:
+            player = await self.client.command("getPlayerStatus")
+        except JBLBarError as err:
+            _LOGGER.debug("Announcement on %s: volume not read: %s", self.client.host, err)
+        else:
+            current_volume, current_mute = _int(player.get("vol")), _on(player.get("mute"))
+        if current_mute:
+            restore.mute = True
+            await self.client.set_mute(False)
+        # Unknown volume (read failed after a restart in standby): keep it, it could not be put back afterwards
+        if volume is not None and current_volume is not None and volume != current_volume:
+            restore.volume = current_volume
+            await self.client.set_volume(volume)
+        await self.client.play_url(url, mime, title)
+
+    async def _finish_announcement(self, restore: AnnounceRestore) -> None:
+        try:
+            await self._wait_for_announcement_end()
+            await self._restore_after_announcement(restore)
+        finally:
+            self._playback_lock.release()
+
+    async def _wait_for_announcement_end(self) -> None:
+        """Wait until the bar has played the announcement (transport leaves PLAYING) or a timeout hits."""
+        loop = self.hass.loop
+        start = loop.time()
+        started = False
+        while True:
+            await asyncio.sleep(ANNOUNCE_POLL)
+            elapsed = loop.time() - start
+            try:
+                transport = (await self.client.media_info()).transport_state
+            except JBLBarError as err:
+                _LOGGER.debug("Announcement on %s: %s", self.client.host, err)
+                transport = None
+            if transport in ("PLAYING", "TRANSITIONING"):
+                started = True
+            elif started and transport is not None:
+                return
+            if elapsed >= ANNOUNCE_MAX or (not started and elapsed >= ANNOUNCE_START_TIMEOUT):
+                _LOGGER.debug("Announcement on %s: no end seen after %.0f s", self.client.host, elapsed)
+                return
+
+    async def _restore_after_announcement(self, restore: AnnounceRestore) -> None:
+        """Put back source, volume, mute and standby; each step on its own, a failed one does not stop the rest."""
+        steps: list[tuple[str, Callable[[], Awaitable[Any]]]] = []
+        if restore.source:
+            source = restore.source
+            steps.append(("source", lambda: self.client.command("setMediaSource", {"media_source": source})))
+        if restore.volume is not None:
+            volume = restore.volume
+            steps.append(("volume", lambda: self.client.set_volume(volume)))
+        if restore.mute:
+            steps.append(("mute", lambda: self.client.set_mute(True)))
+        if restore.power_off:
+            steps.append(("standby", lambda: self.client.command("setPowerState", {"power_state": "1"})))
+        restored: dict[str, Any] = {}
+        values: dict[str, dict[str, Any]] = {
+            "source": {"source": restore.source},
+            "volume": {"volume": restore.volume},
+            "mute": {"muted": True},
+            "standby": {"power": False},
+        }
+        for name, step in steps:
+            try:
+                await step()
+            except JBLBarError as err:
+                _LOGGER.warning(
+                    "After the announcement the %s of %s could not be restored: %s", name, self.client.host, err
+                )
+            else:
+                restored.update(values[name])
+        # Show the restored state right away: the refresh below is debounced, and the next announcement takes its
+        # starting point (power, source) from this state
+        if restored and self.data is not None:
+            state = replace(self.data)
+            self._set(**restored)(state)
+            self.async_set_updated_data(state)
+        self._slow_due = True
+        await self.async_request_refresh()
 
     # ---------- Ereignisse (UPnP GENA) ----------
 

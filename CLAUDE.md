@@ -26,6 +26,11 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   (Moment, so geschrieben), calibration, keyRear, power, mute, volumeUp/Down.
 - Volle Befehlsliste der App: `EnumCommandMapping` (164 Befehle) + `d9`-Request-Klassen; die Bar 1000 kennt nur einen
   Teil (`getFeatureSupport`).
+- Wiedergabe von URLs (Ansagen, `media_player.play_media`): AVTransport `SetAVTransportURI` + `Play` auf
+  `/upnp/control/rendertransport1`. Belegt aus `description.xml` der Test-Bar (DLNA DMR-1.50, AVTransport-SCPD mit
+  `SetAVTransportURI`/`Play`/`Stop`, ConnectionManager `GetProtocolInfo`: http-get für MP3, AAC, FLAC, WAV, WMA, OGG …),
+  nur lesend abgefragt 2026-11-02. **Wiedergabe selbst an der Test-Bar noch ungeprüft**: ob die Bar aus TV/HDMI auf
+  Netzwerk umschaltet, im Standby annimmt, nach dem Ende `STOPPED` meldet und `setMediaSource` danach zurückführt.
 - GENA (an der Test-Bar geprüft: „Dolby Atmos / Dolby Mat / 12ch / 48 kHz“): SUBSCRIBE
   `http://<ip>:49152/upnp/event/rendercontrol1`, NOTIFY an `/api/jbl_bar/notify/<entry_id>`
   (nur von der Bar-IP angenommen) → `HarmanBarState.tv_stream_info` = Audioformat. Abo läuft als Hintergrund-Task

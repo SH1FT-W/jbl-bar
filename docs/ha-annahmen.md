@@ -26,12 +26,18 @@ Worauf sich dieses Repo bei Home Assistant verlässt. Bei jeder Änderung am Cod
 | `async_remove_config_entry_device(hass, entry, device)` wird für „Gerät löschen“ gefragt | `__init__.py` | `test_quality.py::test_remove_stale_rear` (direkter Aufruf, nicht über die Oberfläche) |
 | Zeroconf: `ZeroconfServiceInfo` mit `host`, `name`, `properties` (`MAC`/`mac`) aus `helpers.service_info.zeroconf`; `_abort_if_unique_id_configured(updates=…)` aktualisiert den Host | `config_flow.py` `async_step_zeroconf` | `test_config_flow.py::test_zeroconf`, `::test_zeroconf_updates_host_and_aborts`, `::test_zeroconf_without_mac_or_offline` |
 | Neue IP der Bar (DHCP): `_abort_if_unique_id_configured(updates=…)` lädt einen geladenen Eintrag bei geänderten Daten neu (`reload_on_update=True`); erst dadurch bekommen Client und `host_ips` die neue IP (eingerichtet mit Hostname: Nachschlagen beim NOTIFY von unbekannter IP, höchstens einmal je Minute, Fehlschlag behält die bekannten IPs; ohne HA) | `config_flow.py` `async_step_zeroconf`, `__init__.py` `_async_refresh_host_ips` | `test_events.py::test_notify_after_zeroconf_ip_change`, `::test_notify_after_dns_change`, `::test_failed_lookup_keeps_known_ips` |
+| `media_player.play_media` übergibt `announce` als Keyword (`ATTR_MEDIA_ANNOUNCE`), Titel in `extra` (`ATTR_MEDIA_EXTRA`); `tts.speak` ruft `play_media` mit `announce: True`, `blocking=True` und einer `media-source://tts/…`-ID; der Dienst verlangt nur `PLAY_MEDIA` | `media_player.py` `async_play_media` | `test_announce.py::test_announce_restores_source_volume_and_mute` (über den echten Dienst), `::test_play_url`; der Weg über `tts.speak` selbst ist **ungetestet** |
+| `media_source.is_media_source_id` / `async_resolve_media(hass, id, entity_id)` liefert `PlayMedia` mit `url` (oft relativ) und `mime_type`; `async_browse_media(hass, id, content_filter=…)` mit `BrowseMedia.media_content_type` als MIME-Typ; `manifest.json` `after_dependencies: ["media_source"]` | `media_player.py` `async_play_media`, `async_browse_media` | teilweise: `test_announce.py::test_announce_media_source`, `::test_browse_media_audio_only` (Auflösen und Browsen gemockt, nur Aufruf und Filter geprüft) |
+| `async_process_play_media_url(hass, url)` macht relative URLs mit der internen URL absolut und signiert Pfade mit Anmeldung (`authSig`); `/api/tts_proxy/…` bleibt unsigniert (`PATHS_WITHOUT_AUTH`) | `media_player.py` `async_play_media` | `test_announce.py::test_announce_media_source` (signierter `/media/local/…`-Pfad); der unsignierte TTS-Pfad ist **ungetestet** |
+| `MediaPlayerEntityFeature.MEDIA_ANNOUNCE` meldet, dass die Entität `announce` selbst behandelt (Rückkehr zur vorherigen Quelle) | `media_player.py` `_attr_supported_features` | indirekt: `test_announce.py` (Ansage über den Dienst) |
+| Options-Flow über `async_get_options_flow` + `OptionsFlow` ohne eigenes `__init__` (`self.config_entry` setzt HA); `NumberSelector` liefert eine Zahl (float) | `config_flow.py` `JBLBarOptionsFlow` | `test_announce.py::test_options_flow` |
+| `ConfigEntry.async_create_background_task` für die Rückkehr nach einer Ansage (HA bricht den Task beim Entladen ab, das `finally` gibt die Sperre frei). Folge: Neustart, Neuladen oder Entladen während einer Ansage lässt die Bar auf der Ansage stehen (keine Rückkehr, nichts gespeichert) | `coordinator.py` `async_announce` | teilweise: `test_announce.py` (Rückkehr läuft); Abbruch beim Entladen **ungetestet** |
 | `manifest.json` `dependencies: ["http"]`: `hass.http` ist beim Einrichten gesetzt | `__init__.py` `async_setup` | indirekt über alle Tests mit `setup` |
 
 ## Fremde Integrationen
 
 - Keine: das Repo liest keine Entitäten oder Attribute anderer Integrationen. Es nutzt nur den HA-Kern
-  (`http`, `zeroconf`, Device-/Entity-Registry, `helpers.network`).
+  (`http`, `zeroconf`, `media_source`, Device-/Entity-Registry, `helpers.network`).
 
 ## Prüfbefehl
 

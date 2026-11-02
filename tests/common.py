@@ -67,6 +67,9 @@ class FakeBar:
             {"capicity": 96, "channel": "right", "charging": True, "docked": False, "status": "offline"},
         ]
         self.calls: list[tuple[str, Any]] = []
+        # Last SOAP body per action, and actions that answer with HTTP 500
+        self.soap_bodies: dict[str, str] = {}
+        self.failing_soap: set[str] = set()
         self.state: dict[str, Any] = {
             "power": "0",  # 0 = an
             "vol": 48,
@@ -106,6 +109,14 @@ class FakeBar:
             return AiohttpClientMockResponse(method, url, exc=ClientConnectionError("offline"))
         action = re.search(r"<u:(\w+) ", data).group(1)
         self.calls.append(("soap", action))
+        self.soap_bodies[action] = data
+        if action in self.failing_soap:
+            return AiohttpClientMockResponse(method, url, status=500, text="")
+        if action == "SetAVTransportURI":
+            # Like the bar: network playback is no longer one of the selectable inputs
+            self.state["source"] = self.state["selected"] = "WIFI"
+        if action == "Play":
+            self.state["transport"] = "PLAYING"
         if action == "SetVolume":
             self.state["vol"] = int(re.search(r"<DesiredVolume>(\d+)<", data).group(1))
         if action == "SetMute":

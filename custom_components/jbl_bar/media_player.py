@@ -1,18 +1,27 @@
-"""Die Bar als Mediaplayer: an/aus, Lautstärke, Stumm, Quelle, Wiedergabe mit Titel und Cover."""
+"""Die Bar als Mediaplayer: an/aus, Lautstärke, Stumm, Quelle, Wiedergabe mit Titel und Cover, Ansagen."""
 
 from __future__ import annotations
 
+import mimetypes
+from typing import Any
+
+from homeassistant.components import media_source
 from homeassistant.components.media_player import (
+    ATTR_MEDIA_ANNOUNCE,
+    ATTR_MEDIA_EXTRA,
+    BrowseMedia,
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
     MediaPlayerState,
+    MediaType,
+    async_process_play_media_url,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import slugify
 
-from .const import SOURCES
+from .const import CONF_ANNOUNCE_VOLUME, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import JBLBarEntity
 
@@ -42,6 +51,9 @@ class JBLBarMediaPlayer(JBLBarEntity, MediaPlayerEntity):
         | MediaPlayerEntityFeature.PAUSE
         | MediaPlayerEntityFeature.NEXT_TRACK
         | MediaPlayerEntityFeature.PREVIOUS_TRACK
+        | MediaPlayerEntityFeature.PLAY_MEDIA
+        | MediaPlayerEntityFeature.BROWSE_MEDIA
+        | MediaPlayerEntityFeature.MEDIA_ANNOUNCE
     )
 
     def __init__(self, coordinator: JBLBarCoordinator) -> None:
@@ -129,3 +141,29 @@ class JBLBarMediaPlayer(JBLBarEntity, MediaPlayerEntity):
 
     async def async_media_previous_track(self) -> None:
         await self._run(self.coordinator.async_press("prev"))
+
+    async def async_play_media(self, media_type: MediaType | str, media_id: str, **kwargs: Any) -> None:
+        """Play a URL or a media source item (e.g. TTS); with announce, the previous state comes back afterwards."""
+        mime = media_type if "/" in str(media_type) else None
+        if media_source.is_media_source_id(media_id):
+            item = await media_source.async_resolve_media(self.hass, media_id, self.entity_id)
+            media_id, mime = item.url, item.mime_type
+        # Relative URLs (media source, TTS) become absolute and signed URLs of this Home Assistant
+        url = async_process_play_media_url(self.hass, media_id)
+        mime = mime or mimetypes.guess_type(url.split("?", 1)[0])[0] or "audio/mpeg"
+        title = str((kwargs.get(ATTR_MEDIA_EXTRA) or {}).get("title") or "Home Assistant")
+        if kwargs.get(ATTR_MEDIA_ANNOUNCE):
+            volume = int(self.coordinator.config_entry.options.get(CONF_ANNOUNCE_VOLUME, 0)) or None
+            await self._run(self.coordinator.async_announce(url, mime, title, volume))
+        else:
+            await self._run(self.coordinator.async_play_url(url, mime, title))
+
+    async def async_browse_media(
+        self, media_content_type: MediaType | str | None = None, media_content_id: str | None = None
+    ) -> BrowseMedia:
+        """Media sources, audio only."""
+        return await media_source.async_browse_media(
+            self.hass,
+            media_content_id,
+            content_filter=lambda item: item.media_content_type.startswith("audio/"),
+        )

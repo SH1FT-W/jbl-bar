@@ -5,6 +5,8 @@ Die Bar spricht zwei Wege:
   der JBL-One-App (`certs/`). Antworten sind JSON mit `error_code` ("0" = ok) oder der Text `unknown command`.
 - UPnP (Port 59152): AVTransport `GetInfoEx` (Titel, Cover), RenderingControl `SetVolume`/`SetMute` und
   GENA-Events auf Port 49152 (`HarmanBarState` mit dem Audioformat vom Fernseher).
+  The bar is a DLNA media renderer (DMR-1.50, `description.xml`): AVTransport also offers `SetAVTransportURI` + `Play`,
+  ConnectionManager lists http-get sinks for MP3, AAC, FLAC, WAV and others.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from pathlib import Path
 import ssl
 from typing import Any
 from xml.etree import ElementTree as ET
+from xml.sax.saxutils import escape
 
 import aiohttp
 
@@ -45,6 +48,15 @@ DIDL_NS = {
     "dc": "http://purl.org/dc/elements/1.1/",
     "upnp": "urn:schemas-upnp-org:metadata-1-0/upnp/",
 }
+
+
+# Minimal DIDL-Lite for SetAVTransportURI: title, audio class and the MIME type of the resource.
+DIDL_ITEM = (
+    '<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" '
+    'xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/"><item id="0" parentID="-1" restricted="1">'
+    "<dc:title>{title}</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class>"
+    '<res protocolInfo="http-get:*:{mime}:*">{url}</res></item></DIDL-Lite>'
+)
 
 
 class JBLBarError(Exception):
@@ -257,6 +269,16 @@ class JBLBarClient:
             return parse_info_ex(text)
         except ET.ParseError as err:
             raise JBLBarCommandError("GetInfoEx: kein XML") from err
+
+    async def play_url(self, url: str, mime: str, title: str) -> None:
+        """Play an http(s) URL on the bar: AVTransport `SetAVTransportURI`, then `Play`."""
+        didl = DIDL_ITEM.format(title=escape(title), mime=escape(mime), url=escape(url))
+        await self.soap(
+            "AVTransport",
+            "SetAVTransportURI",
+            f"<CurrentURI>{escape(url)}</CurrentURI><CurrentURIMetaData>{escape(didl)}</CurrentURIMetaData>",
+        )
+        await self.soap("AVTransport", "Play", "<Speed>1</Speed>")
 
     async def set_volume(self, percent: int) -> None:
         """Lautstärke 0–100 (die Bar rundet auf ihre 3-%-Stufen)."""

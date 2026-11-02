@@ -1,6 +1,7 @@
 {
   "domain": "jbl_bar",
   "name": "JBL Bar",
+  "after_dependencies": ["media_source"],
   "codeowners": ["@SH1FT-W"],
   "config_flow": true,
   "dependencies": ["http"],

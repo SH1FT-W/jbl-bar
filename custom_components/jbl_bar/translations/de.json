@@ -22,6 +22,16 @@
       "wrong_device": "Unter dieser Adresse antwortet eine andere Soundbar."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ansagen",
+        "description": "Ansagen (zum Beispiel mit tts.speak) unterbrechen, was die Bar gerade spielt. Danach kommen Quelle (TV, HDMI oder Bluetooth), Lautstärke, Stummschaltung und Standby zurück; andere Streams laufen nicht weiter.",
+        "data": { "announce_volume": "Lautstärke für Ansagen" },
+        "data_description": { "announce_volume": "Lautstärke für Ansagen. 0 behält die aktuelle Lautstärke." }
+      }
+    }
+  },
   "entity": {
     "binary_sensor": {
       "atmos_active": { "name": "Dolby Atmos" },
