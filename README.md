@@ -10,7 +10,7 @@ Fast, complete, no cloud.</p>
 
 [![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSH1FT-W%2Fjbl-bar%2Fmain%2Fcustom_components%2Fjbl_bar%2Fmanifest.json&query=%24.version&label=version&style=flat-square&color=FF6A00&labelColor=111111)](https://github.com/SH1FT-W/jbl-bar/releases/latest)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.9%2B-FF6A00?style=flat-square&labelColor=111111&logo=homeassistant&logoColor=white)](https://www.home-assistant.io)
-[![HACS](https://img.shields.io/badge/HACS-custom%20repository-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
+[![HACS](https://img.shields.io/badge/HACS-default-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
 [![IoT class](https://img.shields.io/badge/iot-local%20polling-FF6A00?style=flat-square&labelColor=111111)](https://developers.home-assistant.io/docs/creating_integration_manifest/#iot-class)
 [![Quality scale](https://img.shields.io/badge/quality%20scale-platinum%20(self--assessed)-FF6A00?style=flat-square&labelColor=111111)](custom_components/jbl_bar/quality_scale.yaml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-FF6A00?style=flat-square&labelColor=111111)](LICENSE)
@@ -96,10 +96,13 @@ button.jbl_bar_1000_rear
 
 ## Installation
 
-### HACS (custom repository)
+### HACS
 
-1. In HACS, open the three dots menu, choose **Custom repositories** and add `https://github.com/SH1FT-W/jbl-bar` with the type **Integration**.
-2. Search for **JBL Bar**, download it and restart Home Assistant.
+JBL Bar is in the HACS default store.
+
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
+
+1. In HACS, search for **JBL Bar** (or click **Open in HACS** above), download it and restart Home Assistant.
 
 ### Manual
 
