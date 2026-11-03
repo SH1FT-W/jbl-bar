@@ -269,7 +269,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
     <h1 class="reveal d1"><span class="en">Your soundbar,<br><em>fully local.</em></span><span class="de">Deine Soundbar,<br><em>ganz lokal.</em></span></h1>
     <p class="lead reveal d2"><span class="en">JBL Bar talks to your soundbar the way the JBL One app does: <strong>a real media player, the true power state, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Fast, complete, no cloud.</span><span class="de">JBL Bar spricht mit deiner Soundbar wie die JBL-One-App: <strong>ein echter Mediaplayer, der echte Ein/Aus-Zustand, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Schnell, vollständig, ohne Cloud.</span></p>
     <div class="cta reveal d3">
-      <a class="btn" href="#install"><span class="en">Install with HACS</span><span class="de">Mit HACS installieren</span></a>
+      <a class="btn" href="#install"><span class="en">Install from the Marketplace</span><span class="de">Über den Marketplace installieren</span></a>
       <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar#readme"><span class="en">Read the README</span><span class="de">Zur Anleitung</span></a>
     </div>
     <p class="meta reveal d3">
@@ -398,17 +398,17 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
     </div>
     <div class="install">
       <div class="panel reveal">
-        <h3><span class="en">With HACS</span><span class="de">Mit HACS</span></h3>
-        <p class="muted"><span class="en">JBL Bar is in the HACS default store.</span><span class="de">JBL Bar steht im Standard-Katalog von HACS.</span></p>
+        <h3><span class="en">With the Marketplace</span><span class="de">Mit dem Marketplace</span></h3>
+        <p class="muted"><span class="en">JBL Bar is in the Marketplace.</span><span class="de">JBL Bar steht im Marketplace.</span></p>
         <ol class="steps">
-          <li class="en"><b>HACS</b>, search for JBL Bar, Download.</li>
+          <li class="en"><b>Marketplace</b>, search for JBL Bar, Download.</li>
           <li class="en"><b>Restart</b> Home Assistant.</li>
           <li class="en"><b>Add the bar.</b> It shows up under Settings, Devices &amp; services, Discovered. Otherwise add the JBL Bar integration and enter its IP address.</li>
-          <li class="de"><b>HACS</b>, nach JBL Bar suchen, Herunterladen.</li>
+          <li class="de"><b>Marketplace</b>, nach JBL Bar suchen, Herunterladen.</li>
           <li class="de"><b>Home Assistant</b> neu starten.</li>
           <li class="de"><b>Füge die Bar hinzu.</b> Sie erscheint unter Einstellungen, Geräte &amp; Dienste, Entdeckt. Sonst die Integration JBL Bar hinzufügen und die IP-Adresse eingeben.</li>
         </ol>
-        <a class="btn" href="https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&amp;repository=jbl-bar&amp;category=integration"><span class="en">Open in HACS</span><span class="de">In HACS öffnen</span></a>
+        <a class="btn" href="https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&amp;repository=jbl-bar&amp;category=integration"><span class="en">Open in the Marketplace</span><span class="de">Im Marketplace öffnen</span></a>
         <p class="note"><span class="en">New IP address later? Three dots, Reconfigure.</span><span class="de">Später eine neue IP-Adresse? Drei Punkte, Neu konfigurieren.</span></p>
       </div>
       <div class="panel reveal d1">
@@ -424,17 +424,17 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
       <div class="panel full reveal" id="migrate">
         <h3><span class="en">Coming from <code>jbl_integration</code></span><span class="de">Umstieg von <code>jbl_integration</code></span></h3>
         <ol class="steps">
-          <li class="en"><b>Delete the old integration</b> and remove it in HACS. This frees its entity IDs.</li>
+          <li class="en"><b>Delete the old integration</b> and remove it in the Marketplace. This frees its entity IDs.</li>
           <li class="en"><b>Install JBL Bar</b> and restart Home Assistant.</li>
           <li class="en"><b>Add the bar.</b> All previous IDs are back; new are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.</li>
-          <li class="de"><b>Alte Integration löschen</b> und in HACS entfernen. Dadurch werden die Entity-IDs frei.</li>
+          <li class="de"><b>Alte Integration löschen</b> und im Marketplace entfernen. Dadurch werden die Entity-IDs frei.</li>
           <li class="de"><b>JBL Bar installieren</b> und Home Assistant neu starten.</li>
           <li class="de"><b>Bar hinzufügen.</b> Alle bisherigen IDs sind wieder da; neu sind Mediaplayer, Audio-Sync, Sleep-Timer, Bestätigungstöne, Quelle und die Atmos-Sensoren.</li>
         </ol>
         <p class="note"><span class="en">Only the raw values that were disabled by default (<code>play_medium</code>, <code>transport_state</code>, …) and the source and volume buttons are gone. The media player does that now.</span><span class="de">Weggefallen sind nur die standardmäßig deaktivierten Rohwerte (<code>play_medium</code>, <code>transport_state</code>, …) und die Quellen- und Lautstärke-Tasten. Das macht jetzt der Mediaplayer.</span></p>
       </div>
       <div class="panel full reveal">
-        <h3><span class="en">Without HACS</span><span class="de">Ohne HACS</span></h3>
+        <h3><span class="en">Without the Marketplace</span><span class="de">Ohne Marketplace</span></h3>
         <p class="muted"><span class="en">Download the <a href="https://github.com/SH1FT-W/jbl-bar/releases/latest">latest release</a>, copy its <code>custom_components/jbl_bar</code> folder into <code>/config/custom_components/</code>, restart Home Assistant and add the bar.</span><span class="de">Lade das <a href="https://github.com/SH1FT-W/jbl-bar/releases/latest">neueste Release</a> herunter, kopiere den Ordner <code>custom_components/jbl_bar</code> nach <code>/config/custom_components/</code>, starte Home Assistant neu und füge die Bar hinzu.</span></p>
       </div>
     </div>
@@ -480,7 +480,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
       <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">Changelog</a>
       <a href="https://github.com/SH1FT-W/jbl-bar/releases">Releases</a>
       <a href="https://github.com/SH1FT-W/jbl-bar/issues"><span class="en">Issues</span><span class="de">Fehler melden</span></a>
-      <a href="https://hacs.xyz">HACS</a>
+      <a href="https://hacs.xyz/docs/marketplace/">Marketplace</a>
       <a href="https://github.com/SH1FT-W/jbl-bar">GitHub</a>
       <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/LICENSE"><span class="en">Apache 2.0 License</span><span class="de">Apache-2.0-Lizenz</span></a>
     </nav>

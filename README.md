@@ -10,7 +10,7 @@ Fast, complete, no cloud.</p>
 
 [![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSH1FT-W%2Fjbl-bar%2Fmain%2Fcustom_components%2Fjbl_bar%2Fmanifest.json&query=%24.version&label=version&style=flat-square&color=FF6A00&labelColor=111111)](https://github.com/SH1FT-W/jbl-bar/releases/latest)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.9%2B-FF6A00?style=flat-square&labelColor=111111&logo=homeassistant&logoColor=white)](https://www.home-assistant.io)
-[![HACS](https://img.shields.io/badge/HACS-default-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
+[![Marketplace](https://img.shields.io/badge/Marketplace-default-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
 [![IoT class](https://img.shields.io/badge/iot-local%20polling-FF6A00?style=flat-square&labelColor=111111)](https://developers.home-assistant.io/docs/creating_integration_manifest/#iot-class)
 [![Quality scale](https://img.shields.io/badge/quality%20scale-platinum%20(self--assessed)-FF6A00?style=flat-square&labelColor=111111)](custom_components/jbl_bar/quality_scale.yaml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-FF6A00?style=flat-square&labelColor=111111)](LICENSE)
@@ -23,7 +23,7 @@ Fast, complete, no cloud.</p>
 
 JBL Bar controls soundbars of the **JBL Bar series** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models) over the same local interface the JBL One app uses. Every command was read from the app itself and tried out, one by one, on a **Bar 1000** (firmware 25.52, JBL One 3.0).
 
-It replaces the HACS integration `jbl_integration` and **keeps its entity IDs**, so automations, dashboards and energy sensors keep working without a single change.
+It replaces the custom integration `jbl_integration` and **keeps its entity IDs**, so automations, dashboards and energy sensors keep working without a single change.
 
 > [!NOTE]
 > JBL Bar is an independent project. It is not affiliated with, endorsed by or sponsored by Harman International, JBL or Linkplay. JBL is a trademark of Harman International Industries, Incorporated.
@@ -96,13 +96,15 @@ button.jbl_bar_1000_rear
 
 ## Installation
 
-### HACS
+### Marketplace
 
-JBL Bar is in the HACS default store.
+The Marketplace is under Settings → Marketplace. On Home Assistant before 2026.11 it is still called HACS.
 
-[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
+JBL Bar is in the Marketplace.
 
-1. In HACS, search for **JBL Bar** (or click **Open in HACS** above), download it and restart Home Assistant.
+[![Open in the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
+
+1. In the Marketplace, search for **JBL Bar** (or click **Open in the Marketplace** above), download it and restart Home Assistant.
 
 ### Manual
 
@@ -148,7 +150,7 @@ format events).
 
 ## Migration from `jbl_integration`
 
-1. Delete the old integration and remove it in HACS. This frees its entity IDs.
+1. Delete the old integration and remove it in the Marketplace. This frees its entity IDs.
 2. Install JBL Bar and restart Home Assistant.
 3. Add the bar. All previous IDs are back; new are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.
 
@@ -184,7 +186,7 @@ When you open an [issue](https://github.com/SH1FT-W/jbl-bar/issues), please atta
 ## Removal
 
 1. **Settings > Devices & services > JBL Bar > three dots > Delete** (for each bar). The event subscription unsubscribes from the bar on the way out.
-2. Delete the folder `/config/custom_components/jbl_bar` (or remove the repository in HACS) and restart Home Assistant.
+2. Delete the folder `/config/custom_components/jbl_bar` (or remove the repository in the Marketplace) and restart Home Assistant.
 
 ## How it works
 
