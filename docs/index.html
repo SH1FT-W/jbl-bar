@@ -208,6 +208,10 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 26px; }
 footer nav a { color: var(--ink-2); font-weight: 500; }
 footer .fine { flex-basis: 100%; line-height: 1.6; }
 
+.tbl.ctl td:first-child { white-space: normal; font-weight: 500; }
+.tbl.ctl th:not(:first-child), .tbl.ctl td:not(:first-child) { text-align: center; width: 140px; color: var(--accent-ink); font-weight: 600; }
+.tbl.ctl td small { display: block; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+
 @media (max-width: 960px) {
   .split, .install { grid-template-columns: 1fr; }
   .grid3 { grid-template-columns: 1fr 1fr; }
@@ -237,6 +241,12 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
   .tbl tr { border-top: 1px solid var(--line); padding: 12px 16px; }
   .tbl tr:first-child { border-top: 0; }
   .tbl td { border: 0; padding: 2px 0; }
+  .tbl.ctl { display: table; }
+  .tbl.ctl thead { display: table-header-group; }
+  .tbl.ctl tbody { display: table-row-group; }
+  .tbl.ctl tr { display: table-row; padding: 0; }
+  .tbl.ctl td, .tbl.ctl th { display: table-cell; padding: 12px 10px; border-top: 1px solid var(--line); }
+  .tbl.ctl th:not(:first-child), .tbl.ctl td:not(:first-child) { width: 72px; }
 }
 </style>
 </head>
@@ -267,13 +277,13 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
   <div class="wrap">
     <p class="eyebrow reveal"><span class="en">JBL soundbars in Home Assistant</span><span class="de">JBL-Soundbars in Home Assistant</span></p>
     <h1 class="reveal d1"><span class="en">Your soundbar,<br><em>fully local.</em></span><span class="de">Deine Soundbar,<br><em>ganz lokal.</em></span></h1>
-    <p class="lead reveal d2"><span class="en">JBL Bar talks to your soundbar the way the JBL One app does: <strong>a real media player, the true power state, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Fast, complete, no cloud.</span><span class="de">JBL Bar spricht mit deiner Soundbar wie die JBL-One-App: <strong>ein echter Mediaplayer, der echte Ein/Aus-Zustand, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Schnell, vollständig, ohne Cloud.</span></p>
+    <p class="lead reveal d2"><span class="en">Your JBL soundbar in Home Assistant, the way the JBL One app sees it: <strong>power, volume, source, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Straight over your network, without cloud.</span><span class="de">Deine JBL-Soundbar in Home Assistant, so wie die JBL-One-App sie sieht: <strong>Ein/Aus, Lautstärke, Quelle, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Direkt über dein Netz, ohne Cloud.</span></p>
     <div class="cta reveal d3">
       <a class="btn" href="#install"><span class="en">Install from the Marketplace</span><span class="de">Über den Marketplace installieren</span></a>
       <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar#readme"><span class="en">Read the README</span><span class="de">Zur Anleitung</span></a>
     </div>
     <p class="meta reveal d3">
-      <span class="pill"><i></i><span id="jbl-version">Version 26.10.3</span></span>
+      <span class="pill"><i></i><span id="jbl-version">Version 26.11.1</span></span>
       <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
     </p>
 
@@ -289,35 +299,42 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
 <section id="new" class="tint">
   <div class="wrap">
     <div class="head center reveal">
-      <p class="eyebrow"><span class="en">Just arrived</span><span class="de">Gerade neu</span></p>
-      <h2><span class="en">Sturdier, quieter,<br>and counted by the calendar.</span><span class="de">Robuster, leiser,<br>und nach Kalender gezählt.</span></h2>
-      <p class="lead"><span class="en">The latest releases make the integration tougher against odd firmware answers and lighter on the bar while it sleeps.</span><span class="de">Die letzten Releases machen die Integration robuster gegen seltsame Antworten der Firmware und schonen die Bar im Standby.</span></p>
+      <p class="eyebrow"><span class="en">New in 26.11</span><span class="de">Neu in 26.11</span></p>
+      <h2><span class="en">The bar speaks.<br>Then it goes back.</span><span class="de">Die Bar spricht.<br>Dann geht sie zurück.</span></h2>
     </div>
     <div class="bento">
-      <div class="b s6 reveal"><span class="tag">26.10.2</span><h3><span class="en">Quiet in standby</span><span class="de">Ruhig im Standby</span></h3><p><span class="en">While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away.</span><span class="de">Solange die Bar schläft, fragt Home Assistant nur, ob sie an ist. Beim Einschalten werden Wiedergabe und Einstellungen sofort gelesen.</span></p></div>
-      <div class="b s6 reveal d1"><span class="tag">26.10.2</span><h3><span class="en">Odd lists, no error</span><span class="de">Seltsame Listen, kein Fehler</span></h3><p><span class="en">Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash.</span><span class="de">Unbekannte Einträge in den EQ-Preset- oder Rear-Listen der Bar werden übersprungen, gültige bleiben. Ein fehlendes EQ-Band gibt eine klare Meldung statt eines Absturzes.</span></p></div>
-      <div class="b s4 reveal"><span class="tag">26.10.2</span><h3><span class="en">Host names work</span><span class="de">Hostnamen gehen</span></h3><p><span class="en">Set up with a host name instead of an IP? The audio format events now get through too.</span><span class="de">Mit Hostnamen statt IP eingerichtet? Die Audioformat-Ereignisse kommen jetzt trotzdem an.</span></p></div>
-      <div class="b s4 reveal d1"><span class="tag">1.0.1</span><h3><span class="en">Diagnostics</span><span class="de">Diagnose</span></h3><p><span class="en">One download for bug reports, without IP address, MAC address or serial number.</span><span class="de">Ein Download für Fehlerberichte, ohne IP-, MAC-Adresse und Seriennummer.</span></p></div>
-      <div class="b s4 reveal d2"><span class="tag">26.10.1</span><h3><span class="en">Calendar versions</span><span class="de">Kalender-Versionen</span></h3><p><span class="en">Releases count year.month.number: <code>26.10.2</code> is the second release of October 2026.</span><span class="de">Releases zählen Jahr.Monat.Nummer: <code>26.10.2</code> ist das zweite Release im Oktober 2026.</span></p></div>
+      <div class="b s4 reveal"><span class="tag">26.11.1</span><h3><span class="en">Announcements</span><span class="de">Ansagen</span></h3><p><span class="en"><code>tts.speak</code> plays on the bar. Afterwards source, volume, mute and standby come back. Optional own announcement volume.</span><span class="de"><code>tts.speak</code> spielt auf der Bar. Danach kommen Quelle, Lautstärke, Stumm und Standby zurück. Auf Wunsch mit eigener Ansage-Lautstärke.</span></p></div>
+      <div class="b s4 reveal d1"><span class="tag">26.11.1</span><h3><span class="en">New IP, events stay</span><span class="de">Neue IP, Ereignisse bleiben</span></h3><p><span class="en">A new address from the router no longer stops the audio format events, and the subscription is renewed in time.</span><span class="de">Eine neue Adresse vom Router stoppt die Audioformat-Ereignisse nicht mehr, und das Abo wird rechtzeitig erneuert.</span></p></div>
+      <div class="b s4 reveal d2"><span class="tag">26.10.3</span><h3><span class="en">Quiet in standby</span><span class="de">Ruhig im Standby</span></h3><p><span class="en">While the bar sleeps, Home Assistant only asks whether it is on. Settings and rears are still read on startup.</span><span class="de">Solange die Bar schläft, fragt Home Assistant nur, ob sie an ist. Einstellungen und Rears werden beim Start trotzdem gelesen.</span></p></div>
     </div>
-    <p class="cap reveal"><span class="en">Everything that changed, release by release: the <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">changelog</a>.</span><span class="de">Alles, was sich geändert hat, Release für Release: das <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">Changelog</a>.</span></p>
+    <p class="cap reveal"><span class="en">Every change, release by release: the <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">changelog</a>.</span><span class="de">Jede Änderung, Release für Release: das <a href="https://github.com/SH1FT-W/jbl-bar/blob/main/CHANGELOG.md">Changelog</a>.</span></p>
   </div>
 </section>
 
 <section id="features">
   <div class="wrap">
     <div class="head center reveal">
-      <p class="eyebrow"><span class="en">What it does</span><span class="de">Was sie kann</span></p>
+      <p class="eyebrow"><span class="en">What you can control</span><span class="de">Was du steuern kannst</span></p>
       <h2><span class="en">Everything the app can.<br>Right in Home Assistant.</span><span class="de">Alles, was die App kann.<br>Direkt in Home Assistant.</span></h2>
-      <p class="lead"><span class="en">Every command was read from the JBL One app and tried out on a Bar 1000, one by one.</span><span class="de">Jeder Befehl stammt aus der JBL-One-App und ist an einer Bar 1000 Stück für Stück ausprobiert.</span></p>
+      <p class="lead"><span class="en">Every command was read from the JBL One app and tried out on a Bar 1000, one by one. Features a model does not know are not created.</span><span class="de">Jeder Befehl stammt aus der JBL-One-App und ist an einer Bar 1000 Stück für Stück ausprobiert. Was ein Modell nicht kennt, wird gar nicht erst angelegt.</span></p>
     </div>
-    <div class="grid3">
-      <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><h3><span class="en">A real media player</span><span class="de">Ein echter Mediaplayer</span></h3><p><span class="en">On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, skip, title, artist and cover art while streaming. Announcements and text to speech.</span><span class="de">An/aus, Lautstärke, Stumm, Quelle (TV, HDMI, Bluetooth), Play/Pause, Vor/Zurück, Titel, Interpret und Cover beim Streamen. Ansagen und Sprachausgabe.</span></p></div>
-      <div class="tile reveal d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg></div><h3><span class="en">True power state</span><span class="de">Echter Ein/Aus-Zustand</span></h3><p><span class="en">Read straight from the bar instead of guessed from what is playing.</span><span class="de">Direkt von der Bar gelesen statt aus dem Wiedergabemedium geraten.</span></p></div>
-      <div class="tile reveal d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2l3-8 4 16 3-10 2 4h6"/></svg></div><h3><span class="en">Dolby Atmos, live</span><span class="de">Dolby Atmos, live</span></h3><p><span class="en">See whether Atmos is coming in and in which format, pushed instantly by a UPnP event.</span><span class="de">Sieht, ob gerade Atmos ankommt und in welchem Format, per UPnP-Ereignis sofort.</span></p></div>
-      <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></div><h3><span class="en">Sound switches</span><span class="de">Klang-Schalter</span></h3><p><span class="en">Night mode, Smart mode, PureVoice and feedback tones, each one a switch.</span><span class="de">Nachtmodus, Smart Mode, PureVoice und Bestätigungstöne, jeweils als Schalter.</span></p></div>
-      <div class="tile reveal d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div><h3><span class="en">Audio sync and sleep timer</span><span class="de">Audio-Sync und Sleep-Timer</span></h3><p><span class="en">Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours.</span><span class="de">Ton bis 250 ms verzögern, Ausschalten nach 15 Minuten bis 2 Stunden.</span></p></div>
-      <div class="tile reveal d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="5" height="12" rx="2"/><rect x="16" y="6" width="5" height="12" rx="2"/><path d="M10 12h4"/></svg></div><h3><span class="en">Rear speakers</span><span class="de">Rear-Speaker</span></h3><p><span class="en">Battery, charging, docked and connected, each rear as its own device under the bar.</span><span class="de">Akku, Laden, Angedockt und Verbunden, jeder Rear als eigenes Gerät unter der Bar.</span></p></div>
+    <div class="reveal">
+      <table class="tbl ctl">
+        <thead><tr><th></th><th><span class="en">See</span><span class="de">Sehen</span></th><th><span class="en">Change</span><span class="de">Ändern</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="en">Power, read from the bar instead of guessed</span><span class="de">Ein/Aus, von der Bar gelesen statt geraten</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">Volume, mute, source (TV, HDMI, Bluetooth)</span><span class="de">Lautstärke, Stumm, Quelle (TV, HDMI, Bluetooth)</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">Play, pause, skip, title, artist and cover while streaming</span><span class="de">Play, Pause, Vor/Zurück, Titel, Interpret und Cover beim Streamen</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">EQ preset and all 7 bands</span><span class="de">EQ-Preset und alle 7 Bänder</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">Night mode, Smart mode, PureVoice, feedback tones</span><span class="de">Nachtmodus, Smart Mode, PureVoice, Bestätigungstöne</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">Audio sync (up to 250 ms)</span><span class="de">Audio-Sync (bis 250 ms)</span></td><td>✓</td><td>✓</td></tr>
+          <tr><td><span class="en">Sleep timer (15 minutes to 2 hours)</span><span class="de">Sleep-Timer (15 Minuten bis 2 Stunden)</span></td><td>✓</td><td><small><span class="en">only while on</span><span class="de">nur im Betrieb</span></small></td></tr>
+          <tr><td><span class="en">Dolby Atmos and audio format, pushed instantly</span><span class="de">Dolby Atmos und Audioformat, sofort per Ereignis</span></td><td>✓</td><td></td></tr>
+          <tr><td><span class="en">Atmos level</span><span class="de">Atmos-Stufe</span></td><td>✓</td><td><small><span class="en">cycle by button</span><span class="de">per Taste durchschalten</span></small></td></tr>
+          <tr><td><span class="en">Rear speakers: battery, charging, docked, connected</span><span class="de">Rear-Speaker: Akku, Laden, Angedockt, Verbunden</span></td><td>✓</td><td></td></tr>
+          <tr><td><span class="en">Announcements and text to speech</span><span class="de">Ansagen und Sprachausgabe</span></td><td></td><td>✓</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -331,7 +348,6 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
         <li><b><span class="en">Presets</span><span class="de">Presets</span></b><span><span class="en">JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own, as a select.</span><span class="de">JBL SIGNATURE, VOCAL, ENERGETIC, CHILL und das eigene, als Auswahl.</span></span></li>
         <li><b><span class="en">Every band</span><span class="de">Jedes Band</span></b><span><span class="en">125 Hz to 8 kHz from −6 to +6 dB (125 Hz down to −9 dB). Changing a band creates your own preset.</span><span class="de">125 Hz bis 8 kHz von −6 bis +6 dB (125 Hz bis −9 dB). Ein geändertes Band legt das eigene Preset an.</span></span></li>
         <li><b><span class="en">Remote buttons</span><span class="de">Fernbedienungstasten</span></b><span><span class="en">Atmos level, bass, Moment, room calibration and rear speakers as buttons.</span><span class="de">Atmos-Stufe, Bass, Moment, Raumkalibrierung und Rear-Speaker als Tasten.</span></span></li>
-        <li><b><span class="en">Adapts to your model</span><span class="de">Passt sich dem Modell an</span></b><span><span class="en">Features a bar does not know are detected and never created.</span><span class="de">Funktionen, die eine Bar nicht kennt, werden erkannt und gar nicht erst angelegt.</span></span></li>
       </ul>
     </div>
     <div class="eq reveal d1" role="img" aria-label="Illustration of a seven band equalizer with presets, made-up values.">
@@ -361,7 +377,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
           <tr><td><span class="en">Media player</span><span class="de">Mediaplayer</span></td><td><code>media_player.jbl_bar_1000</code></td><td><span class="en">Main control</span><span class="de">Hauptsteuerung</span></td></tr>
           <tr><td><span class="en">Switch</span><span class="de">Schalter</span></td><td><code>power</code> <code>nightmode</code> <code>smart_mode</code> <code>pure_voice</code> <code>feedback_tone</code></td><td></td></tr>
           <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>volume</code></td><td><span class="en">0 to 100 %, 3 % steps like on the bar</span><span class="de">0 bis 100 %, 3-%-Stufen wie an der Bar</span></td></tr>
-          <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>125hz</code> … <code>8000hz</code></td><td><span class="en">−6 to +6 dB, changing creates your own preset</span><span class="de">−6 bis +6 dB, Ändern legt das eigene Preset an</span></td></tr>
+          <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>125hz</code> … <code>8000hz</code></td><td><span class="en">EQ bands</span><span class="de">EQ-Bänder</span></td></tr>
           <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>audio_sync</code></td><td>0 … 250 ms</td></tr>
           <tr><td><span class="en">Select</span><span class="de">Auswahl</span></td><td><code>eq_preset</code> <code>sleep_timer</code></td><td><span class="en">Remaining time as an attribute</span><span class="de">Restzeit als Attribut</span></td></tr>
           <tr><td>Sensor</td><td><code>source</code> <code>audio_format</code> <code>atmos_level</code></td><td></td></tr>
@@ -417,7 +433,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
         <ul class="req">
           <li><span class="name">Home Assistant 2026.9+</span><span class="tg"><span class="en">Required</span><span class="de">Nötig</span></span></li>
           <li><span class="name"><span class="en">A JBL Bar with JBL One in the same network</span><span class="de">Eine JBL Bar mit JBL One im selben Netz</span></span><span class="tg"><span class="en">Required</span><span class="de">Nötig</span></span></li>
-          <li><span class="name"><span class="en">Internal URL as an IP address, for the audio format</span><span class="de">Interne URL als IP-Adresse, für das Audioformat</span></span><span class="tg opt"><span class="en">Recommended</span><span class="de">Empfohlen</span></span></li>
+          <li><span class="name"><span class="en">Internal URL as an IP address, for audio format and announcements</span><span class="de">Interne URL als IP-Adresse, für Audioformat und Ansagen</span></span><span class="tg opt"><span class="en">Recommended</span><span class="de">Empfohlen</span></span></li>
         </ul>
         <p class="note"><span class="en">Tested on a Bar 1000 (firmware 25.52). Bar 300, 500, 700, 800, 1300 and the MK2 models speak the same interface.</span><span class="de">Getestet an einer Bar 1000 (Firmware 25.52). Bar 300, 500, 700, 800, 1300 und die MK2-Modelle sprechen dieselbe Schnittstelle.</span></p>
       </div>
@@ -448,13 +464,12 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
       <h2><span class="en">What the firmware<br>does its own way.</span><span class="de">Was die Firmware<br>auf ihre Art macht.</span></h2>
     </div>
     <div class="faq reveal">
-      <details open><summary><span class="en">Why does the sleep timer not start?</span><span class="de">Warum startet der Sleep-Timer nicht?</span></summary><p><span class="en">The bar only accepts it while it is on. In standby it ignores the timer.</span><span class="de">Die Bar nimmt ihn nur im Betrieb an. Im Standby ignoriert sie den Timer.</span></p></details>
-      <details><summary><span class="en">Where is the rear volume?</span><span class="de">Wo ist die Rear-Lautstärke?</span></summary><p><span class="en">It does not change while the rear speakers are docked to the bar, so there is no entity for it (yet).</span><span class="de">Sie ändert sich nicht, solange die Rear-Speaker an der Bar angedockt sind, deshalb gibt es dafür (noch) keine Entität.</span></p></details>
-      <details><summary><span class="en">Can I set the Atmos level directly?</span><span class="de">Kann ich die Atmos-Stufe direkt setzen?</span></summary><p><span class="en">No, the firmware only cycles it with the button. JBL Bar offers that button.</span><span class="de">Nein, die Firmware schaltet sie nur per Taste durch. JBL Bar bietet diese Taste an.</span></p></details>
+      <details open><summary><span class="en">Where is the rear volume?</span><span class="de">Wo ist die Rear-Lautstärke?</span></summary><p><span class="en">It does not change while the rear speakers are docked to the bar, so there is no entity for it (yet).</span><span class="de">Sie ändert sich nicht, solange die Rear-Speaker an der Bar angedockt sind, deshalb gibt es dafür (noch) keine Entität.</span></p></details>
       <details><summary><span class="en">Why did the bar wake up on HDMI?</span><span class="de">Warum wacht die Bar bei HDMI auf?</span></summary><p><span class="en">Choosing the HDMI source wakes the bar even when nothing is connected to the HDMI input.</span><span class="de">Die Quelle HDMI weckt die Bar auch dann, wenn am HDMI-Eingang nichts hängt.</span></p></details>
       <details><summary><span class="en">Why does a change from the remote take a moment?</span><span class="de">Warum dauert eine Änderung per Fernbedienung einen Moment?</span></summary><p><span class="en">The state is polled every 10 seconds. Only the audio format arrives instantly as an event.</span><span class="de">Der Zustand wird alle 10 Sekunden abgefragt. Nur das Audioformat kommt sofort per Ereignis.</span></p></details>
+      <details><summary><span class="en">What does an announcement interrupt?</span><span class="de">Was unterbricht eine Ansage?</span></summary><p><span class="en">Everything, including the TV sound. Changes made during an announcement are overwritten by the restore, and a restart or reload during one restores nothing.</span><span class="de">Alles, auch den Fernsehton. Änderungen während einer Ansage überschreibt die Wiederherstellung, und ein Neustart oder Neuladen mittendrin stellt nichts wieder her.</span></p></details>
       <details><summary><span class="en">All entities are unavailable. What now?</span><span class="de">Alle Entitäten sind nicht verfügbar. Was nun?</span></summary><p><span class="en">The bar does not answer at its IP address. Check in your router whether it got a new one and enter it with Reconfigure. A single dropout, for example while going to standby, is bridged.</span><span class="de">Die Bar antwortet nicht unter ihrer IP-Adresse. Im Router nachsehen, ob sie eine neue bekommen hat, und über Neu konfigurieren eintragen. Ein einzelner Aussetzer, etwa beim Wechsel in den Standby, wird überbrückt.</span></p></details>
-      <details><summary><span class="en">The audio format stays empty.</span><span class="de">Das Audioformat bleibt leer.</span></summary><p><span class="en">The bar cannot reach Home Assistant. Check the internal URL in the network settings (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.</span><span class="de">Die Bar erreicht Home Assistant nicht. Interne URL in den Netzwerk-Einstellungen prüfen (IP-Adresse, kein Hostname) und ob eine Firewall Port 8123 aus dem Netz der Bar sperrt.</span></p></details>
+      <details><summary><span class="en">The audio format stays empty, or announcements are silent.</span><span class="de">Das Audioformat bleibt leer oder Ansagen sind stumm.</span></summary><p><span class="en">The bar cannot reach Home Assistant. Check the internal URL in the network settings (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.</span><span class="de">Die Bar erreicht Home Assistant nicht. Interne URL in den Netzwerk-Einstellungen prüfen (IP-Adresse, kein Hostname) und ob eine Firewall Port 8123 aus dem Netz der Bar sperrt.</span></p></details>
       <details><summary><span class="en">How do I report a bug?</span><span class="de">Wie melde ich einen Fehler?</span></summary><p><span class="en">Download the diagnostics (Settings, Devices &amp; services, JBL Bar, three dots) and attach them to a <a href="https://github.com/SH1FT-W/jbl-bar/issues">GitHub issue</a>. IP address, MAC address and serial number are left out.</span><span class="de">Diagnose herunterladen (Einstellungen, Geräte &amp; Dienste, JBL Bar, drei Punkte) und an ein <a href="https://github.com/SH1FT-W/jbl-bar/issues">GitHub-Issue</a> hängen. IP-, MAC-Adresse und Seriennummer sind nicht enthalten.</span></p></details>
     </div>
   </div>

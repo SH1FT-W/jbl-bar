@@ -5,125 +5,110 @@
   <img src="docs/images/readme-title-light.webp" alt="JBL Bar: Your soundbar, fully local. The feature overview of the project page in a window." />
 </picture>
 
-<p>Local control for JBL soundbars with JBL One in Home Assistant.<br/>
-Fast, complete, no cloud.</p>
-
 [![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSH1FT-W%2Fjbl-bar%2Fmain%2Fcustom_components%2Fjbl_bar%2Fmanifest.json&query=%24.version&label=version&style=flat-square&color=FF6A00&labelColor=111111)](https://github.com/SH1FT-W/jbl-bar/releases/latest)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.9%2B-FF6A00?style=flat-square&labelColor=111111&logo=homeassistant&logoColor=white)](https://www.home-assistant.io)
 [![Marketplace](https://img.shields.io/badge/Marketplace-default-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
-[![IoT class](https://img.shields.io/badge/iot-local%20polling-FF6A00?style=flat-square&labelColor=111111)](https://developers.home-assistant.io/docs/creating_integration_manifest/#iot-class)
-[![Quality scale](https://img.shields.io/badge/quality%20scale-platinum%20(self--assessed)-FF6A00?style=flat-square&labelColor=111111)](custom_components/jbl_bar/quality_scale.yaml)
-[![License](https://img.shields.io/badge/license-Apache%202.0-FF6A00?style=flat-square&labelColor=111111)](LICENSE)
 
-<p><a href="https://sh1ft-w.github.io/jbl-bar"><b>Website</b></a> &nbsp;·&nbsp; <a href="#new">New</a> &nbsp;·&nbsp; <a href="#features">Features</a> &nbsp;·&nbsp; <a href="#entities">Entities</a> &nbsp;·&nbsp; <a href="#installation">Install</a> &nbsp;·&nbsp; <a href="#migration-from-jbl_integration">Migration</a> &nbsp;·&nbsp; <a href="#troubleshooting">Troubleshooting</a> &nbsp;·&nbsp; <a href="CHANGELOG.md">Changelog</a></p>
+<a href="https://sh1ft-w.github.io/jbl-bar"><b>Website</b></a>&emsp;<a href="#install">Install</a>&emsp;<a href="#set-up">Set up</a>&emsp;<a href="#entities">Entities</a>&emsp;<a href="CHANGELOG.md">Changelog</a>
 
 </div>
 
 <br/>
 
-JBL Bar controls soundbars of the **JBL Bar series** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models) over the same local interface the JBL One app uses. Every command was read from the app itself and tried out, one by one, on a **Bar 1000** (firmware 25.52, JBL One 3.0).
+Your JBL soundbar in Home Assistant, the way the JBL One app sees it: **power, volume, source, EQ, sound switches, rear speakers and the live Dolby Atmos format.** Straight over your network, without cloud.
 
-It replaces the custom integration `jbl_integration` and **keeps its entity IDs**, so automations, dashboards and energy sensors keep working without a single change.
+Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models). Every command was read from the app and tried out on a **Bar 1000** (firmware 25.52), the only model tested so far. It replaces `jbl_integration` and **keeps its entity IDs**.
 
-> [!NOTE]
-> JBL Bar is an independent project. It is not affiliated with, endorsed by or sponsored by Harman International, JBL or Linkplay. JBL is a trademark of Harman International Industries, Incorporated.
+## What you can control
 
-<br/>
+|  | See | Change |
+|:--|:--:|:--:|
+| Power, read from the bar instead of guessed | ✓ | ✓ |
+| Volume, mute, source (TV, HDMI, Bluetooth) | ✓ | ✓ |
+| Play, pause, skip, title, artist and cover while streaming | ✓ | ✓ |
+| EQ preset and all 7 bands | ✓ | ✓ |
+| Night mode, Smart mode, PureVoice, feedback tones | ✓ | ✓ |
+| Audio sync (up to 250 ms) | ✓ | ✓ |
+| Sleep timer (15 minutes to 2 hours) | ✓ | only while on |
+| Dolby Atmos and audio format, pushed instantly | ✓ | |
+| Atmos level | ✓ | cycle by button |
+| Rear speakers: battery, charging, docked, connected | ✓ | |
+| Announcements and text to speech | | ✓ |
 
-<a id="new"></a>
-<sub><b>JUST ARRIVED</b></sub>
-## Sturdier, quieter, and counted by the calendar.
+Features a model does not know are not created.
 
-<!-- cards:new -->
-<table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/volume-high-dark.svg"><img src="docs/images/icons/volume-high-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Announcements</b> <code>26.11.1</code><br>tts.speak and play_media with announce play on the bar. Afterwards source, volume, mute and standby come back. Optional own announcement volume.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dns-outline-dark.svg"><img src="docs/images/icons/dns-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Events after an IP change</b> <code>26.11.1</code><br>A new IP address from the router no longer blocks the audio format events, and the subscription is renewed in time.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-sleep-dark.svg"><img src="docs/images/icons/power-sleep-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Quiet in standby</b> <code>26.10.2</code><br>While the bar sleeps, Home Assistant only asks whether it is on. Switch it on and playback and settings are read right away.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/playlist-check-dark.svg"><img src="docs/images/icons/playlist-check-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Odd lists, no error</b> <code>26.10.2</code><br>Unknown entries in the bar's EQ preset or rear speaker lists are skipped, the valid ones stay. A missing EQ band gives a clear message instead of a crash.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dns-outline-dark.svg"><img src="docs/images/icons/dns-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Host names work</b> <code>26.10.2</code><br>Set up with a host name instead of an IP address? The audio format events now get through too, the sender check resolves the name on startup.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/calendar-outline-dark.svg"><img src="docs/images/icons/calendar-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Calendar versions</b> <code>26.10.1</code><br>Year, month and the release of that month: 26.10.2 is the second release of October 2026. The jump from 1.0.1 is intended, updates show up as usual.</td></tr>
-</table>
-<!-- /cards:new -->
+**New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; and audio format events survive a new IP address. Every change is in the [changelog](CHANGELOG.md).
 
-Every change, release by release, in the [changelog](CHANGELOG.md).
+<a id="install"></a>
+## Install
 
-<a id="features"></a>
-## Features
+[![Open in the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
 
-<!-- cards:features -->
-<table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/play-circle-outline-dark.svg"><img src="docs/images/icons/play-circle-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>A real media player</b><br>On and off, volume, mute, source (TV, HDMI, Bluetooth), play and pause, next and previous, title, artist and cover art while streaming. Plays URLs, media sources and announcements.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/power-dark.svg"><img src="docs/images/icons/power-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>True power state</b><br>Read straight from the bar instead of guessed from what is playing.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/tune-vertical-dark.svg"><img src="docs/images/icons/tune-vertical-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>7-band EQ and presets</b><br>JBL SIGNATURE, VOCAL, ENERGETIC, CHILL and your own preset, every band from 125 Hz to 8 kHz adjustable on its own.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/weather-night-dark.svg"><img src="docs/images/icons/weather-night-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Sound switches</b><br>Night mode, Smart mode, PureVoice and feedback tones, each one a switch.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/timer-outline-dark.svg"><img src="docs/images/icons/timer-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Audio sync and sleep timer</b><br>Delay the sound by up to 250 ms, switch off after 15 minutes up to 2 hours.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/speaker-multiple-dark.svg"><img src="docs/images/icons/speaker-multiple-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Rear speakers</b><br>Battery, charging, docked and connected, each rear as its own device under the bar.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/dolby-dark.svg"><img src="docs/images/icons/dolby-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Dolby Atmos and audio format</b><br>See whether Atmos is coming in and in which format, for example ATMOS / DDP / 6ch / 48 kHz, pushed instantly by a UPnP event.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/rocket-launch-outline-dark.svg"><img src="docs/images/icons/rocket-launch-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Adapts and starts instantly</b><br>Features a model does not know are never created. The event subscription runs in the background, Home Assistant does not wait for it.</td></tr>
-</table>
-<!-- /cards:features -->
+Search for **JBL Bar** under **Settings > Marketplace** (called HACS before Home Assistant 2026.11), download it and restart Home Assistant.
+
+<details>
+<summary>Install by hand</summary>
+
+1. Download the [latest release](https://github.com/SH1FT-W/jbl-bar/releases/latest).
+2. Copy `custom_components/jbl_bar` into `/config/custom_components/` and restart Home Assistant.
+
+</details>
+
+<a id="set-up"></a>
+## Set up
+
+For the audio format and for announcements the bar has to reach Home Assistant: the internal URL in Home Assistant's network settings should be an IP address (the default on most installations).
+
+1. **Add the bar.** It usually shows up under **Settings > Devices & services > Discovered**. If not, choose **Add integration > JBL Bar** and enter its IP address.
+2. **Pick an announcement volume** if you like, under **three dots > Configure**. 0 (the default) keeps the current volume.
+
+If the bar gets a new IP address later, use **three dots > Reconfigure**.
+
+<details>
+<summary>Coming from <code>jbl_integration</code></summary>
+
+1. **Delete the old integration** and remove it in the Marketplace. This frees its entity IDs.
+2. **Install JBL Bar** and restart Home Assistant.
+3. **Add the bar.** All previous IDs are back, so automations, dashboards and energy sensors keep working. New are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.
+
+Only the raw values that were disabled by default (`play_medium`, `transport_state`, …) and the source and volume buttons are gone. The media player does that now.
+
+</details>
 
 <a id="entities"></a>
 ## Entities
 
-<!-- cards:entities -->
-<table>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/speaker-dark.svg"><img src="docs/images/icons/speaker-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Media player</b><br>media_player.jbl_bar_1000 is the main control: power, volume, mute, source, playback and now playing.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/toggle-switch-outline-dark.svg"><img src="docs/images/icons/toggle-switch-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Switches</b><br>power, nightmode, smart_mode, pure_voice and feedback_tone.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/volume-high-dark.svg"><img src="docs/images/icons/volume-high-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Volume and EQ bands</b><br>volume from 0 to 100 % in 3 % steps like on the bar. 125hz to 8000hz from -6 to +6 dB (125 Hz down to -9 dB), changing a band creates your own preset.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/form-dropdown-dark.svg"><img src="docs/images/icons/form-dropdown-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Audio sync and selects</b><br>audio_sync from 0 to 250 ms. eq_preset and sleep_timer as selects, the remaining time as an attribute.</td></tr>
-<tr><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/information-outline-dark.svg"><img src="docs/images/icons/information-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Sensors</b><br>source, audio_format and atmos_level, plus left_battery and right_battery per rear speaker.</td><td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/remote-dark.svg"><img src="docs/images/icons/remote-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>Binary sensors and buttons</b><br>atmos_active, left/right charging, docked and online. Buttons for the remote: atmos, bass, moment, calibration and rear.</td></tr>
-</table>
-<!-- /cards:entities -->
+IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are in English and German.
 
-All IDs start with the device name, for example `switch.jbl_bar_1000_nightmode`, and are the same as in `jbl_integration`. Entity names are available in English and German.
+| Entity | Shows |
+|:--|:--|
+| `media_player.jbl_bar_1000` | The main control: power, volume, mute, source, playback and now playing. Plays URLs and announcements. |
+| `switch.jbl_bar_1000_power` | On or standby |
+| `switch.jbl_bar_1000_nightmode`, `_smart_mode`, `_pure_voice`, `_feedback_tone` | Sound switches |
+| `number.jbl_bar_1000_volume` | 0 to 100 % in 3 % steps, like on the bar |
+| `number.jbl_bar_1000_125hz` … `_8000hz` | EQ bands from −6 to +6 dB (125 Hz down to −9 dB). Changing one creates your own preset. |
+| `number.jbl_bar_1000_audio_sync` | 0 to 250 ms |
+| `select.jbl_bar_1000_eq_preset` | JBL SIGNATURE, VOCAL, ENERGETIC, CHILL or your own |
+| `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
+| `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
+| `binary_sensor.jbl_bar_1000_atmos_active` | Dolby Atmos is coming in |
+| `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear` | The remote's buttons |
 
 <details>
-<summary>All entity IDs (for a bar named "JBL Bar 1000")</summary>
+<summary>Rear speakers (each its own device under the bar)</summary>
 
-```
-media_player.jbl_bar_1000
-switch.jbl_bar_1000_power            switch.jbl_bar_1000_nightmode
-switch.jbl_bar_1000_smart_mode       switch.jbl_bar_1000_pure_voice
-switch.jbl_bar_1000_feedback_tone
-number.jbl_bar_1000_volume           number.jbl_bar_1000_audio_sync
-number.jbl_bar_1000_125hz … number.jbl_bar_1000_8000hz
-select.jbl_bar_1000_eq_preset        select.jbl_bar_1000_sleep_timer
-sensor.jbl_bar_1000_source           sensor.jbl_bar_1000_audio_format
-sensor.jbl_bar_1000_atmos_level
-sensor.jbl_bar_1000_left_battery     sensor.jbl_bar_1000_right_battery
-binary_sensor.jbl_bar_1000_atmos_active
-binary_sensor.jbl_bar_1000_left_charging   binary_sensor.jbl_bar_1000_right_charging
-binary_sensor.jbl_bar_1000_left_docked     binary_sensor.jbl_bar_1000_right_docked
-binary_sensor.jbl_bar_1000_left_online     binary_sensor.jbl_bar_1000_right_online
-button.jbl_bar_1000_atmos            button.jbl_bar_1000_bass
-button.jbl_bar_1000_moment           button.jbl_bar_1000_calibration
-button.jbl_bar_1000_rear
-```
+| Entity | Shows |
+|:--|:--|
+| `sensor.jbl_bar_1000_left_battery`, `_right_battery` | Battery |
+| `binary_sensor.jbl_bar_1000_left_charging`, `_right_charging` | Charging |
+| `binary_sensor.jbl_bar_1000_left_docked`, `_right_docked` | Docked to the bar |
+| `binary_sensor.jbl_bar_1000_left_online`, `_right_online` | Connected |
 
 </details>
 
-## Installation
+## Examples
 
-### Marketplace
-
-The Marketplace is under Settings → Marketplace. On Home Assistant before 2026.11 it is still called HACS.
-
-JBL Bar is in the Marketplace.
-
-[![Open in the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
-
-1. In the Marketplace, search for **JBL Bar** (or click **Open in the Marketplace** above), download it and restart Home Assistant.
-
-### Manual
-
-1. Download the [latest release](https://github.com/SH1FT-W/jbl-bar/releases/latest).
-2. Copy the folder `custom_components/jbl_bar` into `/config/custom_components/` and restart Home Assistant.
-
-Requires Home Assistant 2026.9 or newer.
-
-## Setup
-
-1. The bar is discovered automatically (**Settings > Devices & services > Discovered**). Otherwise choose **Add integration > JBL Bar** and enter its IP address.
-2. If the bar gets a new IP address later, use **three dots > Reconfigure**.
-
-> [!TIP]
-> For the audio format the bar has to reach Home Assistant: in Home Assistant's network settings the internal URL should be an IP address (the default on most installations).
-
-## Announcements
-
-The media player plays URLs and media sources, so text to speech works like on any speaker:
+Let the bar speak:
 
 ```yaml
 action: tts.speak
@@ -134,45 +119,22 @@ data:
   message: The washing machine is done.
 ```
 
-Announcements (`tts.speak`, or `media_player.play_media` with `announce: true`) wake the bar from standby and unmute
-it if needed. When the announcement is over (at most 10 minutes), the bar gets back its source (TV, HDMI or Bluetooth),
-volume, mute and standby. A second announcement waits for the first one. Without `announce`, the bar keeps playing the
-stream and stays on network playback.
-
-**Options** (**Settings > Devices & services > JBL Bar > Configure**):
-
-| Option | Meaning |
-|---|---|
-| Announcement volume | Volume for announcements, 0 to 100 %. 0 (default) keeps the current volume. |
-
-The bar fetches the audio from Home Assistant: its internal URL has to be reachable from the bar (as for the audio
-format events).
-
-## Migration from `jbl_integration`
-
-1. Delete the old integration and remove it in the Marketplace. This frees its entity IDs.
-2. Install JBL Bar and restart Home Assistant.
-3. Add the bar. All previous IDs are back; new are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.
-
-Only the raw values that were disabled by default (`play_medium`, `transport_state`, …) and the source and volume buttons are gone. The media player does that now.
+Announcements (`tts.speak`, or `media_player.play_media` with `announce: true`) wake the bar and unmute it if needed. Afterwards it gets back its source, volume, mute and standby. A second announcement waits for the first. Without `announce`, the bar keeps playing the stream.
 
 ## Good to know
 
-- **Sleep timer** is only accepted while the bar is on. In standby the bar ignores it.
-- **Rear volume** does not change while the rear speakers are docked to the bar, so there is no entity for it (yet).
-- **Atmos level** can only be cycled with the button. The firmware has no way to set it directly.
+- **Rear volume** does not change while the rears are docked, so there is no entity for it (yet).
 - **Source HDMI** wakes the bar even when nothing is connected to the HDMI input.
-- **Tested on the Bar 1000 only.** The other models of the series speak the same interface; features a model does not know are not created.
-- **Announcements** interrupt whatever the bar plays, including the TV sound. The end of an announcement is detected by polling the bar once a second. Changes made during an announcement (source, volume, power) are overwritten by the restore. If Home Assistant restarts or the integration reloads during an announcement, nothing is restored.
-- **Polling every 10 seconds.** Changes made on the bar itself (remote control) therefore show up with up to 10 seconds delay; only the audio format arrives instantly as an event.
+- **Changes from the remote** show up within 10 seconds. Only the audio format arrives instantly.
+- **Announcements** interrupt everything, including the TV sound. Changes made during one are overwritten by the restore, and a restart or reload during one restores nothing.
 
-## Troubleshooting
+<details>
+<summary>Troubleshooting</summary>
 
 - **All entities "unavailable".** The bar does not answer at its IP address. Check in your router whether it got a new one and enter it with **three dots > Reconfigure**. A single dropout (for example while going to standby) is bridged.
-- **Audio format stays empty.** The bar cannot reach Home Assistant. Check the internal URL in the network settings (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.
-- **Announcement silent or source does not come back right away.** The bar fetches the audio from Home Assistant's internal URL; check it as for the audio format. The source comes back once the bar reports the end of the announcement (at the latest after 10 minutes, or after 15 seconds if it never started).
-- **Rear speakers missing.** They appear as soon as the bar reports them, also later on. Rears the bar no longer knows can be deleted on their device page.
-- **Diagnostics:** **Settings > Devices & services > JBL Bar > three dots > Download diagnostics**. IP address, MAC address and serial number are left out.
+- **Audio format stays empty, or announcements are silent.** The bar cannot reach Home Assistant. Check the internal URL (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.
+- **Source does not come back right away after an announcement.** It comes back once the bar reports the end (at the latest after 10 minutes, or after 15 seconds if it never started).
+- **Rear speakers missing.** They appear as soon as the bar reports them. Rears the bar no longer knows can be deleted on their device page.
 - **Debug log:**
 
   ```yaml
@@ -181,26 +143,33 @@ Only the raw values that were disabled by default (`play_medium`, `transport_sta
       custom_components.jbl_bar: debug
   ```
 
-When you open an [issue](https://github.com/SH1FT-W/jbl-bar/issues), please attach the diagnostics file.
+When you open an [issue](https://github.com/SH1FT-W/jbl-bar/issues), attach the diagnostics (**Settings > Devices & services > JBL Bar > three dots > Download diagnostics**). IP address, MAC address and serial number are left out.
 
-## Removal
+</details>
 
-1. **Settings > Devices & services > JBL Bar > three dots > Delete** (for each bar). The event subscription unsubscribes from the bar on the way out.
-2. Delete the folder `/config/custom_components/jbl_bar` (or remove the repository in the Marketplace) and restart Home Assistant.
+<details>
+<summary>Remove</summary>
 
-## How it works
+1. **Settings > Devices & services > JBL Bar > three dots > Delete** (for each bar). The event subscription ends on the way out.
+2. Remove the repository in the Marketplace (or delete `/config/custom_components/jbl_bar`) and restart Home Assistant.
 
-<!-- cards:how -->
-<table>
-<tr><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lock-outline-dark.svg"><img src="docs/images/icons/lock-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>HTTPS + certificate</b><br>State, settings, EQ and source through the bar's local API, every 10 seconds.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/music-note-outline-dark.svg"><img src="docs/images/icons/music-note-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP / SOAP</b><br>Title, cover, volume, mute and playback of URLs through the bar's media renderer.</td><td width="33%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/icons/lightning-bolt-outline-dark.svg"><img src="docs/images/icons/lightning-bolt-outline-light.svg" width="22" height="22" align="absmiddle" alt=""></picture> <b>UPnP events</b><br>The bar pushes the audio format to Home Assistant the moment it changes.</td></tr>
-</table>
-<!-- /cards:how -->
+</details>
 
-The integration polls the state every 10 seconds, the settings once a minute and right after every change. In standby it only asks for the power state.
+<details>
+<summary>How it works</summary>
 
-The bar's local API only talks to clients that present the JBL One app's client certificate. The certificate in `custom_components/jbl_bar/certs/` comes from [MrBearPresident/JBL_Soundbar](https://github.com/MrBearPresident/JBL_Soundbar) (MIT License, Copyright (c) 2025 Jerre Latruwe); thanks for the groundwork. Protocol notes, including the firmware's pitfalls, are in [`CLAUDE.md`](CLAUDE.md) (German).
+| Channel | Used for | How often |
+|:--|:--|:--|
+| HTTPS with the app's client certificate | Power, settings, EQ, source | state every 10 seconds, settings every minute and after each change; in standby only power |
+| UPnP / SOAP | Title, cover, volume, mute, playing URLs | every 10 seconds while on |
+| UPnP events | Audio format and Dolby Atmos, pushed by the bar | the moment it changes |
 
-## Development
+The bar only talks to clients that present the JBL One app's client certificate. The certificate in `custom_components/jbl_bar/certs/` comes from [MrBearPresident/JBL_Soundbar](https://github.com/MrBearPresident/JBL_Soundbar) (MIT License, Copyright (c) 2025 Jerre Latruwe); thanks for the groundwork. Protocol notes, including the firmware's pitfalls, are in [`CLAUDE.md`](CLAUDE.md) (German).
+
+</details>
+
+<details>
+<summary>Development</summary>
 
 ```bash
 python -m pytest -q -p no:logging        # fake bar in tests/common.py, no real bar needed
@@ -209,10 +178,12 @@ uvx mypy@2.3.1 --python-executable <venv>/bin/python
 python tools/pruefe-uebersetzungen.py    # strings.json against translations/*.json
 ```
 
-Install the test requirements with `pip install -r requirements_test.txt`. The same checks run on GitHub Actions for every push and pull request, plus HACS validation and hassfest.
+Test requirements: `pip install -r requirements_test.txt`. GitHub Actions runs the same checks plus HACS validation and hassfest. Quality scale: platinum, [self-assessed](custom_components/jbl_bar/quality_scale.yaml).
+
+</details>
 
 ## License
 
-[Apache License 2.0](LICENSE), Copyright 2026 SH1FT-W.
+[Apache License 2.0](LICENSE), Copyright 2026 SH1FT-W. The client certificate is third-party material under the MIT License, see [`certs/LICENSE`](custom_components/jbl_bar/certs/LICENSE) and [`NOTICE`](NOTICE).
 
-The client certificate in `custom_components/jbl_bar/certs/` is third-party material under the MIT License, see [`certs/LICENSE`](custom_components/jbl_bar/certs/LICENSE) and [`NOTICE`](NOTICE).
+<sub>JBL Bar is an independent project, not affiliated with, endorsed or sponsored by Harman International, JBL or Linkplay. JBL is a trademark of Harman International Industries, Incorporated.</sub>
