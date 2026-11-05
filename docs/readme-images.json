@@ -56,7 +56,7 @@
         "v"
       ],
       [
-        "HACS"
+        "Marketplace"
       ]
     ],
     "logo": "docs/images/readme-icon.png",
@@ -75,6 +75,7 @@
       "bar": "Home Assistant › JBL Bar",
       "left": 600,
       "top": 70
-    }
+    },
+    "layout": "center"
   }
 }
