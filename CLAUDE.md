@@ -24,6 +24,12 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
 - Wiedergabe von URLs (`media_player.play_media`) über AVTransport: belegt nur aus `description.xml` der Test-Bar
   (nur lesend 2026-11-02). **Wiedergabe selbst an der Test-Bar noch ungeprüft**: ob die Bar aus TV/HDMI auf
   Netzwerk umschaltet, im Standby annimmt, nach dem Ende `STOPPED` meldet und `setMediaSource` danach zurückführt.
+- Keep-Alive: httpapi (lighttpd 1.4.69) schließt stille Verbindungen nach ~6 s, HAs Pool nutzt sie bis 15 s →
+  jede httpapi-Anfrage mit `Connection: close` (lighttpd antwortet dann selbst mit close). UPnP verträgt gar keine
+  zweite Anfrage pro Verbindung → eigene `force_close`-Session. (Gemessen 2026-11-06.)
+- Quellwechsel: zwischen TV/HDMI/BT ~0,5 s; aus Netzwerk-Wiedergabe (PlayMedium THIRD-DLNA) erst ~4 s nach
+  `setMediaSource`, und dieser Wechsel weckt die Bar aus dem Standby. GetInfoEx `PlayMedium`: TV, HDMI, BLUETOOTH.
+  Auf dem TV-Eingang meldet AVTransport auch ohne Signal `PLAYING`.
 - GENA-Abo (Audioformat vom Fernseher) läuft als Hintergrund-Task: die alte Integration blockierte damit den
   HA-Start 5 Min. NOTIFY nur von der Bar-IP annehmen.
 
