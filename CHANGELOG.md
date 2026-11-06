@@ -1,5 +1,12 @@
 # Changelog
 
+## 26.11.2 – 06.11.2026
+
+- **Fix:** Commands to the bar (for example turning it on) and the restore after an announcement (source, volume,
+  standby) no longer fail now and then with "Server disconnected". The bar's web server closes an idle connection
+  after about 6 seconds, but Home Assistant's connection pool kept reusing it for up to 15 seconds. Every request
+  now asks the bar to close the connection after its answer.
+
 ## 26.11.1 – 06.11.2026
 
 - **New: announcements.** The media player can play media now (`media_player.play_media`, media browser for audio

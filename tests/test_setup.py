@@ -9,6 +9,7 @@ from homeassistant.const import STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.translation import async_get_translations
+from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from common import FakeBar
 
@@ -114,6 +115,18 @@ async def test_unload(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     await hass.async_block_till_done()
     assert setup.state is ConfigEntryState.NOT_LOADED
     assert [session.closed for session in bar.upnp_sessions] == [True]
+
+
+async def test_httpapi_closes_connections(
+    hass: HomeAssistant, bar: FakeBar, aioclient_mock: AiohttpClientMocker, setup
+) -> None:
+    """Turning on and the restore after an announcement failed now and then with "Server disconnected": the bar's
+    web server (lighttpd) closes an idle connection after about 6 seconds, Home Assistant's pooled session reuses
+    it for up to 15. Every httpapi request asks the bar to close the connection after its answer."""
+    await hass.services.async_call("media_player", "turn_on", {"entity_id": "media_player.jbl_bar_1000"}, blocking=True)
+    calls = [call for call in aioclient_mock.mock_calls if str(call[1]).endswith("/httpapi.asp")]
+    assert calls
+    assert all((call[3] or {}).get("Connection") == "close" for call in calls)
 
 
 async def test_not_ready(hass: HomeAssistant, bar: FakeBar) -> None:

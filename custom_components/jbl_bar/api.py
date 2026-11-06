@@ -249,7 +249,10 @@ class JBLBarClient:
             "POST",
             f"https://{self.host}/httpapi.asp",
             data=body,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            # The bar's lighttpd closes an idle connection after about 6 s, Home Assistant's pooled session reuses
+            # it for up to 15 s: a request in between failed with "Server disconnected". Unlike the UPnP server
+            # (see `create_upnp_session`), lighttpd answers this header with "Connection: close" itself.
+            headers={"Content-Type": "application/x-www-form-urlencoded", "Connection": "close"},
             ssl=self._ssl,
         )
         if "unknown command" in text:
