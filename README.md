@@ -64,6 +64,7 @@ For the audio format and for announcements the bar has to reach Home Assistant: 
 
 If the bar gets a new IP address later, use **three dots > Reconfigure**.
 
+<a id="coming-from-jbl_integration"></a>
 <details>
 <summary>Coming from <code>jbl_integration</code></summary>
 
