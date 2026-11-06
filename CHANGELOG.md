@@ -8,6 +8,9 @@
   now asks the bar to close the connection after its answer.
 - **Fix:** The audio format (sensor and media player attribute) is empty again when nothing comes in. The bar sends
   the codec as blanks then, which showed up as an empty-looking value instead of "unknown".
+- Two pairs of entities had the same name: the new source select is called "Input" ("Eingang") now, next to the
+  "Source" sensor, and the Atmos button "Next Atmos level" ("Nächste Atmos-Stufe"), next to the "Atmos level"
+  sensor. Entity IDs stay the same.
 
 ## 26.11.1 – 06.11.2026
 

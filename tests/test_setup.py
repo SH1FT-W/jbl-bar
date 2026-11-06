@@ -152,6 +152,18 @@ async def test_media_player_translation_key(hass: HomeAssistant, setup) -> None:
         assert "component.jbl_bar.entity.media_player.bar.state_attributes.audio_format.name" in translations
 
 
+async def test_entity_names_unique(hass: HomeAssistant, setup) -> None:
+    """Select and sensor of the source were both called "Quelle", Atmos button and sensor both "Atmos-Stufe"."""
+    names = [
+        state.attributes.get("friendly_name") for state in hass.states.async_all() if "jbl_bar_1000" in state.entity_id
+    ]
+    assert len(names) == len(set(names))
+    assert hass.states.get("select.jbl_bar_1000_source").attributes["friendly_name"] == "JBL BAR 1000 Eingang"
+    assert hass.states.get("sensor.jbl_bar_1000_source").attributes["friendly_name"] == "JBL BAR 1000 Quelle"
+    atmos_button = hass.states.get("button.jbl_bar_1000_atmos")
+    assert atmos_button.attributes["friendly_name"] == "JBL BAR 1000 Nächste Atmos-Stufe"
+
+
 async def test_broken_lists_from_bar(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     """Fremde Einträge in den Listen der Bar werden übersprungen, die gültigen bleiben."""
     coordinator = setup.runtime_data

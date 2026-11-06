@@ -40,7 +40,7 @@
       "rear_online": { "name": "Verbunden" }
     },
     "button": {
-      "atmos": { "name": "Atmos-Stufe" },
+      "atmos": { "name": "Nächste Atmos-Stufe" },
       "bass": { "name": "Bass" },
       "moment": { "name": "Moment" },
       "calibration": { "name": "Raum einmessen" },
@@ -53,7 +53,7 @@
     },
     "select": {
       "source": {
-        "name": "Quelle",
+        "name": "Eingang",
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth" }
       },
       "eq_preset": { "name": "EQ-Preset" },
