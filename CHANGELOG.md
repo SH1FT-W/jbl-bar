@@ -1,6 +1,6 @@
 # Changelog
 
-## 26.11.1 – 02.11.2026
+## 26.11.1 – 06.11.2026
 
 - **New: announcements.** The media player can play media now (`media_player.play_media`, media browser for audio
   from media sources), so `tts.speak` and other announcements come out of the bar. With `announce` the bar is woken
