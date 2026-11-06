@@ -195,12 +195,13 @@ def parse_harman_state(body: str) -> dict[str, Any] | None:
 def format_stream_info(info: dict[str, Any]) -> str | None:
     """`{"codec_type":"PCM","channels":2,"sample_rate":48000}` → `PCM / 2ch / 48 kHz`."""
     parts: list[str] = []
-    proc = info.get("proc_type")
-    codec = info.get("codec_type")
+    # With nothing coming in the bar pads the codec with blanks ("   ")
+    proc = str(info.get("proc_type") or "").strip()
+    codec = str(info.get("codec_type") or "").strip()
     if proc:
-        parts.append(str(proc))
+        parts.append(proc)
     if codec and codec != proc:
-        parts.append(str(codec))
+        parts.append(codec)
     if info.get("channels"):
         parts.append(f"{info['channels']}ch")
     rate = info.get("sample_rate")

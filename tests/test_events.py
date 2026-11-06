@@ -47,6 +47,10 @@ def test_parse_harman_state() -> None:
 def test_format_and_didl_edges() -> None:
     assert format_stream_info({}) is None
     assert format_stream_info({"codec_type": "PCM", "sample_rate": "x"}) == "PCM / x Hz"
+    # Nothing coming in (test bar, 2026-11): the codec is padded with blanks, the format must stay empty
+    idle = {"source": "", "codec_type": "   ", "proc_type": "", "channels": 0, "sample_rate": 0}
+    assert format_stream_info(idle) is None
+    assert format_stream_info({"proc_type": " ATMOS ", "codec_type": "DDP ", "channels": 6}) == "ATMOS / DDP / 6ch"
     assert parse_didl(None) == {}
     assert parse_didl("<kaputt") == {}
     assert parse_didl('<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/"/>') == {}

@@ -6,6 +6,8 @@
   standby) no longer fail now and then with "Server disconnected". The bar's web server closes an idle connection
   after about 6 seconds, but Home Assistant's connection pool kept reusing it for up to 15 seconds. Every request
   now asks the bar to close the connection after its answer.
+- **Fix:** The audio format (sensor and media player attribute) is empty again when nothing comes in. The bar sends
+  the codec as blanks then, which showed up as an empty-looking value instead of "unknown".
 
 ## 26.11.1 – 06.11.2026
 
