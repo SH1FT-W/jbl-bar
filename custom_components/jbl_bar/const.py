@@ -37,3 +37,7 @@ CONF_ANNOUNCE_VOLUME: Final = "announce_volume"
 ANNOUNCE_START_TIMEOUT: Final = 15.0
 ANNOUNCE_MAX: Final = 600.0
 ANNOUNCE_POLL: Final = 1.0
+# After an announcement the bar switches back from network playback only seconds after setMediaSource (test bar:
+# about 4 s), and that switch wakes it: standby waits until AVTransport's PlayMedium shows the input, at most this long.
+ANNOUNCE_SOURCE_TIMEOUT: Final = 15.0
+PLAY_MEDIUM: Final = {"TV": "TV", "HDMI": "HDMI", "BT": "BLUETOOTH"}

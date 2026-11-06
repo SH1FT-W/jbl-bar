@@ -26,6 +26,7 @@ URL = "http://192.0.2.10:8123/local/chime.mp3?a=1&b=2"
 @pytest.fixture(autouse=True)
 def fast_announcements(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(coordinator_module, "ANNOUNCE_POLL", 0)
+    monkeypatch.setattr(coordinator_module, "ANNOUNCE_SOURCE_TIMEOUT", 0.2)
 
 
 async def play(hass: HomeAssistant, media_id: str = URL, media_type: str = "music", **data) -> None:
@@ -159,6 +160,35 @@ async def test_announce_from_standby(hass: HomeAssistant, bar: FakeBar, setup: M
     assert bar.commands("setMediaSource") == [{"media_source": "HDMI"}]
     assert bar.commands("setPowerState") == [{"power_state": "0"}, {"power_state": "1"}]
     assert hass.states.get(PLAYER).state == "off"
+
+
+async def test_announce_from_standby_waits_for_source(
+    hass: HomeAssistant, bar: FakeBar, setup: MockConfigEntry
+) -> None:
+    """Test bar, 2026-11-06: back from network playback the bar switches the source only about 4 s after
+    setMediaSource, and that switch woke it again right after the restored standby."""
+    bar.slow_source_switch = True
+    bar.state.update(power="1", transport="STOPPED", selected="TV", source="TV")
+    await setup.runtime_data.async_refresh()
+    await play(hass, announce=True)
+    await finish(hass, bar)
+    for _ in range(5):  # the next polls must not find the bar awake again
+        await setup.runtime_data.async_refresh()
+    assert bar.state["medium"] == "TV"
+    assert bar.state["power"] == "1"
+    assert hass.states.get(PLAYER).state == "off"
+
+
+async def test_announce_standby_after_source_timeout(hass: HomeAssistant, bar: FakeBar, setup: MockConfigEntry) -> None:
+    """The bar never shows the input again: standby still comes after ANNOUNCE_SOURCE_TIMEOUT."""
+    bar.slow_source_switch = True
+    bar.source_switch_requests = 10**6
+    bar.state.update(power="1", transport="STOPPED", selected="TV", source="TV")
+    await setup.runtime_data.async_refresh()
+    await play(hass, announce=True)
+    await finish(hass, bar)
+    assert bar.commands("setPowerState")[-1] == {"power_state": "1"}
+    assert bar.state["medium"] == "THIRD-DLNA"
 
 
 async def test_announce_from_other_source(hass: HomeAssistant, bar: FakeBar, setup: MockConfigEntry) -> None:

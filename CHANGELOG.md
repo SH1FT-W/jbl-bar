@@ -1,5 +1,11 @@
 # Changelog
 
+## 26.11.3 – 06.11.2026
+
+- **Fix:** After an announcement from standby the bar stays in standby again. Coming back from network playback,
+  the bar switches to the previous input only a few seconds after the command, and that switch woke it again right
+  after the restored standby. Standby now waits until the bar shows the input again (at most 15 seconds).
+
 ## 26.11.2 – 06.11.2026
 
 - **Fix:** Commands to the bar (for example turning it on) and the restore after an announcement (source, volume,

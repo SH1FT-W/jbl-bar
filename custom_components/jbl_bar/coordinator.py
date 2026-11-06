@@ -25,12 +25,14 @@ from .api import (
 from .const import (
     ANNOUNCE_MAX,
     ANNOUNCE_POLL,
+    ANNOUNCE_SOURCE_TIMEOUT,
     ANNOUNCE_START_TIMEOUT,
     DOMAIN,
     EQ_CUSTOM_ID,
     EVENT_RETRY,
     EVENT_TIMEOUT,
     MAX_MISSES,
+    PLAY_MEDIUM,
     SCAN_INTERVAL,
     SLOW_EVERY,
     SOURCE_ALIASES,
@@ -489,6 +491,21 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
                 _LOGGER.debug("Announcement on %s: no end seen after %.0f s", self.client.host, elapsed)
                 return
 
+    async def _wait_for_source(self, source: str) -> None:
+        """Wait until the bar has switched to `source` (or a timeout hits); else that switch wakes it from standby."""
+        loop = self.hass.loop
+        start = loop.time()
+        while loop.time() - start < ANNOUNCE_SOURCE_TIMEOUT:
+            try:
+                if (await self.client.media_info()).play_medium == PLAY_MEDIUM.get(source):
+                    return
+            except JBLBarError as err:
+                _LOGGER.debug("Announcement on %s: %s", self.client.host, err)
+            await asyncio.sleep(ANNOUNCE_POLL)
+        _LOGGER.debug(
+            "Announcement on %s: source %s not seen after %.0f s", self.client.host, source, ANNOUNCE_SOURCE_TIMEOUT
+        )
+
     async def _restore_after_announcement(self, restore: AnnounceRestore) -> None:
         """Put back source, volume, mute and standby; each step on its own, a failed one does not stop the rest."""
         steps: list[tuple[str, Callable[[], Awaitable[Any]]]] = []
@@ -501,6 +518,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         if restore.mute:
             steps.append(("mute", lambda: self.client.set_mute(True)))
         if restore.power_off:
+            if restore.source:
+                steps.append(("source", lambda: self._wait_for_source(source)))
             steps.append(("standby", lambda: self.client.command("setPowerState", {"power_state": "1"})))
         restored: dict[str, Any] = {}
         values: dict[str, dict[str, Any]] = {

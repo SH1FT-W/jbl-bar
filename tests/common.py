@@ -44,7 +44,7 @@ EQ_LIST = [
 
 INFO_EX = """<?xml version="1.0" encoding="UTF-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>
 <u:GetInfoExResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1">
-<CurrentTransportState>{state}</CurrentTransportState><PlayMedium>SONGLIST-NETWORK</PlayMedium>
+<CurrentTransportState>{state}</CurrentTransportState><PlayMedium>{medium}</PlayMedium>
 <TrackDuration>0:03:30</TrackDuration><RelTime>0:01:00</RelTime>
 <TrackMetaData>{meta}</TrackMetaData></u:GetInfoExResponse></s:Body></s:Envelope>"""
 
@@ -68,6 +68,11 @@ class FakeBar:
             {"capicity": 96, "channel": "right", "charging": True, "docked": False, "status": "offline"},
         ]
         self.calls: list[tuple[str, Any]] = []
+        # Like the test bar: leaving network playback, setMediaSource takes effect only seconds later (here: some
+        # requests later) and wakes the bar from standby then
+        self.slow_source_switch = False
+        self.source_switch_requests = 3
+        self._pending_source: tuple[str, int] | None = None
         # Last SOAP body per action, and actions that answer with HTTP 500
         self.soap_bodies: dict[str, str] = {}
         self.failing_soap: set[str] = set()
@@ -89,6 +94,7 @@ class FakeBar:
             "atmos_level": "3",
             "sleep": "0",
             "transport": "STOPPED",
+            "medium": "TV",
         }
 
     def install(self, mock: AiohttpClientMocker, host: str = HOST) -> None:
@@ -109,6 +115,7 @@ class FakeBar:
 
             return AiohttpClientMockResponse(method, url, exc=ClientConnectionError("offline"))
         action = re.search(r"<u:(\w+) ", data).group(1)
+        self._tick()
         self.calls.append(("soap", action))
         self.soap_bodies[action] = data
         if action in self.failing_soap:
@@ -116,6 +123,7 @@ class FakeBar:
         if action == "SetAVTransportURI":
             # Like the bar: network playback is no longer one of the selectable inputs
             self.state["source"] = self.state["selected"] = "WIFI"
+            self.state["medium"] = "THIRD-DLNA"
         if action == "Play":
             self.state["transport"] = "PLAYING"
         if action == "SetVolume":
@@ -123,7 +131,25 @@ class FakeBar:
         if action == "SetMute":
             self.state["mute"] = re.search(r"<DesiredMute>(\d)<", data).group(1)
         meta = DIDL if self.state["transport"] == "PLAYING" else ""
-        return AiohttpClientMockResponse(method, url, text=INFO_EX.format(state=self.state["transport"], meta=meta))
+        return AiohttpClientMockResponse(
+            method, url, text=INFO_EX.format(state=self.state["transport"], medium=self.state["medium"], meta=meta)
+        )
+
+    def _tick(self) -> None:
+        """A delayed source switch takes effect after a few more requests and wakes the bar."""
+        if self._pending_source is None:
+            return
+        source, left = self._pending_source
+        if left > 1:
+            self._pending_source = (source, left - 1)
+            return
+        self._pending_source = None
+        self._switch_source(source)
+        self.state["power"] = "0"
+
+    def _switch_source(self, source: str) -> None:
+        self.state["source"] = self.state["selected"] = source
+        self.state["medium"] = {"BT": "BLUETOOTH"}.get(source, source)
 
     async def _httpapi(self, method: str, url: Any, data: Any) -> AiohttpClientMockResponse:
         if not self.reachable:
@@ -133,6 +159,7 @@ class FakeBar:
         fields = dict(part.split("=", 1) for part in data.split("&", 1))
         name = fields["command"]
         payload = json.loads(unquote_plus(fields["payload"])) if "payload" in fields else None
+        self._tick()
         self.calls.append((name, payload))
         if name in self.unknown:
             return AiohttpClientMockResponse(method, url, text="unknown command")
@@ -182,7 +209,10 @@ class FakeBar:
             case "setSleepTimer":
                 s["sleep"] = str(payload["sleep_timer"])
             case "setMediaSource":
-                s["source"] = s["selected"] = payload["media_source"]
+                if self.slow_source_switch and s["medium"] == "THIRD-DLNA":
+                    self._pending_source = (payload["media_source"], self.source_switch_requests)
+                else:
+                    self._switch_source(payload["media_source"])
             case "setActiveEQ":
                 s["eq_active"] = payload["active_eq_id"]
                 if payload["active_eq_id"] == "0":
