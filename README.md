@@ -37,7 +37,7 @@ Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300
 
 Features a model does not know are not created.
 
-**New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; the input as a select for automations; and audio format events survive a new IP address. Every change is in the [changelog](CHANGELOG.md).
+**New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; the input as a select for automations; audio format events survive a new IP address; and commands no longer fail now and then with "Server disconnected". Every change is in the [changelog](CHANGELOG.md).
 
 <a id="install"></a>
 ## Install
