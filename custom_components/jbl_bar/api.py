@@ -212,12 +212,31 @@ def format_stream_info(info: dict[str, Any]) -> str | None:
     return " / ".join(parts) or None
 
 
-class JBLBarClient:
-    """Befehle an eine Bar. Die aiohttp-Session gehört Home Assistant."""
+def create_upnp_session() -> aiohttp.ClientSession:
+    """Own session for the UPnP port (SOAP), closing every connection after its answer.
 
-    def __init__(self, host: str, session: aiohttp.ClientSession, ssl_context: ssl.SSLContext) -> None:
+    The bar's UPnP server answers HTTP/1.1 without "Connection: close" but drops a second request on the same
+    connection. On Home Assistant's pooled session a SOAP call right after another one (e.g. play_media after the
+    poll's GetInfoEx) failed with "Server disconnected"; aiohttp pools by the answer only, so a request header
+    does not help. The owner closes it (entry unload).
+    """
+    return aiohttp.ClientSession(connector=aiohttp.TCPConnector(force_close=True))
+
+
+class JBLBarClient:
+    """Befehle an eine Bar. Die aiohttp-Session gehört Home Assistant; SOAP geht über `upnp_session`
+    (siehe `create_upnp_session`), ohne sie über `session` (nur für den Einrichtungsdialog, der kein SOAP schickt)."""
+
+    def __init__(
+        self,
+        host: str,
+        session: aiohttp.ClientSession,
+        ssl_context: ssl.SSLContext,
+        upnp_session: aiohttp.ClientSession | None = None,
+    ) -> None:
         self.host = host
         self._session = session
+        self._upnp_session = upnp_session or session
         self._ssl = ssl_context
         self._limit = asyncio.Semaphore(MAX_PARALLEL)
 
@@ -260,6 +279,7 @@ class JBLBarClient:
                 "Content-Type": 'text/xml; charset="utf-8"',
                 "SOAPAction": f'"urn:schemas-upnp-org:service:{service}:1#{action}"',
             },
+            session=self._upnp_session,
         )
 
     async def media_info(self) -> MediaInfo:
@@ -332,10 +352,15 @@ class JBLBarClient:
             seconds = int(granted.split("-", 1)[1])
         return sid, seconds
 
-    async def _request(self, method: str, url: str, **kwargs: Any) -> str:
+    async def _request(
+        self, method: str, url: str, *, session: aiohttp.ClientSession | None = None, **kwargs: Any
+    ) -> str:
         async with self._limit:
             try:
-                async with asyncio.timeout(REQUEST_TIMEOUT), self._session.request(method, url, **kwargs) as response:
+                async with (
+                    asyncio.timeout(REQUEST_TIMEOUT),
+                    (session or self._session).request(method, url, **kwargs) as response,
+                ):
                     text = await response.text(errors="replace")
             except (TimeoutError, aiohttp.ClientError, OSError) as err:
                 raise JBLBarConnectionError(f"{url}: {err or type(err).__name__}") from err

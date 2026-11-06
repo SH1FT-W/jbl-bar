@@ -18,7 +18,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.network import NoURLAvailableError, get_url
 from homeassistant.helpers.typing import ConfigType
 
-from .api import UPNP_PORT, JBLBarClient, JBLBarError, create_ssl_context
+from .api import UPNP_PORT, JBLBarClient, JBLBarError, create_ssl_context, create_upnp_session
 from .const import DOMAIN
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import bar_device_info
@@ -70,10 +70,13 @@ async def _handle_notify(request: web.Request) -> web.Response:
 async def async_setup_entry(hass: HomeAssistant, entry: JBLBarConfigEntry) -> bool:
     """Bar verbinden, erste Abfrage, Plattformen, Ereignis-Abo im Hintergrund."""
     host: str = entry.data[CONF_HOST]
+    upnp_session = create_upnp_session()
+    entry.async_on_unload(upnp_session.close)  # also runs when setup fails
     client = JBLBarClient(
         host,
         async_get_clientsession(hass, verify_ssl=False),
         await hass.async_add_executor_job(create_ssl_context),
+        upnp_session,
     )
     try:
         device = (await client.command("getDeviceInfo")).get("device_info", {})

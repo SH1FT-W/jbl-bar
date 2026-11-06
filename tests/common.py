@@ -61,6 +61,7 @@ class FakeBar:
 
     def __init__(self) -> None:
         self.reachable = True
+        self.upnp_sessions: list[Any] = []  # own UPnP sessions of the integration (conftest)
         self.unknown: set[str] = {"getRearSpeakerVolume"}
         self.rears: list[dict[str, Any]] = [
             {"capicity": 93, "channel": "left", "charging": False, "docked": True, "status": "online"},

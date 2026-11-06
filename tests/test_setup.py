@@ -113,6 +113,7 @@ async def test_unload(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     assert await hass.config_entries.async_unload(setup.entry_id)
     await hass.async_block_till_done()
     assert setup.state is ConfigEntryState.NOT_LOADED
+    assert [session.closed for session in bar.upnp_sessions] == [True]
 
 
 async def test_not_ready(hass: HomeAssistant, bar: FakeBar) -> None:
@@ -124,6 +125,8 @@ async def test_not_ready(hass: HomeAssistant, bar: FakeBar) -> None:
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     assert entry.state is ConfigEntryState.SETUP_RETRY
+    await hass.async_block_till_done()
+    assert [session.closed for session in bar.upnp_sessions] == [True]  # own session closed on failed setup too
 
 
 async def test_media_player_translation_key(hass: HomeAssistant, setup) -> None:

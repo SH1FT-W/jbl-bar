@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
+
+import aiohttp
 from homeassistant.core import HomeAssistant
 from homeassistant.core_config import async_process_ha_core_config
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -9,7 +12,7 @@ import pytest
 from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from common import HOST
-from custom_components.jbl_bar import _callback_url
+from custom_components.jbl_bar import _callback_url, api
 from custom_components.jbl_bar.api import (
     JBLBarClient,
     JBLBarCommandError,
@@ -110,3 +113,44 @@ async def test_unsubscribe_releases_response(aioclient_mock: AiohttpClientMocker
     aioclient_mock.clear_requests()
     aioclient_mock.request("unsubscribe", f"http://{HOST}:49152/upnp/event/rendercontrol1", exc=OSError("Netz weg"))
     await client.unsubscribe("uuid:abc")  # auch OSError bleibt still
+
+
+class _OneRequestPerConnection(asyncio.Protocol):
+    """Like the bar's UPnP server: HTTP/1.1 answer without a Connection header, yet a second request on the same
+    connection is dropped without an answer."""
+
+    def connection_made(self, transport: asyncio.BaseTransport) -> None:
+        self.transport = transport
+        self.buffer = b""
+        self.answered = False
+
+    def data_received(self, data: bytes) -> None:
+        if self.answered:
+            self.transport.close()
+            return
+        self.buffer += data
+        head, sep, body = self.buffer.partition(b"\r\n\r\n")
+        lines = head.split(b"\r\n")
+        length = next((int(line.split(b":", 1)[1]) for line in lines if line.lower().startswith(b"content-length:")), 0)
+        if not sep or len(body) < length:
+            return
+        self.answered = True
+        answer = b"<ok/>"
+        self.transport.write(  # type: ignore[attr-defined]
+            b"HTTP/1.1 200 OK\r\nCONTENT-LENGTH: %d\r\nCONTENT-TYPE: text/xml\r\n\r\n%s" % (len(answer), answer)
+        )
+
+
+async def test_upnp_does_not_reuse_connections(socket_enabled: None, monkeypatch: pytest.MonkeyPatch) -> None:
+    """play_media failed with "Server disconnected": the bar drops a second request on a kept-alive connection,
+    and a SOAP call right after another one (e.g. the poll's GetInfoEx) reused it."""
+    server = await asyncio.get_running_loop().create_server(_OneRequestPerConnection, "127.0.0.1", 0)
+    monkeypatch.setattr(api, "UPNP_PORT", server.sockets[0].getsockname()[1])
+    try:
+        async with aiohttp.ClientSession() as session, api.create_upnp_session() as upnp_session:
+            bar = JBLBarClient("127.0.0.1", session, create_ssl_context(), upnp_session)
+            await bar.soap("AVTransport", "GetInfoEx")
+            await bar.play_url("http://192.0.2.99:8123/api/tts_proxy/abc.mp3", "audio/mpeg", "Test")
+    finally:
+        server.close()
+        await server.wait_closed()

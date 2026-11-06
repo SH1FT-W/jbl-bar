@@ -7,6 +7,8 @@
   from standby and unmuted if needed, plays the announcement and then gets its source (TV, HDMI, Bluetooth), volume,
   mute and standby back. An own volume for announcements can be set in the integration's options (0 keeps the
   current volume). Playback goes through the bar's UPnP media renderer (AVTransport `SetAVTransportURI` + `Play`).
+  Since 26.11.1b2 the UPnP commands use their own connection each time: the bar drops a second request on a reused
+  connection, so in 26.11.1b1 playback and announcements failed with "Server disconnected".
 - **Fix:** If the bar is set up with a host name and its IP address changes (DHCP), its UPnP events (audio format)
   get through again without reloading the integration: an event from an unknown address makes the integration look
   up the name again (at most once a minute). Bars set up with an IP address were already covered (zeroconf updates

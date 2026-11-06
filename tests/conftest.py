@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 
+from aiohttp import ClientSession
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 import pytest
@@ -23,9 +24,17 @@ def auto_enable_custom_integrations(enable_custom_integrations):
 
 
 @pytest.fixture
-def bar(aioclient_mock: AiohttpClientMocker) -> FakeBar:
+def bar(hass: HomeAssistant, aioclient_mock: AiohttpClientMocker, monkeypatch: pytest.MonkeyPatch) -> FakeBar:
     fake = FakeBar()
     fake.install(aioclient_mock)
+    # The own UPnP session (force_close) goes through the mock as well; kept to check that it gets closed
+
+    def create_upnp_session() -> ClientSession:
+        session = aioclient_mock.create_session(hass.loop)
+        fake.upnp_sessions.append(session)
+        return session
+
+    monkeypatch.setattr("custom_components.jbl_bar.create_upnp_session", create_upnp_session)
     return fake
 
 
