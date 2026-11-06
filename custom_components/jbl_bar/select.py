@@ -1,4 +1,4 @@
-"""Auswahl: EQ-Preset und Sleep-Timer."""
+"""Selects: input source, EQ preset and sleep timer."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import SLEEP_OPTIONS
+from .const import SLEEP_OPTIONS, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import JBLBarEntity
 
@@ -17,12 +17,31 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: JBLBarConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
 ) -> None:
     coordinator = entry.runtime_data
-    entities: list[SelectEntity] = []
+    entities: list[SelectEntity] = [JBLBarSource(coordinator)]
     if coordinator.supports("getEQList") and coordinator.data.eq_presets:
         entities.append(JBLBarEqPreset(coordinator))
     if coordinator.supports("getSleepTimer"):
         entities.append(JBLBarSleepTimer(coordinator))
     async_add_entities(entities)
+
+
+class JBLBarSource(JBLBarEntity, SelectEntity):
+    """Selected input, the same as the media player's source (for select.select_option in automations)."""
+
+    def __init__(self, coordinator: JBLBarCoordinator) -> None:
+        super().__init__(coordinator, "source", "select")
+        # Option keys like the source sensor's states (tv, hdmi, bluetooth); names come from the translations.
+        self._attr_options = [name.lower() for name in SOURCES.values()]
+
+    @property
+    def current_option(self) -> str | None:
+        # Idle or an input without a select option (e.g. network streaming) shows as unknown.
+        name = SOURCES.get(self.coordinator.data.source or "")
+        return name.lower() if name else None
+
+    async def async_select_option(self, option: str) -> None:
+        key = next(key for key, name in SOURCES.items() if name.lower() == option)
+        await self._run(self.coordinator.async_set_source(key))
 
 
 class JBLBarEqPreset(JBLBarEntity, SelectEntity):

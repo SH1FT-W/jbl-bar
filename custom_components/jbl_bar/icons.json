@@ -14,6 +14,7 @@
       "audio_sync": { "default": "mdi:timer-sync-outline" }
     },
     "select": {
+      "source": { "default": "mdi:import" },
       "eq_preset": { "default": "mdi:tune-variant" },
       "sleep_timer": { "default": "mdi:power-sleep" }
     },

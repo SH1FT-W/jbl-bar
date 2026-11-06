@@ -52,6 +52,10 @@
       "audio_sync": { "name": "Audio sync" }
     },
     "select": {
+      "source": {
+        "name": "Source",
+        "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth" }
+      },
       "eq_preset": { "name": "EQ preset" },
       "sleep_timer": {
         "name": "Sleep timer",

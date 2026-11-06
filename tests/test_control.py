@@ -53,6 +53,28 @@ async def test_media_player(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     assert bar.commands("sendAppController")[-1] == {"key_pressed": "musicPlayPause"}
 
 
+async def test_source_select(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    entity = "select.jbl_bar_1000_source"
+    state = hass.states.get(entity)
+    assert state.state == "tv"
+    assert state.attributes["options"] == ["tv", "hdmi", "bluetooth"]
+
+    await call(hass, "select", "select_option", entity, option="bluetooth")
+    assert bar.commands("setMediaSource") == [{"media_source": "BT"}]
+    assert hass.states.get(entity).state == "bluetooth"
+    assert hass.states.get(PLAYER).attributes["source"] == "Bluetooth"
+
+    # Media player and select stay in step.
+    await call(hass, "media_player", "select_source", PLAYER, source="HDMI")
+    assert hass.states.get(entity).state == "hdmi"
+
+    # Idle or network streaming has no option: unknown, not an error.
+    bar.state.update(source="IDLE", selected="IDLE")
+    await hass.config_entries.async_reload(next(iter(hass.config_entries.async_entries(DOMAIN))).entry_id)
+    await hass.async_block_till_done()
+    assert hass.states.get(entity).state == "unknown"
+
+
 async def test_media_metadata(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     bar.state.update(transport="PLAYING", is_streaming="false", source="IDLE", selected="IDLE")
     await setup.runtime_data.async_refresh()

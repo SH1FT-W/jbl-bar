@@ -89,6 +89,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `number.jbl_bar_1000_volume` | 0 to 100 % in 3 % steps, like on the bar |
 | `number.jbl_bar_1000_125hz` … `_8000hz` | EQ bands from −6 to +6 dB (125 Hz down to −9 dB). Changing one creates your own preset. |
 | `number.jbl_bar_1000_audio_sync` | 0 to 250 ms |
+| `select.jbl_bar_1000_source` | Input: TV, HDMI or Bluetooth, the same as the media player's source |
 | `select.jbl_bar_1000_eq_preset` | JBL SIGNATURE, VOCAL, ENERGETIC, CHILL or your own |
 | `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
@@ -121,6 +122,18 @@ data:
 ```
 
 Announcements (`tts.speak`, or `media_player.play_media` with `announce: true`) wake the bar and unmute it if needed. Afterwards it gets back its source, volume, mute and standby. A second announcement waits for the first. Without `announce`, the bar keeps playing the stream.
+
+Switch the input, for example to Bluetooth (`tv`, `hdmi` or `bluetooth`):
+
+```yaml
+action: select.select_option
+target:
+  entity_id: select.jbl_bar_1000_source
+data:
+  option: bluetooth
+```
+
+`media_player.select_source` with `source: Bluetooth` on the media player does the same.
 
 ## Good to know
 
