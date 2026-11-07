@@ -177,3 +177,17 @@ async def test_broken_lists_from_bar(hass: HomeAssistant, bar: FakeBar, setup) -
     assert coordinator.last_update_success
     assert list(coordinator.data.rears) == ["left"]
     assert coordinator.data.eq_presets["1"].payload == {}
+
+
+async def test_rear_battery_255_is_unknown(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    """An empty rear speaker reports capicity 255 (no reading), not 255 percent (issue #3)."""
+    coordinator = setup.runtime_data
+    bar.rears = [
+        {"capicity": 255, "channel": "left", "charging": False, "docked": False, "status": "offline"},
+        {"capicity": 0, "channel": "right", "charging": False, "docked": False, "status": "offline"},
+    ]
+    coordinator._slow_due = True
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.jbl_bar_1000_left_battery").state == "unknown"
+    assert hass.states.get("sensor.jbl_bar_1000_right_battery").state == "0"

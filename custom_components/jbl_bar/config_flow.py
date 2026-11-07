@@ -64,16 +64,23 @@ class JBLBarConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_zeroconf(self, discovery_info: ZeroconfServiceInfo) -> ConfigFlowResult:
+        # Not every bar puts its MAC into the TXT record (BAR 800, issue #2); then it comes from getDeviceInfo.
         mac = discovery_info.properties.get("MAC") or discovery_info.properties.get("mac")
         host = discovery_info.host
-        if not mac:
-            return self.async_abort(reason="not_jbl")
-        await self.async_set_unique_id(format_mac(mac))
-        self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+        if mac:
+            await self.async_set_unique_id(format_mac(mac))
+            self._abort_if_unique_id_configured(updates={CONF_HOST: host})
         try:
             device = await self._probe(host)
-        except JBLBarError:
+        except JBLBarConnectionError:
             return self.async_abort(reason="cannot_connect")
+        except JBLBarError:
+            return self.async_abort(reason="not_jbl")
+        if not mac:
+            if not device.get("wlan0_mac"):
+                return self.async_abort(reason="not_jbl")
+            await self.async_set_unique_id(format_mac(device["wlan0_mac"]))
+            self._abort_if_unique_id_configured(updates={CONF_HOST: host})
         self._host = host
         self._name = device.get("name") or discovery_info.name.split(".")[0]
         self.context["title_placeholders"] = {"name": self._name}

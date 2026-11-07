@@ -11,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import SOURCES
-from .coordinator import JBLBarConfigEntry, JBLBarCoordinator, JBLBarState
+from .coordinator import JBLBarConfigEntry, JBLBarCoordinator, JBLBarState, _int
 from .entity import JBLBarEntity, async_track_rears, rear_device_info
 
 PARALLEL_UPDATES = 0
@@ -89,5 +89,6 @@ class JBLBarRearBattery(JBLBarEntity, SensorEntity):
     def native_value(self) -> int | None:
         rear = self.coordinator.data.rears.get(self._channel)
         # Die Bar schreibt das Feld „capicity“.
-        value = rear.get("capicity", rear.get("capacity")) if rear else None
-        return int(value) if value is not None else None
+        value = _int(rear.get("capicity", rear.get("capacity"))) if rear else None
+        # An empty rear speaker reports 255 (no reading) instead of 0..100 (issue #3).
+        return value if value is not None and 0 <= value <= 100 else None

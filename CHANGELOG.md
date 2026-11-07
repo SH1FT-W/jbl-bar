@@ -1,5 +1,13 @@
 # Changelog
 
+## 26.11.4 – 07.11.2026
+
+- **Fix:** The battery of a rear speaker no longer shows 255 percent. An empty rear speaker reports 255 when it has
+  no reading, which now shows up as "unknown" until the speaker reports a real value again (#3).
+- **Fix:** Bars that leave their MAC address out of the network announcement (seen on the BAR 800) are found
+  automatically again. The MAC then comes from the bar itself, so these bars show up under discovered devices and
+  a new IP address is taken over (#2).
+
 ## 26.11.3 – 06.11.2026
 
 - **Fix:** After an announcement from standby the bar stays in standby again. Coming back from network playback,

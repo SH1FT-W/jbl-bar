@@ -76,11 +76,37 @@ async def test_zeroconf_updates_host_and_aborts(hass: HomeAssistant, bar: FakeBa
     assert setup.data[CONF_HOST] == "192.0.2.77"
 
 
-async def test_zeroconf_without_mac_or_offline(hass: HomeAssistant, bar: FakeBar) -> None:
+async def test_zeroconf_without_mac_in_txt(hass: HomeAssistant, bar: FakeBar) -> None:
+    """Not every bar puts its MAC into the TXT record (issue #2): the MAC then comes from getDeviceInfo."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_ZEROCONF}, data=zeroconf(mac=None)
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "confirm"
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["result"].unique_id == "02:00:00:00:00:01"
+    await hass.async_block_till_done()
+
+    # Already set up with an old IP: the discovered IP is taken over, no second entry
+    entry = hass.config_entries.async_entries(DOMAIN)[0]
+    hass.config_entries.async_update_entry(entry, data={CONF_HOST: "192.0.2.77"})
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_ZEROCONF}, data=zeroconf(mac=None)
+    )
+    assert result["reason"] == "already_configured"
+    assert len(hass.config_entries.async_entries(DOMAIN)) == 1
+    assert entry.data[CONF_HOST] == HOST
+    await hass.async_block_till_done()
+
+
+async def test_zeroconf_not_jbl_or_offline(hass: HomeAssistant, bar: FakeBar) -> None:
+    bar.unknown.add("getDeviceInfo")
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_ZEROCONF}, data=zeroconf(mac=None)
     )
     assert result["reason"] == "not_jbl"
+    bar.unknown.discard("getDeviceInfo")
     bar.reachable = False
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_ZEROCONF}, data=zeroconf()
