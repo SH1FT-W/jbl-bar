@@ -18,7 +18,8 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
 - Wirken nachweislich: setAudioSync (0–250), setActiveEQ, setPersonalListeningMode, setPureVoiceState, setSmartMode,
   setFeedbackToneConfig, setPowerState, setMediaSource. setSleepTimer wirkt nur im Betrieb, im Standby ignoriert.
   setRearSpeakerVolume ändert nichts, solange die Rears angedockt sind → Auswahl nur abgenommen verfügbar. Stufen 0–3 =
-  stumm/leise/mittel/laut sind abgeleitet (MK2 meldet 3; das App-Menü ist eine Webansicht außerhalb des APK).
+  stumm/leise/mittel/laut abgeleitet (App-Menü ist eine Webansicht außerhalb des APK); abgenommen an der Test-Bar
+  (OneOS 3.0) in beide Richtungen geprüft: Setzen aus HA wirkt, Änderung in der App erscheint in HA.
   `setAtmosConfig` ändert nichts → Atmos-Stufe nur per Taste `keyAtmosLevel`.
 - Volle Befehlsliste der App: `EnumCommandMapping` (164 Befehle) + `d9`-Request-Klassen; die Bar 1000 kennt nur einen
   Teil (`getFeatureSupport`), unbekannte Befehle landen in `coordinator.unsupported` und werden nicht mehr gefragt.
