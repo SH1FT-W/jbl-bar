@@ -93,6 +93,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `select.jbl_bar_1000_eq_preset` | JBL SIGNATURE, VOCAL, ENERGETIC, CHILL or your own |
 | `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
 | `select.jbl_bar_1000_broadcast` | Broadcast of detached rear speakers: off, mono or stereo. Only on bars that report the feature. |
+| `select.jbl_bar_1000_rear_volume` | Volume of the detached rear speakers: muted, low, medium or high. Unavailable while they are docked. |
 | `switch.jbl_bar_1000_deep_sleep` | Deep sleep. Only on bars that report the feature. |
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
 | `sensor.jbl_bar_1000_play_medium` | What is playing, as the bar reports it: `TV`, `HDMI`, `BLUETOOTH`, or a stream such as `AIRPLAY` or `CAST`. Unknown in standby. Disabled by default, as in `jbl_integration`. |
@@ -140,7 +141,7 @@ data:
 
 ## Good to know
 
-- **Rear volume** does not change while the rears are docked, so there is no entity for it (yet).
+- **Rear volume** only works with the rears detached, so its select is unavailable while they are docked. The bar remembers the last level.
 - **Source HDMI** wakes the bar even when nothing is connected to the HDMI input.
 - **Changes from the remote** show up within 10 seconds. Only the audio format arrives instantly.
 - **Announcements** interrupt everything, including the TV sound. Changes made during one are overwritten by the restore, and a restart or reload during one restores nothing.

@@ -61,6 +61,10 @@
         "name": "Broadcast",
         "state": { "off": "Aus", "mono": "Mono", "stereo": "Stereo" }
       },
+      "rear_volume": {
+        "name": "Rear-Lautstärke",
+        "state": { "muted": "Stumm", "low": "Leise", "medium": "Mittel", "high": "Laut" }
+      },
       "sleep_timer": {
         "name": "Sleep-Timer",
         "state": { "0": "Aus", "15": "15 Min.", "30": "30 Min.", "45": "45 Min.", "60": "1 Std.", "90": "1,5 Std.", "120": "2 Std." },

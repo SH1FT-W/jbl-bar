@@ -1,4 +1,4 @@
-"""Selects: input source, EQ preset, sleep timer and Broadcast of the rear speakers."""
+"""Selects: input source, EQ preset, sleep timer, Broadcast and volume of the rear speakers."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import BROADCAST_MODES, SLEEP_OPTIONS, SOURCES
+from .const import BROADCAST_MODES, REAR_VOLUME_LEVELS, SLEEP_OPTIONS, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import JBLBarEntity
 
@@ -24,6 +24,8 @@ async def async_setup_entry(
         entities.append(JBLBarSleepTimer(coordinator))
     if coordinator.has_feature("flex_listening"):
         entities.append(JBLBarBroadcast(coordinator))
+    if coordinator.supports("getRearSpeakerVolume"):
+        entities.append(JBLBarRearVolume(coordinator))
     async_add_entities(entities)
 
 
@@ -107,3 +109,25 @@ class JBLBarBroadcast(JBLBarEntity, SelectEntity):
     async def async_select_option(self, option: str) -> None:
         value = next(value for value, name in BROADCAST_MODES.items() if name == option)
         await self._run(self.coordinator.async_set_broadcast(value))
+
+
+class JBLBarRearVolume(JBLBarEntity, SelectEntity):
+    """Volume of the detached rear speakers; docked the bar ignores it and only remembers the last level."""
+
+    def __init__(self, coordinator: JBLBarCoordinator) -> None:
+        super().__init__(coordinator, "rear_volume", "select")
+        self._attr_options = list(REAR_VOLUME_LEVELS.values())
+
+    @property
+    def available(self) -> bool:
+        rears = self.coordinator.data.rears.values()
+        return super().available and any(r.get("docked") is False and r.get("status") == "online" for r in rears)
+
+    @property
+    def current_option(self) -> str | None:
+        volume = self.coordinator.data.rear_volume
+        return None if volume is None else REAR_VOLUME_LEVELS.get(volume)
+
+    async def async_select_option(self, option: str) -> None:
+        value = next(value for value, name in REAR_VOLUME_LEVELS.items() if name == option)
+        await self._run(self.coordinator.async_set_rear_volume(value))

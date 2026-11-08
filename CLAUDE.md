@@ -17,7 +17,8 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
 - Quelle: `getMediaSourceStatus` = gewählter Eingang (auch im Leerlauf), `getStreamingStatus` = was gerade ankommt.
 - Wirken nachweislich: setAudioSync (0–250), setActiveEQ, setPersonalListeningMode, setPureVoiceState, setSmartMode,
   setFeedbackToneConfig, setPowerState, setMediaSource. setSleepTimer wirkt nur im Betrieb, im Standby ignoriert.
-  setRearSpeakerVolume ändert nichts, solange die Rears angedockt sind (abgenommen ungetestet) → keine Entität.
+  setRearSpeakerVolume ändert nichts, solange die Rears angedockt sind → Auswahl nur abgenommen verfügbar. Stufen 0–3 =
+  stumm/leise/mittel/laut sind abgeleitet (MK2 meldet 3; das App-Menü ist eine Webansicht außerhalb des APK).
   `setAtmosConfig` ändert nichts → Atmos-Stufe nur per Taste `keyAtmosLevel`.
 - Volle Befehlsliste der App: `EnumCommandMapping` (164 Befehle) + `d9`-Request-Klassen; die Bar 1000 kennt nur einen
   Teil (`getFeatureSupport`), unbekannte Befehle landen in `coordinator.unsupported` und werden nicht mehr gefragt.

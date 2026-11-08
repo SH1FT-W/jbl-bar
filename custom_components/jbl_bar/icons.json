@@ -17,6 +17,7 @@
       "source": { "default": "mdi:import" },
       "eq_preset": { "default": "mdi:tune-variant" },
       "broadcast": { "default": "mdi:speaker-multiple" },
+      "rear_volume": { "default": "mdi:volume-medium" },
       "sleep_timer": { "default": "mdi:power-sleep" }
     },
     "sensor": {

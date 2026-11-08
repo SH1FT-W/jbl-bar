@@ -8,10 +8,11 @@ import pytest
 
 from common import FakeBar
 from custom_components.jbl_bar.coordinator import _prod_value
-from custom_components.jbl_bar.diagnostics import async_get_config_entry_diagnostics
+from custom_components.jbl_bar.diagnostics import PROBES, async_get_config_entry_diagnostics
 
 BROADCAST = "select.jbl_bar_1000_broadcast"
 DEEP_SLEEP = "switch.jbl_bar_1000_deep_sleep"
+REAR_VOLUME = "select.jbl_bar_1000_rear_volume"
 
 
 async def call(hass: HomeAssistant, domain: str, service: str, entity_id: str, **data) -> None:
@@ -75,6 +76,69 @@ async def test_deep_sleep(hass: HomeAssistant, capable_bar: FakeBar, setup) -> N
 async def test_diagnostics_list_the_features(hass: HomeAssistant, capable_bar: FakeBar, setup) -> None:
     result = await async_get_config_entry_diagnostics(hass, setup)
     assert result["feature_support"]["flex_listening"] == {"support": "true"}
+
+
+async def test_diagnostics_probe_read_only(hass: HomeAssistant, bar: FakeBar, setup, monkeypatch) -> None:
+    bar.unknown.add("getBassLevel")
+    answer = bar._answer
+    monkeypatch.setattr(
+        bar,
+        "_answer",
+        lambda name, payload: (
+            {"error_code": "0", "soundscape": "x", "music": {"music_id": "secret"}}
+            if name == "getSmartButtonConfig"
+            else {"error_code": "0"}
+            if name in {"getProductUsage", "getAuracastSQMode", "getSubwooferState"}
+            else answer(name, payload)
+        ),
+    )
+    probes = (await async_get_config_entry_diagnostics(hass, setup))["probes"]
+    assert probes["getBassLevel"] == "getBassLevel: unknown command"
+    assert probes["getSmartButtonConfig"]["soundscape"] == "x"
+    assert probes["getSmartButtonConfig"]["music"] == "**REDACTED**"
+    assert set(probes) == set(PROBES)
+    assert bar.commands("setBassLevel") == []
+
+
+@pytest.fixture
+def volume_bar(bar: FakeBar) -> FakeBar:
+    bar.unknown.discard("getRearSpeakerVolume")
+    return bar
+
+
+@pytest.fixture
+def detached_bar(volume_bar: FakeBar) -> FakeBar:
+    for rear in volume_bar.rears:
+        rear |= {"docked": False, "status": "online"}
+    return volume_bar
+
+
+async def test_rear_volume(hass: HomeAssistant, detached_bar: FakeBar, setup) -> None:
+    state = hass.states.get(REAR_VOLUME)
+    assert state.state == "high"
+    assert state.attributes["options"] == ["muted", "low", "medium", "high"]
+
+    await call(hass, "select", "select_option", REAR_VOLUME, option="low")
+    assert detached_bar.commands("setRearSpeakerVolume") == [{"volume": "1"}]
+    assert hass.states.get(REAR_VOLUME).state == "low"
+
+
+async def test_rear_volume_unavailable_while_docked(hass: HomeAssistant, volume_bar: FakeBar, setup) -> None:
+    assert hass.states.get(REAR_VOLUME).state == "unavailable"
+
+
+@pytest.fixture
+def odd_volume_bar(detached_bar: FakeBar) -> FakeBar:
+    detached_bar.state["rear_volume"] = "7"
+    return detached_bar
+
+
+async def test_rear_volume_unknown_level(hass: HomeAssistant, odd_volume_bar: FakeBar, setup) -> None:
+    assert hass.states.get(REAR_VOLUME).state == "unknown"
+
+
+async def test_no_rear_volume_without_the_command(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    assert hass.states.get(REAR_VOLUME) is None
 
 
 @pytest.mark.parametrize(

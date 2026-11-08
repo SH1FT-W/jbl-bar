@@ -30,6 +30,8 @@ EQ_CUSTOM_ID: Final = "0"
 SLEEP_OPTIONS: Final = (0, 15, 30, 45, 60, 90, 120)
 # Values of the product setting "FlexListening" (rear speakers detached, called Broadcast in the app)
 BROADCAST_MODES: Final = {"0": "off", "1": "mono", "2": "stereo"}
+# Levels of detached rear speakers. The app menu is a web view outside the APK, so the numbers are inferred.
+REAR_VOLUME_LEVELS: Final = {0: "muted", 1: "low", 2: "medium", 3: "high"}
 
 AUDIO_SYNC_MAX: Final = 250
 

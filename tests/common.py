@@ -94,6 +94,7 @@ class FakeBar:
             "voice": "0",
             "tone": "on",
             "sync": "0",
+            "rear_volume": "3",
             "atmos_level": "3",
             "sleep": "0",
             "transport": "STOPPED",
@@ -191,6 +192,7 @@ class FakeBar:
             "getPureVoiceState": {"purevoice_state": s["voice"]},
             "getFeedbackToneConfig": {"status": s["tone"]},
             "getAudioSync": {"audio_sync": s["sync"]},
+            "getRearSpeakerVolume": {"volume": s["rear_volume"], "status": "detached"},
             "getAtmosLevel": {"atmos_level": s["atmos_level"], "status": "on"},
             "getRearSpeakerStatus": {"rears": self.rears},
             "getSleepTimer": {"sleep_timer": s["sleep"], "remain_time": s["sleep"]},
@@ -214,6 +216,8 @@ class FakeBar:
                 s["tone"] = payload["status"]
             case "setAudioSync":
                 s["sync"] = payload["audio_sync"]
+            case "setRearSpeakerVolume":
+                s["rear_volume"] = payload["volume"]
             case "setSleepTimer":
                 s["sleep"] = str(payload["sleep_timer"])
             case "setMediaSource":
