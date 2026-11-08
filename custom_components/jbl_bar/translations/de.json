@@ -89,8 +89,7 @@
       "smart_mode": { "name": "Smart Mode" },
       "pure_voice": { "name": "PureVoice" },
       "feedback_tone": { "name": "Bestätigungstöne" },
-      "deep_sleep": { "name": "Tiefschlaf" },
-      "auracast_quality": { "name": "Auracast hohe Qualität" }
+      "deep_sleep": { "name": "Tiefschlaf" }
     },
     "media_player": {
       "bar": { "state_attributes": { "audio_format": { "name": "Audioformat" } } }

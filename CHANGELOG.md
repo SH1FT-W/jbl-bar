@@ -2,9 +2,9 @@
 
 ## 26.11.6 – 08.11.2026
 
-- **New (beta): Power-on and playback time** as `sensor.jbl_bar_1000_power_on_time` and `_playback_time`, the bar's own
+- **New: Power-on and playback time** as `sensor.jbl_bar_1000_power_on_time` and `_playback_time`, the bar's own
   lifetime counters, on bars that report them.
-- **New (beta): Auracast high quality switch** on bars that report the feature (#4).
+- The Auracast high quality switch from the 26.11.6 beta is gone again: the bar 1000 MK2 did not accept the command (#4).
 - The diagnostics download no longer asks the bar for the extra settings from 26.11.5.
 
 ## 26.11.5 – 08.11.2026

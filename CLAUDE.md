@@ -37,8 +37,8 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   `feature_support.flex_listening` bzw. `.deep_sleep` mit `support` "true"; modellabhängige Prüfungen gibt es dafür nicht.
   Nur aus der App belegt, die Test-Bar (OneOS 3.0) meldet beides nicht und kennt `getProdSetting` nicht.
 - `getProductUsage`: `product_usage.power_on_duration` / `.playback_duration` in Minuten (an der Test-Bar nachgezählt), Feature
-  `product_usage_time`. `setAuracastSQMode` mit `{"status":"on|off"}`, Feature `auracast_sq_mode`; die App schickt beim Einschalten
-  zusätzlich `keepAlive {"interval":3}`, ob es ohne an bleibt, ist offen. `getBassLevel` kennen Bar 1000 und MK2 nicht, `getSubwooferState` antwortet leer.
+  `product_usage_time`. Auracast-Qualität: `getAuracastSQMode` liest an der MK2 (Feature `auracast_sq_mode`), `setAuracastSQMode`
+  mit `{"status":"on|off"}` lehnt sie aber mit „unknown command“ ab (in welchem Modus die Bar dabei war, ist offen; die App zeigt das Menü nur im Bluetooth-Modus und schickt beim Einschalten zusätzlich `keepAlive {"interval":3}`). Deshalb keine Entität, erst wieder auf Nutzerwunsch. `getBassLevel` kennen Bar 1000 und MK2 nicht, `getSubwooferState` antwortet leer.
 - GENA-Abo (Audioformat vom Fernseher) läuft als Hintergrund-Task: die alte Integration blockierte damit den
   HA-Start 5 Min. NOTIFY nur von der Bar-IP annehmen.
 

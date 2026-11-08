@@ -1,4 +1,4 @@
-"""Schalter: Ein/Aus, Nachtmodus, Smart Mode, PureVoice, Bestätigungstöne, Deep Sleep, Auracast-Qualität."""
+"""Schalter: Ein/Aus, Nachtmodus, Smart Mode, PureVoice, Bestätigungstöne, Deep Sleep."""
 
 from __future__ import annotations
 
@@ -44,13 +44,6 @@ SWITCHES = (
         value=lambda s: s.deep_sleep,
         command="getProdSetting",
         feature="deep_sleep",
-        entity_category=EntityCategory.CONFIG,
-    ),
-    JBLBarSwitchDescription(
-        key="auracast_quality",
-        value=lambda s: s.auracast_quality,
-        command="getAuracastSQMode",
-        feature="auracast_sq_mode",
         entity_category=EntityCategory.CONFIG,
     ),
 )

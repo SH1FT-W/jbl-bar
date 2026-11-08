@@ -80,7 +80,6 @@ class JBLBarState:
     atmos_level: int | None = None
     broadcast: str | None = None
     deep_sleep: bool | None = None
-    auracast_quality: bool | None = None
     power_on_minutes: int | None = None
     playback_minutes: int | None = None
     rears: dict[str, dict[str, Any]] = field(default_factory=dict)
@@ -274,8 +273,6 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         if self.has_feature("deep_sleep") and (sleep := await self._ask("getProdSetting", {"DeepSleep": ""})):
             value = _prod_value(sleep, "DeepSleep")
             state.deep_sleep = None if value is None else value == "1"
-        if self.has_feature("auracast_sq_mode") and (quality := await self._ask("getAuracastSQMode")):
-            state.auracast_quality = _on(quality.get("status"))
         if self.has_feature("product_usage_time") and (answer := await self._ask("getProductUsage")):
             usage = answer.get("product_usage")
             if isinstance(usage, dict):
@@ -374,8 +371,6 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             "pure_voice": ("setPureVoiceState", {"purevoice_state": "1" if on else "0"}),
             "feedback_tone": ("setFeedbackToneConfig", {"status": "on" if on else "off"}),
             "deep_sleep": ("setProdSetting", {"DeepSleep": "1" if on else "0"}),
-            # The app also sends keepAlive {"interval": 3} when turning this on; left out, it has no session to keep.
-            "auracast_quality": ("setAuracastSQMode", {"status": "on" if on else "off"}),
         }
         command, payload = commands[key]
         await self._write(lambda: self.client.command(command, payload), self._set(**{key: on}))

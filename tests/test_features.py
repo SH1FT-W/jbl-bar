@@ -87,13 +87,9 @@ def usage_bar(bar: FakeBar) -> FakeBar:
     return bar
 
 
-async def test_usage_and_auracast_absent_without_features(
-    hass: HomeAssistant, bar: FakeBar, setup, entity_registry
-) -> None:
+async def test_usage_absent_without_feature(hass: HomeAssistant, bar: FakeBar, setup, entity_registry) -> None:
     assert entity_registry.async_get(POWER_ON) is None
-    assert hass.states.get(AURACAST) is None
     assert bar.commands("getProductUsage") == []
-    assert bar.commands("getAuracastSQMode") == []
 
 
 async def test_usage_sensors(hass: HomeAssistant, usage_bar: FakeBar, setup) -> None:
@@ -103,11 +99,10 @@ async def test_usage_sensors(hass: HomeAssistant, usage_bar: FakeBar, setup) -> 
     assert float(hass.states.get(PLAYBACK).state) == 1.5
 
 
-async def test_auracast_quality(hass: HomeAssistant, usage_bar: FakeBar, setup) -> None:
-    assert hass.states.get(AURACAST).state == "off"
-    await call(hass, "switch", "turn_on", AURACAST)
-    assert usage_bar.commands("setAuracastSQMode") == [{"status": "on"}]
-    assert hass.states.get(AURACAST).state == "on"
+async def test_auracast_quality_has_no_switch(hass: HomeAssistant, usage_bar: FakeBar, setup) -> None:
+    """A bar 1000 MK2 reports the feature and reads it, but answers setAuracastSQMode with unknown command (#4)."""
+    assert hass.states.get(AURACAST) is None
+    assert usage_bar.commands("getAuracastSQMode") == []
 
 
 @pytest.fixture

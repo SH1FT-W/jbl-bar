@@ -34,8 +34,7 @@
       "smart_mode": { "default": "mdi:auto-fix" },
       "pure_voice": { "default": "mdi:account-voice" },
       "feedback_tone": { "default": "mdi:bell-ring-outline" },
-      "deep_sleep": { "default": "mdi:sleep" },
-      "auracast_quality": { "default": "mdi:high-definition" }
+      "deep_sleep": { "default": "mdi:sleep" }
     }
   }
 }
