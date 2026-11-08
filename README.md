@@ -72,7 +72,7 @@ If the bar gets a new IP address later, use **three dots > Reconfigure**.
 2. **Install JBL Bar** and restart Home Assistant.
 3. **Add the bar.** All previous IDs are back, so automations, dashboards and energy sensors keep working. New are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.
 
-Only the raw values that were disabled by default (`transport_state`, …) and the source and volume buttons are gone. The media player does that now. `play_medium` is back since 26.11.6.
+Only the raw values that were disabled by default (`transport_state`, …) and the source and volume buttons are gone. The media player does that now. `play_medium` is back since 26.11.5.
 
 </details>
 
