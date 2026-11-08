@@ -1,5 +1,11 @@
 # Changelog
 
+## 26.11.6 – 08.11.2026
+
+- **Back: `sensor.jbl_bar_1000_play_medium`** with the same ID as in `jbl_integration`. It shows what the bar
+  plays, including streams like `AIRPLAY` or `CAST`, which the source sensor and the media player cannot show
+  because they only know the inputs TV, HDMI and Bluetooth. Disabled by default, as before.
+
 ## 26.11.5 – 08.11.2026
 
 - **New (beta): Broadcast for detached rear speakers.** Bars that report the feature (seen in the JBL One app on the

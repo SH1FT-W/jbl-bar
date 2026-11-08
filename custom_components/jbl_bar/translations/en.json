@@ -72,6 +72,7 @@
         "name": "Source",
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "None", "other": "Other" }
       },
+      "play_medium": { "name": "Play medium" },
       "audio_format": { "name": "Audio format" },
       "atmos_level": { "name": "Atmos level" },
       "rear_battery": { "name": "Battery" }
