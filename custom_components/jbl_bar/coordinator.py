@@ -78,6 +78,8 @@ class JBLBarState:
     feedback_tone: bool | None = None
     audio_sync: int | None = None
     atmos_level: int | None = None
+    broadcast: str | None = None
+    deep_sleep: bool | None = None
     rears: dict[str, dict[str, Any]] = field(default_factory=dict)
     rear_volume: int | None = None
     sleep_timer: int | None = None
@@ -118,6 +120,13 @@ def _dicts(value: Any) -> list[dict[str, Any]]:
     return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
 
 
+def _prod_value(answer: dict[str, Any], key: str) -> str | None:
+    """One value of getProdSetting: the app reads it from the top level, group notifications nest it in prod_setting."""
+    nested = answer.get("prod_setting")
+    value = (nested if isinstance(nested, dict) else answer).get(key)
+    return None if value in (None, "") else str(value)
+
+
 def _source(raw: Any) -> str | None:
     if not raw:
         return None
@@ -145,6 +154,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         self.device = device
         # Befehle, die diese Bar nicht kennt – werden nicht mehr gefragt, ihre Entitäten nicht angelegt.
         self.unsupported: set[str] = set()
+        # What the bar reports in getFeatureSupport (raw, also part of the diagnostics).
+        self.features: dict[str, Any] = {}
         self._cycle = 0
         self._slow_due = True
         self._standby = False
@@ -166,18 +177,23 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
     def supports(self, command: str) -> bool:
         return command not in self.unsupported
 
+    def has_feature(self, name: str) -> bool:
+        """Whether getFeatureSupport lists a feature; the app shows Broadcast and Deep Sleep only then."""
+        feature = self.features.get(name)
+        return isinstance(feature, dict) and str(feature.get("support")).lower() == "true"
+
     @property
     def events_subscribed(self) -> bool:
         return self._sid is not None
 
     # ---------- Abfragen ----------
 
-    async def _ask(self, command: str) -> dict[str, Any] | None:
+    async def _ask(self, command: str, payload: dict[str, Any] | None = None) -> dict[str, Any] | None:
         """Ein Lese-Befehl; None bei unbekanntem Befehl oder kurzem Fehler (alter Wert bleibt dann stehen)."""
         if command in self.unsupported:
             return None
         try:
-            return await self.client.command(command)
+            return await self.client.command(command, payload)
         except JBLBarCommandError as err:
             if "unknown command" in str(err):
                 _LOGGER.debug("%s: Bar kennt %s nicht", self.client.host, command)
@@ -247,6 +263,14 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         return state
 
     async def _update_settings(self, state: JBLBarState) -> None:
+        if not self.features and (answer := await self._ask("getFeatureSupport")):
+            features = answer.get("feature_support")
+            self.features = features if isinstance(features, dict) else {}
+        if self.has_feature("flex_listening") and (flex := await self._ask("getProdSetting", {"FlexListening": ""})):
+            state.broadcast = _prod_value(flex, "FlexListening")
+        if self.has_feature("deep_sleep") and (sleep := await self._ask("getProdSetting", {"DeepSleep": ""})):
+            value = _prod_value(sleep, "DeepSleep")
+            state.deep_sleep = None if value is None else value == "1"
         commands = (
             "getEQList",
             "getPersonalListeningMode",
@@ -339,6 +363,7 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             "smart_mode": ("setSmartMode", {"status": "on" if on else "off"}),
             "pure_voice": ("setPureVoiceState", {"purevoice_state": "1" if on else "0"}),
             "feedback_tone": ("setFeedbackToneConfig", {"status": "on" if on else "off"}),
+            "deep_sleep": ("setProdSetting", {"DeepSleep": "1" if on else "0"}),
         }
         command, payload = commands[key]
         await self._write(lambda: self.client.command(command, payload), self._set(**{key: on}))
@@ -358,6 +383,12 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         await self._write(
             lambda: self.client.command("setSleepTimer", {"sleep_timer": minutes * 60}),
             self._set(sleep_timer=minutes * 60, sleep_remaining=minutes * 60),
+        )
+
+    async def async_set_broadcast(self, value: str) -> None:
+        """Broadcast of detached rear speakers: "0" off, "1" mono, "2" stereo."""
+        await self._write(
+            lambda: self.client.command("setProdSetting", {"FlexListening": value}), self._set(broadcast=value)
         )
 
     async def async_set_eq_preset(self, eq_id: str) -> None:

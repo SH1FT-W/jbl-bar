@@ -1,4 +1,4 @@
-"""Schalter: Ein/Aus, Nachtmodus, Smart Mode, PureVoice, Bestätigungstöne."""
+"""Schalter: Ein/Aus, Nachtmodus, Smart Mode, PureVoice, Bestätigungstöne, Deep Sleep."""
 
 from __future__ import annotations
 
@@ -22,6 +22,8 @@ class JBLBarSwitchDescription(SwitchEntityDescription):
     value: Callable[[JBLBarState], bool | None]
     command: str
     object_id: str | None = None
+    # Only on bars that list this feature in getFeatureSupport
+    feature: str | None = None
 
 
 SWITCHES = (
@@ -37,6 +39,13 @@ SWITCHES = (
         command="getFeedbackToneConfig",
         entity_category=EntityCategory.CONFIG,
     ),
+    JBLBarSwitchDescription(
+        key="deep_sleep",
+        value=lambda s: s.deep_sleep,
+        command="getProdSetting",
+        feature="deep_sleep",
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 
@@ -45,7 +54,10 @@ async def async_setup_entry(
 ) -> None:
     coordinator = entry.runtime_data
     async_add_entities(
-        JBLBarSwitch(coordinator, description) for description in SWITCHES if coordinator.supports(description.command)
+        JBLBarSwitch(coordinator, description)
+        for description in SWITCHES
+        if coordinator.supports(description.command)
+        and (description.feature is None or coordinator.has_feature(description.feature))
     )
 
 

@@ -1,4 +1,4 @@
-"""Selects: input source, EQ preset and sleep timer."""
+"""Selects: input source, EQ preset, sleep timer and Broadcast of the rear speakers."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import SLEEP_OPTIONS, SOURCES
+from .const import BROADCAST_MODES, SLEEP_OPTIONS, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import JBLBarEntity
 
@@ -22,6 +22,8 @@ async def async_setup_entry(
         entities.append(JBLBarEqPreset(coordinator))
     if coordinator.supports("getSleepTimer"):
         entities.append(JBLBarSleepTimer(coordinator))
+    if coordinator.has_feature("flex_listening"):
+        entities.append(JBLBarBroadcast(coordinator))
     async_add_entities(entities)
 
 
@@ -89,3 +91,19 @@ class JBLBarSleepTimer(JBLBarEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         await self._run(self.coordinator.async_set_sleep_timer(int(option)))
+
+
+class JBLBarBroadcast(JBLBarEntity, SelectEntity):
+    """Broadcast of detached rear speakers ("FlexListening" in the app), only on bars that report the feature."""
+
+    def __init__(self, coordinator: JBLBarCoordinator) -> None:
+        super().__init__(coordinator, "broadcast", "select")
+        self._attr_options = list(BROADCAST_MODES.values())
+
+    @property
+    def current_option(self) -> str | None:
+        return BROADCAST_MODES.get(self.coordinator.data.broadcast or "")
+
+    async def async_select_option(self, option: str) -> None:
+        value = next(value for value, name in BROADCAST_MODES.items() if name == option)
+        await self._run(self.coordinator.async_set_broadcast(value))

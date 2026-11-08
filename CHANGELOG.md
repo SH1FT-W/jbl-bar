@@ -1,5 +1,12 @@
 # Changelog
 
+## 26.11.5 – 08.11.2026
+
+- **New (beta): Broadcast for detached rear speakers.** Bars that report the feature (seen in the JBL One app on the
+  BAR 1000 MK2 with OneOS 4.0) get `select.jbl_bar_1000_broadcast` with off, mono and stereo (#4).
+- **New (beta): Deep sleep switch** on bars that report the feature.
+- The diagnostics download lists what the bar reports as supported features.
+
 ## 26.11.4 – 07.11.2026
 
 - **Fix:** The battery of a rear speaker no longer shows 255 percent. An empty rear speaker reports 255 when it has

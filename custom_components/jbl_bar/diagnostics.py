@@ -20,6 +20,7 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: JBLBarC
         "entry": async_redact_data(dict(entry.data), TO_REDACT),
         "device": async_redact_data(coordinator.device, TO_REDACT),
         "unsupported_commands": sorted(coordinator.unsupported),
+        "feature_support": coordinator.features,
         "last_update_success": coordinator.last_update_success,
         "events_subscribed": coordinator.events_subscribed,
         "state": async_redact_data(asdict(coordinator.data), TO_REDACT),

@@ -28,6 +28,8 @@ EQ_CUSTOM_ID: Final = "0"
 
 # Sleep-Timer in Minuten (0 = aus); die Bar will Sekunden.
 SLEEP_OPTIONS: Final = (0, 15, 30, 45, 60, 90, 120)
+# Values of the product setting "FlexListening" (rear speakers detached, called Broadcast in the app)
+BROADCAST_MODES: Final = {"0": "off", "1": "mono", "2": "stereo"}
 
 AUDIO_SYNC_MAX: Final = 250
 

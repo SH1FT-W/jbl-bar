@@ -92,6 +92,8 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `select.jbl_bar_1000_source` | Input: TV, HDMI or Bluetooth, the same as the media player's source |
 | `select.jbl_bar_1000_eq_preset` | JBL SIGNATURE, VOCAL, ENERGETIC, CHILL or your own |
 | `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
+| `select.jbl_bar_1000_broadcast` | Broadcast of detached rear speakers: off, mono or stereo. Only on bars that report the feature. |
+| `switch.jbl_bar_1000_deep_sleep` | Deep sleep. Only on bars that report the feature. |
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
 | `binary_sensor.jbl_bar_1000_atmos_active` | Dolby Atmos is coming in |
 | `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear` | The remote's buttons |

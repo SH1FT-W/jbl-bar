@@ -63,6 +63,9 @@ class FakeBar:
         self.reachable = True
         self.upnp_sessions: list[Any] = []  # own UPnP sessions of the integration (conftest)
         self.unknown: set[str] = {"getRearSpeakerVolume"}
+        # Like the test bar: neither Broadcast nor Deep Sleep reported (getProdSetting is only asked when they are)
+        self.features: dict[str, Any] = {"user_eq": {"support": "true"}, "smart_mode": {"support": "true"}}
+        self.prod: dict[str, str] = {}
         self.rears: list[dict[str, Any]] = [
             {"capicity": 93, "channel": "left", "charging": False, "docked": True, "status": "online"},
             {"capicity": 96, "channel": "right", "charging": True, "docked": False, "status": "offline"},
@@ -171,7 +174,10 @@ class FakeBar:
         if name.startswith("set") or name == "sendAppController":
             self._apply(name, payload or {})
             return ok
+        if name == "getProdSetting":
+            return ok | {key: self.prod[key] for key in payload if key in self.prod}
         answers: dict[str, dict[str, Any]] = {
+            "getFeatureSupport": {"feature_support": self.features},
             "getDeviceInfo": {"device_info": DEVICE_INFO},
             "getPowerState": {"power_state": s["power"]},
             "getPlayerStatus": {"status": s["status"], "vol": str(s["vol"]), "mute": s["mute"]},
@@ -194,6 +200,8 @@ class FakeBar:
     def _apply(self, name: str, payload: dict[str, Any]) -> None:
         s = self.state
         match name:
+            case "setProdSetting":
+                self.prod.update(payload)
             case "setPowerState":
                 s["power"] = payload["power_state"]
             case "setPersonalListeningMode":

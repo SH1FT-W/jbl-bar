@@ -30,6 +30,10 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
 - Quellwechsel: zwischen TV/HDMI/BT ~0,5 s; aus Netzwerk-Wiedergabe (PlayMedium THIRD-DLNA) erst ~4 s nach
   `setMediaSource`, und dieser Wechsel weckt die Bar aus dem Standby. GetInfoEx `PlayMedium`: TV, HDMI, BLUETOOTH.
   Auf dem TV-Eingang meldet AVTransport auch ohne Signal `PLAYING`.
+- Broadcast (`FlexListening`) und Deep Sleep sind Produkt-Einstellungen: `getProdSetting` je Schlüssel (`{"FlexListening":""}`),
+  `setProdSetting` mit `{"FlexListening":"0|1|2"}` (aus/Mono/Stereo) bzw. `{"DeepSleep":"0|1"}`. Die App zeigt sie nur bei
+  `feature_support.flex_listening` bzw. `.deep_sleep` mit `support` "true"; modellabhängige Prüfungen gibt es dafür nicht.
+  Nur aus der App belegt, die Test-Bar (OneOS 3.0) meldet beides nicht und kennt `getProdSetting` nicht.
 - GENA-Abo (Audioformat vom Fernseher) läuft als Hintergrund-Task: die alte Integration blockierte damit den
   HA-Start 5 Min. NOTIFY nur von der Bar-IP annehmen.
 

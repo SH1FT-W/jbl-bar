@@ -16,6 +16,7 @@
     "select": {
       "source": { "default": "mdi:import" },
       "eq_preset": { "default": "mdi:tune-variant" },
+      "broadcast": { "default": "mdi:speaker-multiple" },
       "sleep_timer": { "default": "mdi:power-sleep" }
     },
     "sensor": {
@@ -28,7 +29,8 @@
       "night_mode": { "default": "mdi:weather-night" },
       "smart_mode": { "default": "mdi:auto-fix" },
       "pure_voice": { "default": "mdi:account-voice" },
-      "feedback_tone": { "default": "mdi:bell-ring-outline" }
+      "feedback_tone": { "default": "mdi:bell-ring-outline" },
+      "deep_sleep": { "default": "mdi:sleep" }
     }
   }
 }

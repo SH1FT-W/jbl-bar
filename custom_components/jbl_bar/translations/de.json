@@ -57,6 +57,10 @@
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth" }
       },
       "eq_preset": { "name": "EQ-Preset" },
+      "broadcast": {
+        "name": "Broadcast",
+        "state": { "off": "Aus", "mono": "Mono", "stereo": "Stereo" }
+      },
       "sleep_timer": {
         "name": "Sleep-Timer",
         "state": { "0": "Aus", "15": "15 Min.", "30": "30 Min.", "45": "45 Min.", "60": "1 Std.", "90": "1,5 Std.", "120": "2 Std." },
@@ -77,7 +81,8 @@
       "night_mode": { "name": "Nachtmodus" },
       "smart_mode": { "name": "Smart Mode" },
       "pure_voice": { "name": "PureVoice" },
-      "feedback_tone": { "name": "Bestätigungstöne" }
+      "feedback_tone": { "name": "Bestätigungstöne" },
+      "deep_sleep": { "name": "Tiefschlaf" }
     },
     "media_player": {
       "bar": { "state_attributes": { "audio_format": { "name": "Audioformat" } } }
