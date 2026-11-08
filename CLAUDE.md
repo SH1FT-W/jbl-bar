@@ -28,7 +28,7 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   jede httpapi-Anfrage mit `Connection: close` (lighttpd antwortet dann selbst mit close). UPnP verträgt gar keine
   zweite Anfrage pro Verbindung → eigene `force_close`-Session. (Gemessen 2026-11-06.)
 - Quellwechsel: zwischen TV/HDMI/BT ~0,5 s; aus Netzwerk-Wiedergabe (PlayMedium THIRD-DLNA) erst ~4 s nach
-  `setMediaSource`, und dieser Wechsel weckt die Bar aus dem Standby. GetInfoEx `PlayMedium`: TV, HDMI, BLUETOOTH.
+  `setMediaSource`, und dieser Wechsel weckt die Bar aus dem Standby. GetInfoEx `PlayMedium`: TV, HDMI, BLUETOOTH, bei Streams z. B. AIRPLAY, CAST, THIRD-DLNA.
   Auf dem TV-Eingang meldet AVTransport auch ohne Signal `PLAYING`.
 - Broadcast (`FlexListening`) und Deep Sleep sind Produkt-Einstellungen: `getProdSetting` je Schlüssel (`{"FlexListening":""}`),
   `setProdSetting` mit `{"FlexListening":"0|1|2"}` (aus/Mono/Stereo) bzw. `{"DeepSleep":"0|1"}`. Die App zeigt sie nur bei

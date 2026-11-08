@@ -1,17 +1,14 @@
 # Changelog
 
-## 26.11.6 – 08.11.2026
-
-- **Back: `sensor.jbl_bar_1000_play_medium`** with the same ID as in `jbl_integration`. It shows what the bar
-  plays, including streams like `AIRPLAY` or `CAST`, which the source sensor and the media player cannot show
-  because they only know the inputs TV, HDMI and Bluetooth. Disabled by default, as before.
-
 ## 26.11.5 – 08.11.2026
 
 - **New (beta): Broadcast for detached rear speakers.** Bars that report the feature (seen in the JBL One app on the
   BAR 1000 MK2 with OneOS 4.0) get `select.jbl_bar_1000_broadcast` with off, mono and stereo (#4).
 - **New (beta): Deep sleep switch** on bars that report the feature.
 - The diagnostics download lists what the bar reports as supported features.
+- **Back: `sensor.jbl_bar_1000_play_medium`** with the same ID as in `jbl_integration`. It shows what the bar
+  plays, including streams like `AIRPLAY` or `CAST`, which the source sensor and the media player cannot show
+  because they only know the inputs TV, HDMI and Bluetooth. Disabled by default, as before.
 
 ## 26.11.4 – 07.11.2026
 
