@@ -8,11 +8,14 @@ import pytest
 
 from common import FakeBar
 from custom_components.jbl_bar.coordinator import _prod_value
-from custom_components.jbl_bar.diagnostics import PROBES, async_get_config_entry_diagnostics
+from custom_components.jbl_bar.diagnostics import async_get_config_entry_diagnostics
 
 BROADCAST = "select.jbl_bar_1000_broadcast"
 DEEP_SLEEP = "switch.jbl_bar_1000_deep_sleep"
 REAR_VOLUME = "select.jbl_bar_1000_rear_volume"
+POWER_ON = "sensor.jbl_bar_1000_power_on_time"
+PLAYBACK = "sensor.jbl_bar_1000_playback_time"
+AURACAST = "switch.jbl_bar_1000_auracast_quality"
 
 
 async def call(hass: HomeAssistant, domain: str, service: str, entity_id: str, **data) -> None:
@@ -78,26 +81,33 @@ async def test_diagnostics_list_the_features(hass: HomeAssistant, capable_bar: F
     assert result["feature_support"]["flex_listening"] == {"support": "true"}
 
 
-async def test_diagnostics_probe_read_only(hass: HomeAssistant, bar: FakeBar, setup, monkeypatch) -> None:
-    bar.unknown.add("getBassLevel")
-    answer = bar._answer
-    monkeypatch.setattr(
-        bar,
-        "_answer",
-        lambda name, payload: (
-            {"error_code": "0", "soundscape": "x", "music": {"music_id": "secret"}}
-            if name == "getSmartButtonConfig"
-            else {"error_code": "0"}
-            if name in {"getProductUsage", "getAuracastSQMode", "getSubwooferState"}
-            else answer(name, payload)
-        ),
-    )
-    probes = (await async_get_config_entry_diagnostics(hass, setup))["probes"]
-    assert probes["getBassLevel"] == "getBassLevel: unknown command"
-    assert probes["getSmartButtonConfig"]["soundscape"] == "x"
-    assert probes["getSmartButtonConfig"]["music"] == "**REDACTED**"
-    assert set(probes) == set(PROBES)
-    assert bar.commands("setBassLevel") == []
+@pytest.fixture
+def usage_bar(bar: FakeBar) -> FakeBar:
+    bar.features |= {"product_usage_time": {"support": "true"}, "auracast_sq_mode": {"support": "true"}}
+    return bar
+
+
+async def test_usage_and_auracast_absent_without_features(
+    hass: HomeAssistant, bar: FakeBar, setup, entity_registry
+) -> None:
+    assert entity_registry.async_get(POWER_ON) is None
+    assert hass.states.get(AURACAST) is None
+    assert bar.commands("getProductUsage") == []
+    assert bar.commands("getAuracastSQMode") == []
+
+
+async def test_usage_sensors(hass: HomeAssistant, usage_bar: FakeBar, setup) -> None:
+    state = hass.states.get(POWER_ON)
+    assert float(state.state) == 10
+    assert state.attributes["unit_of_measurement"] == "h"
+    assert float(hass.states.get(PLAYBACK).state) == 1.5
+
+
+async def test_auracast_quality(hass: HomeAssistant, usage_bar: FakeBar, setup) -> None:
+    assert hass.states.get(AURACAST).state == "off"
+    await call(hass, "switch", "turn_on", AURACAST)
+    assert usage_bar.commands("setAuracastSQMode") == [{"status": "on"}]
+    assert hass.states.get(AURACAST).state == "on"
 
 
 @pytest.fixture

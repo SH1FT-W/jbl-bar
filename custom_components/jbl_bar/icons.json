@@ -23,6 +23,8 @@
     "sensor": {
       "source": { "default": "mdi:import" },
       "play_medium": { "default": "mdi:cast-audio" },
+      "power_on_time": { "default": "mdi:timer-outline" },
+      "playback_time": { "default": "mdi:play-circle-outline" },
       "audio_format": { "default": "mdi:waveform" },
       "atmos_level": { "default": "mdi:dolby" }
     },
@@ -32,7 +34,8 @@
       "smart_mode": { "default": "mdi:auto-fix" },
       "pure_voice": { "default": "mdi:account-voice" },
       "feedback_tone": { "default": "mdi:bell-ring-outline" },
-      "deep_sleep": { "default": "mdi:sleep" }
+      "deep_sleep": { "default": "mdi:sleep" },
+      "auracast_quality": { "default": "mdi:high-definition" }
     }
   }
 }

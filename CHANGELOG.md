@@ -1,5 +1,12 @@
 # Changelog
 
+## 26.11.6 – 08.11.2026
+
+- **New (beta): Power-on and playback time** as `sensor.jbl_bar_1000_power_on_time` and `_playback_time`, the bar's own
+  lifetime counters, on bars that report them.
+- **New (beta): Auracast high quality switch** on bars that report the feature (#4).
+- The diagnostics download no longer asks the bar for the extra settings from 26.11.5.
+
 ## 26.11.5 – 08.11.2026
 
 - **New: Broadcast for detached rear speakers.** Bars that report the feature (seen in the JBL One app on the

@@ -77,6 +77,8 @@
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "None", "other": "Other" }
       },
       "play_medium": { "name": "Play medium" },
+      "power_on_time": { "name": "Power-on time" },
+      "playback_time": { "name": "Playback time" },
       "audio_format": { "name": "Audio format" },
       "atmos_level": { "name": "Atmos level" },
       "rear_battery": { "name": "Battery" }
@@ -87,7 +89,8 @@
       "smart_mode": { "name": "Smart mode" },
       "pure_voice": { "name": "PureVoice" },
       "feedback_tone": { "name": "Feedback tones" },
-      "deep_sleep": { "name": "Deep sleep" }
+      "deep_sleep": { "name": "Deep sleep" },
+      "auracast_quality": { "name": "Auracast high quality" }
     },
     "media_player": {
       "bar": { "state_attributes": { "audio_format": { "name": "Audio format" } } }

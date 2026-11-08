@@ -94,6 +94,7 @@ class FakeBar:
             "voice": "0",
             "tone": "on",
             "sync": "0",
+            "auracast": "off",
             "rear_volume": "3",
             "atmos_level": "3",
             "sleep": "0",
@@ -192,6 +193,8 @@ class FakeBar:
             "getPureVoiceState": {"purevoice_state": s["voice"]},
             "getFeedbackToneConfig": {"status": s["tone"]},
             "getAudioSync": {"audio_sync": s["sync"]},
+            "getAuracastSQMode": {"status": s["auracast"]},
+            "getProductUsage": {"product_usage": {"power_on_duration": 600, "playback_duration": 90}},
             "getRearSpeakerVolume": {"volume": s["rear_volume"], "status": "detached"},
             "getAtmosLevel": {"atmos_level": s["atmos_level"], "status": "on"},
             "getRearSpeakerStatus": {"rears": self.rears},
@@ -214,6 +217,8 @@ class FakeBar:
                 s["voice"] = payload["purevoice_state"]
             case "setFeedbackToneConfig":
                 s["tone"] = payload["status"]
+            case "setAuracastSQMode":
+                s["auracast"] = payload["status"]
             case "setAudioSync":
                 s["sync"] = payload["audio_sync"]
             case "setRearSpeakerVolume":

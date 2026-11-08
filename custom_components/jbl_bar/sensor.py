@@ -1,4 +1,4 @@
-"""Sensoren: Akku der Rear-Speaker, Quelle, Wiedergabeweg (PlayMedium), Audioformat, Atmos-Stufe."""
+"""Sensoren: Akku der Rear-Speaker, Quelle, Wiedergabeweg (PlayMedium), Audioformat, Atmos-Stufe, Betriebszeiten."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription, SensorStateClass
-from homeassistant.const import PERCENTAGE, EntityCategory
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -40,6 +40,8 @@ class JBLBarSensorDescription(SensorEntityDescription):
     value: Callable[[JBLBarState], str | int | None]
     # httpapi command the value comes from; None = AVTransport (UPnP), asked on every bar
     command: str | None
+    # Only on bars that list this feature in getFeatureSupport
+    feature: str | None = None
 
 
 SENSORS = (
@@ -60,6 +62,29 @@ SENSORS = (
         command="getAtmosLevel",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
+    # Lifetime counters of the bar in minutes (a running bar counted one per minute)
+    JBLBarSensorDescription(
+        key="power_on_time",
+        value=lambda s: s.power_on_minutes,
+        command="getProductUsage",
+        feature="product_usage_time",
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        suggested_unit_of_measurement=UnitOfTime.HOURS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    JBLBarSensorDescription(
+        key="playback_time",
+        value=lambda s: s.playback_minutes,
+        command="getProductUsage",
+        feature="product_usage_time",
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        suggested_unit_of_measurement=UnitOfTime.HOURS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
 )
 
 
@@ -70,7 +95,8 @@ async def async_setup_entry(
     entities: list[SensorEntity] = [
         JBLBarSensor(coordinator, description)
         for description in SENSORS
-        if description.command is None or coordinator.supports(description.command)
+        if (description.command is None or coordinator.supports(description.command))
+        and (description.feature is None or coordinator.has_feature(description.feature))
     ]
     async_add_entities(entities)
     async_track_rears(coordinator, async_add_entities, lambda channel: [JBLBarRearBattery(coordinator, channel)])
