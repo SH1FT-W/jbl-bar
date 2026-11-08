@@ -1,4 +1,4 @@
-"""Sensoren: Akku der Rear-Speaker, Quelle, Audioformat, Atmos-Stufe."""
+"""Sensoren: Akku der Rear-Speaker, Quelle, Wiedergabeweg (PlayMedium), Audioformat, Atmos-Stufe."""
 
 from __future__ import annotations
 
@@ -25,10 +25,21 @@ def _source_state(source: str | None) -> str | None:
     return "idle" if source == "IDLE" else "other"
 
 
+def _play_medium(state: JBLBarState) -> str | None:
+    """AVTransport's PlayMedium as the bar reports it (TV, HDMI, BLUETOOTH, AIRPLAY, CAST, THIRD-DLNA, …).
+
+    Unlike `source` it also shows network streams. Not asked in standby, so the last value would be stale there.
+    """
+    if not state.power:
+        return None
+    return state.media.play_medium or None
+
+
 @dataclass(frozen=True, kw_only=True)
 class JBLBarSensorDescription(SensorEntityDescription):
     value: Callable[[JBLBarState], str | int | None]
-    command: str
+    # httpapi command the value comes from; None = AVTransport (UPnP), asked on every bar
+    command: str | None
 
 
 SENSORS = (
@@ -39,6 +50,9 @@ SENSORS = (
         value=lambda s: _source_state(s.source),
         command="getStreamingStatus",
     ),
+    # Same ID as the "Play Medium" sensor of jbl_integration, disabled by default like there. Free text, the set of
+    # values is open (streaming services).
+    JBLBarSensorDescription(key="play_medium", value=_play_medium, command=None, entity_registry_enabled_default=False),
     JBLBarSensorDescription(key="audio_format", value=lambda s: s.audio_format, command="getStreamingStatus"),
     JBLBarSensorDescription(
         key="atmos_level",
@@ -54,7 +68,9 @@ async def async_setup_entry(
 ) -> None:
     coordinator = entry.runtime_data
     entities: list[SensorEntity] = [
-        JBLBarSensor(coordinator, description) for description in SENSORS if coordinator.supports(description.command)
+        JBLBarSensor(coordinator, description)
+        for description in SENSORS
+        if description.command is None or coordinator.supports(description.command)
     ]
     async_add_entities(entities)
     async_track_rears(coordinator, async_add_entities, lambda channel: [JBLBarRearBattery(coordinator, channel)])

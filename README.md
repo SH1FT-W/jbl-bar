@@ -72,7 +72,7 @@ If the bar gets a new IP address later, use **three dots > Reconfigure**.
 2. **Install JBL Bar** and restart Home Assistant.
 3. **Add the bar.** All previous IDs are back, so automations, dashboards and energy sensors keep working. New are the media player, audio sync, sleep timer, feedback tones, source and the Atmos sensors.
 
-Only the raw values that were disabled by default (`play_medium`, `transport_state`, …) and the source and volume buttons are gone. The media player does that now.
+Only the raw values that were disabled by default (`transport_state`, …) and the source and volume buttons are gone. The media player does that now. `play_medium` is back since 26.11.6.
 
 </details>
 
@@ -95,6 +95,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `select.jbl_bar_1000_broadcast` | Broadcast of detached rear speakers: off, mono or stereo. Only on bars that report the feature. |
 | `switch.jbl_bar_1000_deep_sleep` | Deep sleep. Only on bars that report the feature. |
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
+| `sensor.jbl_bar_1000_play_medium` | What is playing, as the bar reports it: `TV`, `HDMI`, `BLUETOOTH`, or a stream such as `AIRPLAY` or `CAST`. Unknown in standby. Disabled by default, as in `jbl_integration`. |
 | `binary_sensor.jbl_bar_1000_atmos_active` | Dolby Atmos is coming in |
 | `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear` | The remote's buttons |
 

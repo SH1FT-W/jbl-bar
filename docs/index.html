@@ -380,7 +380,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
           <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>125hz</code> … <code>8000hz</code></td><td><span class="en">EQ bands</span><span class="de">EQ-Bänder</span></td></tr>
           <tr><td><span class="en">Number</span><span class="de">Zahl</span></td><td><code>audio_sync</code></td><td>0 … 250 ms</td></tr>
           <tr><td><span class="en">Select</span><span class="de">Auswahl</span></td><td><code>source</code> <code>eq_preset</code> <code>sleep_timer</code></td><td><span class="en">Remaining time as an attribute</span><span class="de">Restzeit als Attribut</span></td></tr>
-          <tr><td>Sensor</td><td><code>source</code> <code>audio_format</code> <code>atmos_level</code></td><td></td></tr>
+          <tr><td>Sensor</td><td><code>source</code> <code>play_medium</code> <code>audio_format</code> <code>atmos_level</code></td><td><span class="en"><code>play_medium</code> also shows streams (AirPlay, Cast), disabled by default</span><span class="de"><code>play_medium</code> zeigt auch Streams (AirPlay, Cast), standardmäßig deaktiviert</span></td></tr>
           <tr><td>Sensor</td><td><code>left_battery</code> <code>right_battery</code></td><td><span class="en">Per rear speaker</span><span class="de">Je Rear-Speaker</span></td></tr>
           <tr><td><span class="en">Binary sensor</span><span class="de">Binärsensor</span></td><td><code>atmos_active</code> <code>left/right_charging</code> <code>_docked</code> <code>_online</code></td><td></td></tr>
           <tr><td><span class="en">Button</span><span class="de">Taste</span></td><td><code>atmos</code> <code>bass</code> <code>moment</code> <code>calibration</code> <code>rear</code></td><td><span class="en">The remote's buttons</span><span class="de">Tasten der Fernbedienung</span></td></tr>
@@ -447,7 +447,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
           <li class="de"><b>JBL Bar installieren</b> und Home Assistant neu starten.</li>
           <li class="de"><b>Bar hinzufügen.</b> Alle bisherigen IDs sind wieder da; neu sind Mediaplayer, Audio-Sync, Sleep-Timer, Bestätigungstöne, Quelle und die Atmos-Sensoren.</li>
         </ol>
-        <p class="note"><span class="en">Only the raw values that were disabled by default (<code>play_medium</code>, <code>transport_state</code>, …) and the source and volume buttons are gone. The media player does that now.</span><span class="de">Weggefallen sind nur die standardmäßig deaktivierten Rohwerte (<code>play_medium</code>, <code>transport_state</code>, …) und die Quellen- und Lautstärke-Tasten. Das macht jetzt der Mediaplayer.</span></p>
+        <p class="note"><span class="en">Only the raw values that were disabled by default (<code>transport_state</code>, …) and the source and volume buttons are gone. The media player does that now. <code>play_medium</code> is back since 26.11.6.</span><span class="de">Weggefallen sind nur die standardmäßig deaktivierten Rohwerte (<code>transport_state</code>, …) und die Quellen- und Lautstärke-Tasten. Das macht jetzt der Mediaplayer. <code>play_medium</code> gibt es seit 26.11.6 wieder.</span></p>
       </div>
       <div class="panel full reveal">
         <h3><span class="en">Without the Marketplace</span><span class="de">Ohne Marketplace</span></h3>

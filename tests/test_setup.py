@@ -43,12 +43,20 @@ LEGACY_IDS = [
     "button.jbl_bar_1000_calibration",
     "button.jbl_bar_1000_rear",
 ]
+# Disabled by default as in jbl_integration: they have no state until enabled, only a registry entry.
+LEGACY_DISABLED_IDS = ["sensor.jbl_bar_1000_play_medium"]
 
 
 async def test_entities_and_ids(hass: HomeAssistant, setup) -> None:
     assert setup.state is ConfigEntryState.LOADED
     for entity_id in [*LEGACY_IDS, "media_player.jbl_bar_1000", "number.jbl_bar_1000_audio_sync"]:
         assert hass.states.get(entity_id) is not None, entity_id
+    registry = er.async_get(hass)
+    for entity_id in LEGACY_DISABLED_IDS:
+        entry = registry.async_get(entity_id)
+        assert entry is not None, entity_id
+        assert entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION, entity_id
+        assert hass.states.get(entity_id) is None, entity_id
 
     assert hass.states.get("switch.jbl_bar_1000_power").state == "on"
     assert hass.states.get("switch.jbl_bar_1000_smart_mode").state == "on"
@@ -191,3 +199,23 @@ async def test_rear_battery_255_is_unknown(hass: HomeAssistant, bar: FakeBar, se
     await hass.async_block_till_done()
     assert hass.states.get("sensor.jbl_bar_1000_left_battery").state == "unknown"
     assert hass.states.get("sensor.jbl_bar_1000_right_battery").state == "0"
+
+
+async def test_play_medium_shows_streams(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    """The input stays TV while AirPlay plays; only PlayMedium shows the stream. Unknown in standby, not stale."""
+    # Disabled by default: enable it as a user would, then reload the entry
+    er.async_get(hass).async_update_entity("sensor.jbl_bar_1000_play_medium", disabled_by=None)
+    assert await hass.config_entries.async_reload(setup.entry_id)
+    await hass.async_block_till_done()
+    coordinator = setup.runtime_data
+    assert hass.states.get("sensor.jbl_bar_1000_play_medium").state == "TV"
+    bar.state["medium"] = "AIRPLAY"
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.jbl_bar_1000_play_medium").state == "AIRPLAY"
+    assert hass.states.get("sensor.jbl_bar_1000_source").state == "tv"
+
+    bar.state["power"] = "1"
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.jbl_bar_1000_play_medium").state == "unknown"

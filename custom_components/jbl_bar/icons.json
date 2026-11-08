@@ -21,6 +21,7 @@
     },
     "sensor": {
       "source": { "default": "mdi:import" },
+      "play_medium": { "default": "mdi:cast-audio" },
       "audio_format": { "default": "mdi:waveform" },
       "atmos_level": { "default": "mdi:dolby" }
     },
