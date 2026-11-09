@@ -2,14 +2,14 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme-title-dark.webp" />
-  <img src="docs/images/readme-title-light.webp" alt="JBL Bar: Your soundbar, fully local." />
+  <img src="docs/images/readme-title-light.webp" alt="JBL Bar: your JBL soundbar in Home Assistant, fully local. Local, no cloud. True power state. EQ and rear speakers." />
 </picture>
 
 [![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSH1FT-W%2Fjbl-bar%2Fmain%2Fcustom_components%2Fjbl_bar%2Fmanifest.json&query=%24.version&label=version&style=flat-square&color=FF6A00&labelColor=111111)](https://github.com/SH1FT-W/jbl-bar/releases/latest)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.9%2B-FF6A00?style=flat-square&labelColor=111111&logo=homeassistant&logoColor=white)](https://www.home-assistant.io)
 [![Marketplace](https://img.shields.io/badge/Marketplace-default-FF6A00?style=flat-square&labelColor=111111)](https://hacs.xyz)
 
-<a href="https://sh1ft-w.github.io/jbl-bar"><b>Website</b></a>&emsp;<a href="#install">Install</a>&emsp;<a href="#set-up">Set up</a>&emsp;<a href="#entities">Entities</a>&emsp;<a href="CHANGELOG.md">Changelog</a>
+<a href="https://sh1ft-w.github.io/jbl-bar"><b>Website</b></a>&emsp;<a href="#get-started">Get started</a>&emsp;<a href="#entities">Entities</a>&emsp;<a href="#examples">Examples</a>&emsp;<a href="CHANGELOG.md">Changelog</a>
 
 </div>
 
@@ -19,7 +19,7 @@ Your JBL soundbar in Home Assistant, the way the JBL One app sees it: **power, v
 
 Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models). Every command was read from the app and tried out on a **Bar 1000** (firmware 25.52), the only model tested so far. It replaces `jbl_integration` and **keeps its entity IDs**.
 
-## What you can control
+## What you get
 
 |  | See | Change |
 |:--|:--:|:--:|
@@ -39,12 +39,18 @@ Features a model does not know are not created.
 
 **New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; the input as a select for automations; audio format events survive a new IP address; and commands no longer fail now and then with "Server disconnected". Every change is in the [changelog](CHANGELOG.md).
 
-<a id="install"></a>
-## Install
+<a id="get-started"></a><a id="install"></a><a id="set-up"></a>
+## Get started
 
 [![Open in the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
 
-Search for **JBL Bar** under **Settings > Marketplace** (called HACS before Home Assistant 2026.11), download it and restart Home Assistant.
+For the audio format and for announcements the bar has to reach Home Assistant: the internal URL in Home Assistant's network settings should be an IP address (the default on most installations).
+
+1. **Install it.** Search for **JBL Bar** under **Settings > Marketplace** (called HACS before Home Assistant 2026.11), download it and restart Home Assistant.
+2. **Add the bar.** It usually shows up under **Settings > Devices & services > Discovered**. If not, choose **Add integration > JBL Bar** and enter its IP address.
+3. **Pick an announcement volume** if you like, under **three dots > Configure**. 0 (the default) keeps the current volume.
+
+If the bar gets a new IP address later, use **three dots > Reconfigure**.
 
 <details>
 <summary>Install by hand</summary>
@@ -53,16 +59,6 @@ Search for **JBL Bar** under **Settings > Marketplace** (called HACS before Home
 2. Copy `custom_components/jbl_bar` into `/config/custom_components/` and restart Home Assistant.
 
 </details>
-
-<a id="set-up"></a>
-## Set up
-
-For the audio format and for announcements the bar has to reach Home Assistant: the internal URL in Home Assistant's network settings should be an IP address (the default on most installations).
-
-1. **Add the bar.** It usually shows up under **Settings > Devices & services > Discovered**. If not, choose **Add integration > JBL Bar** and enter its IP address.
-2. **Pick an announcement volume** if you like, under **three dots > Configure**. 0 (the default) keeps the current volume.
-
-If the bar gets a new IP address later, use **three dots > Reconfigure**.
 
 <a id="coming-from-jbl_integration"></a>
 <details>
@@ -113,6 +109,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 
 </details>
 
+<a id="examples"></a>
 ## Examples
 
 Let the bar speak:
@@ -206,3 +203,11 @@ Test requirements: `pip install -r requirements_test.txt`. GitHub Actions runs t
 [Apache License 2.0](LICENSE), Copyright 2026 SH1FT-W. The client certificate is third-party material under the MIT License, see [`certs/LICENSE`](custom_components/jbl_bar/certs/LICENSE) and [`NOTICE`](NOTICE).
 
 <sub>JBL Bar is an independent project, not affiliated with, endorsed or sponsored by Harman International, JBL or Linkplay. JBL is a trademark of Harman International Industries, Incorporated.</sub>
+
+<br/>
+
+<div align="center">
+<a href="https://sh1ft-w.github.io"><img src="https://sh1ft-w.github.io/readme/footer.png" width="640" alt="All SH1FT-W projects"></a>
+<br/>
+<sub>More open source for Home Assistant and the Mac at <a href="https://sh1ft-w.github.io">sh1ft-w.github.io</a></sub>
+</div>

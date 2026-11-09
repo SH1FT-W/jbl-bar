@@ -1,5 +1,5 @@
 {
-  "$comment": "Colours, fonts and title image of the README. Render with sh1ft-w.github.io/theme/v1/readme-images: node render.mjs <this repo> title. The title image is built from tools/readme-title.html (photo instead of a window shot, see the comment there).",
+  "$comment": "Content of the README title. Render with sh1ft-w.github.io/theme/v2/readme-images (node render.mjs <this repo>): banner 1280 x 440 light and dark, social preview 1280 x 640. Used fields: title.name, title.line, title.lanes, title.logo, colors.*.bg/ink/ink2, colors.light.accent. The other fields are from the v1 title and no longer read.",
   "colors": {
     "light": {
       "bg": "#F7F5F2",
@@ -76,6 +76,12 @@
       "left": 600,
       "top": 70
     },
-    "layout": "center"
+    "layout": "center",
+    "line": "Your JBL soundbar in Home Assistant, fully local.",
+    "lanes": [
+      "Local, no cloud",
+      "True power state",
+      "EQ and rear speakers"
+    ]
   }
 }

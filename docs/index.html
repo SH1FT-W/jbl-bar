@@ -13,20 +13,17 @@
 <meta property="og:description" content="Local control for JBL soundbars with JBL One. Fast, complete, no cloud.">
 <meta property="og:image" content="https://sh1ft-w.github.io/jbl-bar/images/readme-title-social.png">
 <link rel="icon" href="logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Shared SH1FT-W design (tokens, glass navigation, light/dark, DE/EN, reveal) -->
-<link rel="stylesheet" href="https://sh1ft-w.github.io/theme/v1/theme.css">
-<script src="https://sh1ft-w.github.io/theme/v1/theme.js"></script>
+<!-- Shared SH1FT-W design, version 2 (tokens, Archivo, navigation, light/dark, DE/EN, the lanes) -->
+<link rel="stylesheet" href="https://sh1ft-w.github.io/theme/v2/theme.css">
+<script src="https://sh1ft-w.github.io/theme/v2/theme.js"></script>
 <style>
 /* JBL-Bar-Palette: helles Grau bei Tag, fast Schwarz bei Nacht, ein Akzent in JBL-Orange */
 :root {
   --accent: #D95A00; --accent-ink: #C24F00; --on-accent: #1A0A00;
   --orange: #FF6A00; --orange-ink: #C24F00; --orange-tint: rgba(255,106,0,0.12); --orange-glow: rgba(255,106,0,0.38);
-  --font: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --display: "Archivo", "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --display: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
   --bg: #F7F5F2; --bg-2: #EFECE7; --card: #FFFFFF; --card-2: #F6F3EF;
   --ink: #161412; --ink-2: #57514B; --ink-3: rgba(22,20,18,0.52);
   --line: rgba(40,30,20,0.11); --chip: rgba(60,40,20,0.06);
@@ -93,9 +90,6 @@ section.tint { background: var(--bg-2); }
 
 /* Hero */
 .hero { padding: clamp(56px, 9vw, 112px) 0 clamp(64px, 8vw, 104px); text-align: center; overflow: hidden; }
-.hero .glow { position: absolute; inset: -20% -10% auto; height: 90%; pointer-events: none;
-  background: radial-gradient(40% 36% at 30% 30%, rgba(255,106,0,0.2), transparent 70%), radial-gradient(36% 34% at 72% 24%, rgba(255,160,90,0.18), transparent 70%);
-  filter: blur(50px); }
 .hero .wrap { position: relative; }
 .hero .lead { max-width: 640px; margin-left: auto; margin-right: auto; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 34px; }
@@ -103,9 +97,6 @@ section.tint { background: var(--bg-2); }
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--card); box-shadow: var(--shadow); font-weight: 600; color: var(--ink-2); font-size: 13px; }
 .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: inline-block; }
 
-/* Bühne: das README-Titelbild */
-.stage { position: relative; margin: clamp(48px, 7vw, 84px) auto 0; max-width: 1100px; }
-.stage .photo { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
 /* Das Logo ist dunkel auf transparent: im Dunkelmodus hell zeichnen */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand img { filter: invert(1); } }
 :root[data-theme="dark"] .brand img { filter: invert(1); }
@@ -248,6 +239,36 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
   .tbl.ctl td, .tbl.ctl th { display: table-cell; padding: 12px 10px; border-top: 1px solid var(--line); }
   .tbl.ctl th:not(:first-child), .tbl.ctl td:not(:first-child) { width: 72px; }
 }
+/* ---- theme v2 ---- */
+:root { --lane-a: #FF6A00; --lane-b: #FFA15C; --radius: 20px; --radius-lg: 28px; --max: 1200px; }
+body { font-family: var(--font); }
+h1 { font-size: clamp(44px, 6vw, 84px); line-height: 1; font-weight: 800; font-stretch: 118%; font-style: italic; letter-spacing: -0.025em; }
+h2 { font-size: clamp(30px, 3.8vw, 48px); line-height: 1.08; font-weight: 750; font-stretch: 112%; letter-spacing: -0.02em; }
+h3 { font-stretch: 106%; }
+h1 em, h2 em { color: inherit; font-style: inherit; }
+.center { text-align: left; } .center .lead { margin-left: 0; margin-right: 0; }
+.head { max-width: 50em; }
+.eyebrow { text-transform: none; letter-spacing: 0; font-size: 16px; font-weight: 650; margin-bottom: 12px; }
+.eyebrow::before { display: none; }
+.cap { text-align: left; }
+.flow { margin: 0; }
+.btn { border-radius: 12px; box-shadow: none; }
+.btn.ghost { background: var(--chip); box-shadow: none; }
+.pill { box-shadow: none; background: var(--chip); border-radius: 8px; }
+.b, .tile, .panel, .eq, .tbl, .faq details, .flow .lane { box-shadow: none; border: 1px solid var(--line); }
+.b .tag, .tg, .tbl thead th { text-transform: none; letter-spacing: 0; font-size: 13px; }
+.b .tag, .tg { border-radius: 6px; }
+.tile .ico { border-radius: 10px; }
+.hero { text-align: left; padding: clamp(48px, 7vw, 96px) 0 clamp(56px, 7vw, 96px); overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+.hero .mark { width: 64px; height: 64px; border-radius: 15px; margin-bottom: 26px; }
+.hero .lead { margin-left: 0; max-width: 34em; }
+.cta, .meta { justify-content: flex-start; }
+.finale .cta { justify-content: center; }
+.hero .s-lanes { margin-right: calc(-1 * var(--gutter) - 14vw); }
+/* Dark text on the orange lanes: white is too faint on JBL orange */
+.s-track b { color: #1A0A00; font: italic 800 clamp(20px, 2.5vw, 34px)/1 var(--font); font-stretch: 116%; letter-spacing: -0.015em; white-space: nowrap; }
+@media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero .s-lanes { margin: 8px calc(-1 * var(--gutter) - 8vw) 0 44px; } }
 </style>
 </head>
 <body>
@@ -273,25 +294,24 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
 </div>
 
 <section class="hero" id="top">
-  <div class="glow" aria-hidden="true"></div>
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="en">JBL soundbars in Home Assistant</span><span class="de">JBL-Soundbars in Home Assistant</span></p>
-    <h1 class="reveal d1"><span class="en">Your soundbar,<br><em>fully local.</em></span><span class="de">Deine Soundbar,<br><em>ganz lokal.</em></span></h1>
-    <p class="lead reveal d2"><span class="en">Your JBL soundbar in Home Assistant, the way the JBL One app sees it: <strong>power, volume, source, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Straight over your network, without cloud.</span><span class="de">Deine JBL-Soundbar in Home Assistant, so wie die JBL-One-App sie sieht: <strong>Ein/Aus, Lautstärke, Quelle, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Direkt über dein Netz, ohne Cloud.</span></p>
-    <div class="cta reveal d3">
-      <a class="btn" href="#install"><span class="en">Install from the Marketplace</span><span class="de">Über den Marketplace installieren</span></a>
-      <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar#readme"><span class="en">Read the README</span><span class="de">Zur Anleitung</span></a>
+    <div>
+      <img class="mark" src="images/readme-icon.png" alt="" width="64" height="64">
+      <h1><span class="en">Your soundbar, fully local.</span><span class="de">Deine Soundbar, ganz lokal.</span></h1>
+      <p class="lead reveal d2"><span class="en">Your JBL soundbar in Home Assistant, the way the JBL One app sees it: <strong>power, volume, source, EQ, sound switches, rear speakers</strong> and the live Dolby Atmos format. Straight over your network, without cloud.</span><span class="de">Deine JBL-Soundbar in Home Assistant, so wie die JBL-One-App sie sieht: <strong>Ein/Aus, Lautstärke, Quelle, EQ, Klang-Schalter, Rear-Speaker</strong> und das Dolby-Atmos-Format live. Direkt über dein Netz, ohne Cloud.</span></p>
+      <div class="cta reveal d3">
+        <a class="btn" href="#install"><span class="en">Install from the Marketplace</span><span class="de">Über den Marketplace installieren</span></a>
+        <a class="btn ghost" href="https://github.com/SH1FT-W/jbl-bar#readme"><span class="en">Read the README</span><span class="de">Zur Anleitung</span></a>
+      </div>
+      <p class="meta reveal d3">
+        <span class="pill"><i></i><span id="jbl-version">Version 26.11.1</span></span>
+        <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
+      </p>
     </div>
-    <p class="meta reveal d3">
-      <span class="pill"><i></i><span id="jbl-version">Version 26.11.1</span></span>
-      <span class="en">Home Assistant 2026.9 or newer &middot; English and German &middot; Apache 2.0</span><span class="de">Home Assistant 2026.9 oder neuer &middot; Deutsch und Englisch &middot; Apache 2.0</span>
-    </p>
-
-    <div class="stage reveal d3">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="images/readme-title-dark.webp">
-        <img class="photo" src="images/readme-title-light.webp" width="2560" height="1280" alt="JBL Bar: Your soundbar, fully local.">
-      </picture>
+    <div class="s-lanes" aria-hidden="true">
+      <div class="s-lane"><div class="s-track"><b><span class="en">Local, no cloud</span><span class="de">Lokal, ohne Cloud</span></b></div></div>
+      <div class="s-lane"><div class="s-track"><b><span class="en">True power state</span><span class="de">Echter Ein/Aus-Zustand</span></b></div></div>
+      <div class="s-lane"><div class="s-track"><b><span class="en">EQ and rear speakers</span><span class="de">EQ und Rear-Speaker</span></b></div></div>
     </div>
   </div>
 </section>
@@ -477,8 +497,7 @@ footer .fine { flex-basis: 100%; line-height: 1.6; }
 
 <section class="finale">
   <div class="wrap narrow reveal">
-    <p class="eyebrow">JBL Bar</p>
-    <h2><span class="en">Turn it up.<br><em>Locally.</em></span><span class="de">Lauter machen.<br><em>Lokal.</em></span></h2>
+    <h2><span class="en">Turn it up.<br>Locally.</span><span class="de">Lauter machen.<br>Lokal.</span></h2>
     <p class="lead"><span class="en">One integration, every setting, no cloud.</span><span class="de">Eine Integration, jede Einstellung, keine Cloud.</span></p>
     <div class="cta">
       <a class="btn" href="#install"><span class="en">Install JBL Bar</span><span class="de">JBL Bar installieren</span></a>
