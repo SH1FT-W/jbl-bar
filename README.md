@@ -201,6 +201,20 @@ Test requirements: `pip install -r requirements_test.txt`. GitHub Actions runs t
 
 </details>
 
+<details>
+<summary>Thanks</summary>
+
+JBL Bar stands on the work of others and gets better with every bug report and every idea. A big thank you to:
+
+- [**@MrBearPresident**](https://github.com/MrBearPresident): the biggest thanks of all. He built [`jbl_integration`](https://github.com/MrBearPresident/JBL_Soundbar), the integration JBL Bar grew out of and replaces, found the way to talk to the bar and maintained it for more than two years. The client certificate comes from his project. He pointed his users here himself and still reported the missing discovery and the battery reading on his Bar 800.
+- [**@hadrbrt**](https://github.com/hadrbrt): the wish for broadcast, and beta after beta tested on a Bar 1000 MK2. Rear volume, broadcast and the usage times are confirmed there because of him.
+- [**@tgechev**](https://github.com/tgechev): the first pull request, which brought the `play_medium` sensor back.
+- [**@xitters**](https://github.com/xitters), [**@matanmesika**](https://github.com/matanmesika): the EQ bands in the right order and the push for the input as its own select.
+
+Found something or missing a feature? [Open an issue](https://github.com/SH1FT-W/jbl-bar/issues/new/choose).
+
+</details>
+
 ## License
 
 [Apache License 2.0](LICENSE), Copyright 2026 SH1FT-W. The client certificate is third-party material under the MIT License, see [`certs/LICENSE`](custom_components/jbl_bar/certs/LICENSE) and [`NOTICE`](NOTICE).
