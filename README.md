@@ -33,11 +33,14 @@ Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300
 | Dolby Atmos and audio format, pushed instantly | ✓ | |
 | Atmos level | ✓ | cycle by button |
 | Rear speakers: battery, charging, docked, connected | ✓ | |
+| Rear speaker volume (muted, low, medium, high) | ✓ | only while detached |
+| Broadcast of detached rear speakers and deep sleep, where the bar has them | ✓ | ✓ |
+| Power-on and playback time | ✓ | |
 | Announcements and text to speech | | ✓ |
 
 Features a model does not know are not created.
 
-**New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; the input as a select for automations; audio format events survive a new IP address; and commands no longer fail now and then with "Server disconnected". Every change is in the [changelog](CHANGELOG.md).
+**New in 26.11:** announcements with `tts.speak`, after which the bar gets its source, volume and standby back; the input as a select for automations; rear speaker volume, broadcast and deep sleep; power-on and playback time; audio format events survive a new IP address; and commands no longer fail now and then with "Server disconnected". Every change is in the [changelog](CHANGELOG.md).
 
 <a id="get-started"></a><a id="install"></a><a id="set-up"></a>
 ## Get started
