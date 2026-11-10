@@ -17,7 +17,7 @@
 
 Your JBL soundbar in Home Assistant, the way the JBL One app sees it: **power, volume, source, EQ, sound switches, rear speakers and the live Dolby Atmos format.** Straight over your network, without cloud.
 
-Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models). Every command was read from the app and tried out on a **Bar 1000** (firmware 25.52), the only model tested so far. It replaces `jbl_integration` and **keeps its entity IDs**.
+Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300 and the MK2 models). Every command was read from the app and tried out on a **Bar 1000** (firmware 25.52). Users also run it on a **Bar 1000 MK2** (OneOS 4.0), a **Bar 800** and a **Bar 500**. It replaces `jbl_integration` and **keeps its entity IDs**.
 
 ## What you get
 
