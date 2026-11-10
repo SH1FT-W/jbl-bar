@@ -1,5 +1,11 @@
 # Changelog
 
+## 26.11.7 – 10.11.2026
+
+- **Fixed: EQ bands in the wrong order.** The bands from 1 kHz up were listed before 125 Hz on the device page. They
+  are now all named in Hz (`EQ 1000 Hz` instead of `EQ 1 kHz`), so Home Assistant lists them from 125 Hz to 8000 Hz.
+  Entity IDs stay the same (#6).
+
 ## 26.11.6 – 08.11.2026
 
 - **New: Power-on and playback time** as `sensor.jbl_bar_1000_power_on_time` and `_playback_time`, the bar's own

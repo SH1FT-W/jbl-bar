@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from unittest.mock import patch
 
 from homeassistant.config_entries import ConfigEntryState
@@ -77,7 +78,18 @@ async def test_entities_and_ids(hass: HomeAssistant, setup) -> None:
     assert player.attributes["friendly_name"] == "JBL BAR 1000"
     # Übersetzte Namen, IDs bleiben trotzdem englisch/alt
     assert hass.states.get("switch.jbl_bar_1000_nightmode").attributes["friendly_name"] == "JBL BAR 1000 Nachtmodus"
-    assert hass.states.get("number.jbl_bar_1000_1000hz").attributes["friendly_name"] == "JBL BAR 1000 EQ 1 kHz"
+    assert hass.states.get("number.jbl_bar_1000_1000hz").attributes["friendly_name"] == "JBL BAR 1000 EQ 1000 Hz"
+
+
+async def test_eq_bands_sort_by_frequency(hass: HomeAssistant, setup) -> None:
+    """Home Assistant lists a device's entities by name and compares numbers as numbers (issue #6)."""
+
+    def natural(name: str) -> list[int | str]:
+        return [int(part) if part.isdigit() else part.casefold() for part in re.split(r"(\d+)", name)]
+
+    bands = [f"number.jbl_bar_1000_{hz}hz" for hz in (125, 250, 500, 1000, 2000, 4000, 8000)]
+    names = [hass.states.get(entity_id).attributes["friendly_name"] for entity_id in bands]
+    assert sorted(names, key=natural) == names
 
 
 async def test_unsupported_command_skips_entity(hass: HomeAssistant, bar: FakeBar, setup) -> None:

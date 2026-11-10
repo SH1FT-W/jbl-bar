@@ -59,7 +59,9 @@ class JBLBarEqBand(JBLBarEntity, NumberEntity):
         super().__init__(coordinator, f"eq_{hz}", "number", f"{hz}hz")
         self._index = index
         self._attr_native_min_value = -9 if hz == 125 else -6
-        self._attr_translation_placeholders = {"band": f"{hz} Hz" if hz < 1000 else f"{hz // 1000} kHz"}
+        # Always in Hz: Home Assistant sorts a device's entities by name and compares numbers as numbers, so
+        # "1 kHz" would land before "125 Hz".
+        self._attr_translation_placeholders = {"band": f"{hz} Hz"}
         self._attr_translation_key = "eq_band"
 
     @property
