@@ -44,7 +44,11 @@
       "bass": { "name": "Bass" },
       "moment": { "name": "Moment" },
       "calibration": { "name": "Raum einmessen" },
-      "rear": { "name": "Rear-Speaker" }
+      "rear": { "name": "Rear-Speaker" },
+      "hdmi": { "name": "Nächster HDMI-Eingang" },
+      "hdmi_1": { "name": "HDMI 1" },
+      "hdmi_2": { "name": "HDMI 2" },
+      "hdmi_3": { "name": "HDMI 3" }
     },
     "number": {
       "volume": { "name": "Lautstärke" },

@@ -6,7 +6,11 @@
       "bass": { "default": "mdi:speaker" },
       "moment": { "default": "mdi:star-outline" },
       "calibration": { "default": "mdi:tune-vertical" },
-      "rear": { "default": "mdi:surround-sound" }
+      "rear": { "default": "mdi:surround-sound" },
+      "hdmi": { "default": "mdi:video-input-hdmi" },
+      "hdmi_1": { "default": "mdi:video-input-hdmi" },
+      "hdmi_2": { "default": "mdi:video-input-hdmi" },
+      "hdmi_3": { "default": "mdi:video-input-hdmi" }
     },
     "number": {
       "volume": { "default": "mdi:volume-high" },

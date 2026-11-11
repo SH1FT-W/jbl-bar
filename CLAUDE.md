@@ -26,6 +26,11 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
 - Wiedergabe von URLs (`media_player.play_media`) über AVTransport: belegt nur aus `description.xml` der Test-Bar
   (nur lesend 2026-11-02). **Wiedergabe selbst an der Test-Bar noch ungeprüft**: ob die Bar aus TV/HDMI auf
   Netzwerk umschaltet, im Standby annimmt, nach dem Ende `STOPPED` meldet und `setMediaSource` danach zurückführt.
+- HDMI-Eingänge (Issue #7): `setMediaSource` nimmt `HDMI1`/`HDMI2`/`HDMI3` mit error_code 0 an; an der Test-Bar
+  (2026-11-11, nur das Gerät an HDMI 1 da, die übrigen aus) wechselte nur HDMI1, HDMI2/3 und die Taste
+  `source-hdmi-switch` (aus `jbl_integration`, vom Melder an einer Bar 1000 mit gleicher Firmware als Durchschalten
+  bestätigt) blieben auf HDMI1, vermutlich weil die Bar Eingänge ohne Signal überspringt. Einzel-Eingänge daher
+  ungeprüft, Knöpfe standardmäßig aus; `getMediaSourceStatus` meldet den Eingang als HDMI1/2/3.
 - Keep-Alive: httpapi (lighttpd 1.4.69) schließt stille Verbindungen nach ~6 s, HAs Pool nutzt sie bis 15 s →
   jede httpapi-Anfrage mit `Connection: close` (lighttpd antwortet dann selbst mit close). UPnP verträgt gar keine
   zweite Anfrage pro Verbindung → eigene `force_close`-Session. (Gemessen 2026-11-06.)

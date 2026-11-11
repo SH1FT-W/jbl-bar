@@ -98,7 +98,8 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
 | `sensor.jbl_bar_1000_play_medium` | What is playing, as the bar reports it: `TV`, `HDMI`, `BLUETOOTH`, or a stream such as `AIRPLAY` or `CAST`. Unknown in standby. Disabled by default, as in `jbl_integration`. |
 | `binary_sensor.jbl_bar_1000_atmos_active` | Dolby Atmos is coming in |
-| `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear` | The remote's buttons |
+| `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear`, `_hdmi` | The remote's buttons; `_hdmi` steps through the HDMI inputs |
+| `button.jbl_bar_1000_hdmi_1`, `_hdmi_2`, `_hdmi_3` | Switch straight to one HDMI input. Disabled by default. |
 
 <details>
 <summary>Rear speakers (each its own device under the bar)</summary>

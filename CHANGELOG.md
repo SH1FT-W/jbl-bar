@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **New: Next HDMI input** as `button.jbl_bar_1000_hdmi`, the same ID as in `jbl_integration`. It sends the
+  remote's HDMI key, which steps through the HDMI inputs. Choosing HDMI as the source always goes to the last used
+  input (#7).
+- **New: HDMI 1, HDMI 2 and HDMI 3** as `button.jbl_bar_1000_hdmi_1` to `_hdmi_3`, switching straight to one input.
+  Disabled by default, because not every bar has three HDMI inputs. The source select and sensor still show all of
+  them as `hdmi` (#7).
+
 ## 26.11.7 – 10.11.2026
 
 - **Fixed: EQ bands in the wrong order.** The bands from 1 kHz up were listed before 125 Hz on the device page. They

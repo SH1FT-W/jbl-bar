@@ -357,7 +357,7 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
 
     async def async_set_source(self, source: str) -> None:
         await self._write(
-            lambda: self.client.command("setMediaSource", {"media_source": source}), self._set(source=source)
+            lambda: self.client.command("setMediaSource", {"media_source": source}), self._set(source=_source(source))
         )
 
     async def async_press(self, key: str) -> None:

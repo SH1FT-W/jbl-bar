@@ -5,6 +5,7 @@ from __future__ import annotations
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import entity_registry as er
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -142,6 +143,27 @@ async def test_settings(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     assert bar.commands("sendAppController")[-1] == {"key_pressed": "keyAtmosLevel"}
     await call(hass, "button", "press", "button.jbl_bar_1000_moment")
     assert bar.commands("sendAppController")[-1] == {"key_pressed": "smart_triger"}
+    await call(hass, "button", "press", "button.jbl_bar_1000_hdmi")
+    assert bar.commands("sendAppController")[-1] == {"key_pressed": "source-hdmi-switch"}
+
+
+async def test_hdmi_inputs(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    """One button per HDMI input (disabled by default); the source select keeps showing them as "hdmi"."""
+    registry = er.async_get(hass)
+    for number in (1, 2, 3):
+        entity_id = f"button.jbl_bar_1000_hdmi_{number}"
+        assert registry.async_get(entity_id).disabled_by is er.RegistryEntryDisabler.INTEGRATION
+        registry.async_update_entity(entity_id, disabled_by=None)
+    assert await hass.config_entries.async_reload(setup.entry_id)
+    await hass.async_block_till_done()
+
+    await call(hass, "button", "press", "button.jbl_bar_1000_hdmi_2")
+    assert bar.commands("setMediaSource") == [{"media_source": "HDMI2"}]
+    assert hass.states.get("select.jbl_bar_1000_source").state == "hdmi"
+    assert hass.states.get("sensor.jbl_bar_1000_source").state == "hdmi"
+    await setup.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("select.jbl_bar_1000_source").state == "hdmi"
 
 
 async def test_error_is_readable(hass: HomeAssistant, bar: FakeBar, setup) -> None:

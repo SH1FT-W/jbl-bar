@@ -43,6 +43,7 @@ LEGACY_IDS = [
     "button.jbl_bar_1000_moment",
     "button.jbl_bar_1000_calibration",
     "button.jbl_bar_1000_rear",
+    "button.jbl_bar_1000_hdmi",
 ]
 # Disabled by default as in jbl_integration: they have no state until enabled, only a registry entry.
 LEGACY_DISABLED_IDS = ["sensor.jbl_bar_1000_play_medium"]
