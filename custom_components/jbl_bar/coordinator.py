@@ -6,6 +6,7 @@ import asyncio
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field, replace
 import logging
+import re
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -67,6 +68,8 @@ class JBLBarState:
     muted: bool | None = None
     player_status: str | None = None
     source: str | None = None
+    # Number of the selected HDMI input (1-3) while the source is HDMI and the bar names it, else None
+    hdmi_input: int | None = None
     streaming: bool | None = None
     atmos_active: bool | None = None
     media: MediaInfo = field(default_factory=MediaInfo)
@@ -127,6 +130,12 @@ def _prod_value(answer: dict[str, Any], key: str) -> str | None:
     nested = answer.get("prod_setting")
     value = (nested if isinstance(nested, dict) else answer).get(key)
     return None if value in (None, "") else str(value)
+
+
+def _hdmi_input(raw: Any) -> int | None:
+    """HDMI1/HDMI2/HDMI3 → 1/2/3; plain HDMI (the last used input) and everything else → None."""
+    match = re.fullmatch(r"HDMI([1-3])", str(raw or "").upper())
+    return int(match.group(1)) if match else None
 
 
 def _source(raw: Any) -> str | None:
@@ -250,11 +259,13 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         if streaming and isinstance(streaming.get("status"), dict):
             info = streaming["status"]
             state.source = _source(info.get("source"))
+            state.hdmi_input = _hdmi_input(info.get("source"))
             state.streaming = _on(info.get("is_streaming"))
             state.atmos_active = _on(info.get("is_atmos"))
         # Gewählter Eingang – auch wenn gerade nichts ankommt (dann meldet getStreamingStatus nur IDLE).
         if selected and selected.get("media_source"):
             state.source = _source(selected["media_source"])
+            state.hdmi_input = _hdmi_input(selected["media_source"])
         try:
             state.media = await self.client.media_info()
         except JBLBarError as err:
@@ -357,7 +368,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
 
     async def async_set_source(self, source: str) -> None:
         await self._write(
-            lambda: self.client.command("setMediaSource", {"media_source": source}), self._set(source=_source(source))
+            lambda: self.client.command("setMediaSource", {"media_source": source}),
+            self._set(source=_source(source), hdmi_input=_hdmi_input(source)),
         )
 
     async def async_press(self, key: str) -> None:

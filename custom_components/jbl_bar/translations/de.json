@@ -78,7 +78,9 @@
     "sensor": {
       "source": {
         "name": "Quelle",
-        "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "Keine", "other": "Andere" }
+        "state": { "tv": "TV", "hdmi": "HDMI",
+          "hdmi_1": "HDMI 1", "hdmi_2": "HDMI 2", "hdmi_3": "HDMI 3",
+          "bluetooth": "Bluetooth", "idle": "Keine", "other": "Andere" }
       },
       "play_medium": { "name": "Wiedergabeweg" },
       "power_on_time": { "name": "Betriebszeit" },

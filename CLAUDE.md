@@ -31,6 +31,8 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   `source-hdmi-switch` (aus `jbl_integration`, vom Melder an einer Bar 1000 mit gleicher Firmware als Durchschalten
   bestätigt) blieben auf HDMI1, vermutlich weil die Bar Eingänge ohne Signal überspringt. Einzel-Eingänge daher
   ungeprüft, Knöpfe standardmäßig aus; `getMediaSourceStatus` meldet den Eingang als HDMI1/2/3.
+  Der Quellen-Sensor zeigt daraus `hdmi_1`–`hdmi_3` (nur `hdmi`, wenn die Bar keine Nummer nennt), Auswahl und
+  Media-Player bleiben bei `hdmi`, weil `setMediaSource` "HDMI" zum zuletzt genutzten Eingang geht.
 - Keep-Alive: httpapi (lighttpd 1.4.69) schließt stille Verbindungen nach ~6 s, HAs Pool nutzt sie bis 15 s →
   jede httpapi-Anfrage mit `Connection: close` (lighttpd antwortet dann selbst mit close). UPnP verträgt gar keine
   zweite Anfrage pro Verbindung → eigene `force_close`-Session. (Gemessen 2026-11-06.)

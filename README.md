@@ -95,7 +95,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `select.jbl_bar_1000_rear_volume` | Volume of the detached rear speakers: muted, low, medium or high. Unavailable while they are docked. |
 | `switch.jbl_bar_1000_deep_sleep` | Deep sleep. Only on bars that report the feature. |
 | `sensor.jbl_bar_1000_power_on_time`, `_playback_time` | The bar's lifetime counters. Only on bars that report them. |
-| `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input, incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
+| `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input (HDMI 1 to 3 when the bar names the input), incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
 | `sensor.jbl_bar_1000_play_medium` | What is playing, as the bar reports it: `TV`, `HDMI`, `BLUETOOTH`, or a stream such as `AIRPLAY` or `CAST`. Unknown in standby. Disabled by default, as in `jbl_integration`. |
 | `binary_sensor.jbl_bar_1000_atmos_active` | Dolby Atmos is coming in |
 | `button.jbl_bar_1000_atmos`, `_bass`, `_moment`, `_calibration`, `_rear`, `_hdmi` | The remote's buttons; `_hdmi` steps through the HDMI inputs |

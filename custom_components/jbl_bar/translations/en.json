@@ -78,7 +78,9 @@
     "sensor": {
       "source": {
         "name": "Source",
-        "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth", "idle": "None", "other": "Other" }
+        "state": { "tv": "TV", "hdmi": "HDMI",
+          "hdmi_1": "HDMI 1", "hdmi_2": "HDMI 2", "hdmi_3": "HDMI 3",
+          "bluetooth": "Bluetooth", "idle": "None", "other": "Other" }
       },
       "play_medium": { "name": "Play medium" },
       "power_on_time": { "name": "Power-on time" },

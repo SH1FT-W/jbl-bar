@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- **New: the source sensor names the HDMI input.** `sensor.jbl_bar_1000_source` now shows `hdmi_1`, `hdmi_2` or
+  `hdmi_3` (HDMI 1 to HDMI 3) when the bar reports which input is selected, and `hdmi` only when it does not, for
+  example right after choosing HDMI in the source select until the bar answers. Automations that check the sensor for
+  `hdmi` need the new values; the source select and the media player keep showing `hdmi` and `HDMI` (#7).
+
 ## 26.11.8 – 12.11.2026
 
 - **New: Next HDMI input** as `button.jbl_bar_1000_hdmi`, the same ID as in `jbl_integration`. It sends the

@@ -160,10 +160,46 @@ async def test_hdmi_inputs(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     await call(hass, "button", "press", "button.jbl_bar_1000_hdmi_2")
     assert bar.commands("setMediaSource") == [{"media_source": "HDMI2"}]
     assert hass.states.get("select.jbl_bar_1000_source").state == "hdmi"
-    assert hass.states.get("sensor.jbl_bar_1000_source").state == "hdmi"
+    assert hass.states.get("sensor.jbl_bar_1000_source").state == "hdmi_2"
     await setup.runtime_data.async_refresh()
     await hass.async_block_till_done()
     assert hass.states.get("select.jbl_bar_1000_source").state == "hdmi"
+    assert hass.states.get("sensor.jbl_bar_1000_source").state == "hdmi_2"
+
+
+async def test_source_sensor_names_the_hdmi_input(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    """#7: the source sensor shows which HDMI input is selected; without a number from the bar it stays "hdmi"."""
+    sensor = "sensor.jbl_bar_1000_source"
+    assert hass.states.get(sensor).attributes["options"] == [
+        "tv",
+        "hdmi",
+        "hdmi_1",
+        "hdmi_2",
+        "hdmi_3",
+        "bluetooth",
+        "idle",
+        "other",
+    ]
+    bar.state["source"] = bar.state["selected"] = "HDMI3"
+    await setup.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get(sensor).state == "hdmi_3"
+    # The select's HDMI goes to the last used input: the number is unknown until the bar reports it
+    await call(hass, "select", "select_option", "select.jbl_bar_1000_source", option="hdmi")
+    assert bar.commands("setMediaSource")[-1] == {"media_source": "HDMI"}
+    assert hass.states.get(sensor).state == "hdmi"
+    bar.state["source"] = bar.state["selected"] = "HDMI1"
+    await setup.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get(sensor).state == "hdmi_1"
+    # A bar that reports plain HDMI
+    bar.state["source"] = bar.state["selected"] = "HDMI"
+    await setup.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get(sensor).state == "hdmi"
+    # Leaving HDMI forgets the number
+    await call(hass, "select", "select_option", "select.jbl_bar_1000_source", option="tv")
+    assert hass.states.get(sensor).state == "tv"
 
 
 async def test_error_is_readable(hass: HomeAssistant, bar: FakeBar, setup) -> None:

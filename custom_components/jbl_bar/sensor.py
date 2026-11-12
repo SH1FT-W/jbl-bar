@@ -17,9 +17,11 @@ from .entity import JBLBarEntity, async_track_rears, rear_device_info
 PARALLEL_UPDATES = 0
 
 
-def _source_state(source: str | None) -> str | None:
+def _source_state(source: str | None, hdmi_input: int | None = None) -> str | None:
     if source is None:
         return None
+    if source == "HDMI" and hdmi_input:
+        return f"hdmi_{hdmi_input}"
     if source in SOURCES:
         return SOURCES[source].lower()
     return "idle" if source == "IDLE" else "other"
@@ -48,8 +50,9 @@ SENSORS = (
     JBLBarSensorDescription(
         key="source",
         device_class=SensorDeviceClass.ENUM,
-        options=["tv", "hdmi", "bluetooth", "idle", "other"],
-        value=lambda s: _source_state(s.source),
+        # "hdmi" when the bar does not name the input
+        options=["tv", "hdmi", "hdmi_1", "hdmi_2", "hdmi_3", "bluetooth", "idle", "other"],
+        value=lambda s: _source_state(s.source, s.hdmi_input),
         command="getStreamingStatus",
     ),
     # Same ID as the "Play Medium" sensor of jbl_integration, disabled by default like there. Free text, the set of
