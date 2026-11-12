@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 26.11.8 – 12.11.2026
 
 - **New: Next HDMI input** as `button.jbl_bar_1000_hdmi`, the same ID as in `jbl_integration`. It sends the
   remote's HDMI key, which steps through the HDMI inputs. Choosing HDMI as the source always goes to the last used
