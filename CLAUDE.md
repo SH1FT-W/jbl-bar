@@ -30,7 +30,8 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   (2026-11-11, nur das Gerät an HDMI 1 da, die übrigen aus) wechselte nur HDMI1, HDMI2/3 und die Taste
   `source-hdmi-switch` (aus `jbl_integration`, vom Melder an einer Bar 1000 mit gleicher Firmware als Durchschalten
   bestätigt) blieben auf HDMI1, vermutlich weil die Bar Eingänge ohne Signal überspringt. Einzel-Eingänge daher
-  ungeprüft, Knöpfe standardmäßig aus; `getMediaSourceStatus` meldet den Eingang als HDMI1/2/3.
+  an der Test-Bar ungeprüft, Knöpfe standardmäßig aus; der Melder (Bar 1000, 2026-11-12) bestätigt: HDMI1–3 schalten,
+  ohne aktives Gerät bleibt die Bar auf dem aktuellen Eingang (im README unter „Good to know“); `getMediaSourceStatus` meldet den Eingang als HDMI1/2/3.
   Der Quellen-Sensor zeigt daraus `hdmi_1`–`hdmi_3` (nur `hdmi`, wenn die Bar keine Nummer nennt), Auswahl und
   Media-Player bleiben bei `hdmi`, weil `setMediaSource` "HDMI" zum zuletzt genutzten Eingang geht.
 - Keep-Alive: httpapi (lighttpd 1.4.69) schließt stille Verbindungen nach ~6 s, HAs Pool nutzt sie bis 15 s →

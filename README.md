@@ -145,6 +145,7 @@ data:
 
 - **Rear volume** only works with the rears detached, so its select is unavailable while they are docked. The bar remembers the last level.
 - **Source HDMI** wakes the bar even when nothing is connected to the HDMI input.
+- **HDMI 1 to 3** only switch to an input with an active device. If nothing is connected there or the device is off, the bar stays on the current input. Next HDMI input skips such inputs as well.
 - **Changes from the remote** show up within 10 seconds. Only the audio format arrives instantly.
 - **Announcements** interrupt everything, including the TV sound. Changes made during one are overwritten by the restore, and a restart or reload during one restores nothing.
 
