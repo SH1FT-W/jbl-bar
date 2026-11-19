@@ -47,11 +47,11 @@ Features a model does not know are not created.
 
 [![Open in the Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=SH1FT-W&repository=jbl-bar&category=integration)
 
-For the audio format and for announcements the bar has to reach Home Assistant: the internal URL in Home Assistant's network settings should be an IP address (the default on most installations).
+For the audio format and for announcements the bar has to reach Home Assistant: the internal URL in Home Assistant's network settings should be an IP address (the default on most installations). If Home Assistant itself serves HTTPS (its own certificate), it refuses an IP address there and the plain http address handed to the bar does not answer: enter a **Callback URL** under **three dots > Configure** instead (see Troubleshooting below).
 
 1. **Install it.** Search for **JBL Bar** under **Settings > Marketplace** (called HACS before Home Assistant 2026.11), download it and restart Home Assistant.
 2. **Add the bar.** It usually shows up under **Settings > Devices & services > Discovered**. If not, choose **Add integration > JBL Bar** and enter its IP address.
-3. **Pick an announcement volume** if you like, under **three dots > Configure**. 0 (the default) keeps the current volume.
+3. **Pick an announcement volume** if you like, under **three dots > Configure**. 0 (the default) keeps the current volume. The same dialog holds the callback URL, which you only need when Home Assistant serves nothing but HTTPS.
 
 If the bar gets a new IP address later, use **three dots > Reconfigure**.
 
@@ -154,6 +154,7 @@ data:
 
 - **All entities "unavailable".** The bar does not answer at its IP address. Check in your router whether it got a new one and enter it with **three dots > Reconfigure**. A single dropout (for example while going to standby) is bridged.
 - **Audio format stays empty, or announcements are silent.** The bar cannot reach Home Assistant. Check the internal URL (an IP address, not a host name) and whether a firewall blocks port 8123 from the bar's network.
+- **Home Assistant serves only HTTPS** (a certificate under `http:` in `configuration.yaml`). The address the integration hands to the bar is plain http, which Home Assistant then does not answer, and its network settings refuse an IP address as internal URL, so the audio format stays unknown (the log says so). Enter a **Callback URL** under **three dots > Configure**: the address of something the bar reaches over plain http that forwards to Home Assistant, such as a reverse proxy, for example `http://192.0.2.20:8080`. The integration adds `/api/jbl_bar/notify/…` itself, and the entry reloads when the URL changes. The proxy has to pass on the `NOTIFY` method and the bar's address as the sender, which Home Assistant checks: add the proxy to `trusted_proxies`, set `use_x_forwarded_for: true` under `http:` and let it send `X-Forwarded-For`. An IP address works best; a host name only if the bar can resolve it (it does not resolve `.local` names).
 - **Source does not come back right away after an announcement.** It comes back once the bar reports the end (at the latest after 10 minutes, or after 15 seconds if it never started).
 - **Rear speakers missing.** They appear as soon as the bar reports them. Rears the bar no longer knows can be deleted on their device page.
 - **Debug log:**

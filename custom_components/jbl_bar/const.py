@@ -37,6 +37,9 @@ AUDIO_SYNC_MAX: Final = 250
 
 # Announcements (media_player.play_media with announce): option for an own volume, 0 = keep the current volume.
 CONF_ANNOUNCE_VOLUME: Final = "announce_volume"
+# Optional base URL under which the bar reaches Home Assistant (callback of the audio format events), e.g. the
+# plain-http address of a reverse proxy when Home Assistant itself only serves HTTPS. Empty/absent = automatic.
+CONF_CALLBACK_URL: Final = "callback_url"
 # Wait this long for the bar to start playing, then at most this long for the end; checked every ANNOUNCE_POLL s.
 ANNOUNCE_START_TIMEOUT: Final = 15.0
 ANNOUNCE_MAX: Final = 600.0

@@ -25,11 +25,17 @@
   "options": {
     "step": {
       "init": {
-        "title": "Announcements",
-        "description": "Announcements (for example with tts.speak) interrupt what the bar is playing. Afterwards the source (TV, HDMI or Bluetooth), volume, mute and standby come back; other streams are not resumed.",
-        "data": { "announce_volume": "Announcement volume" },
-        "data_description": { "announce_volume": "Volume for announcements. 0 keeps the current volume." }
+        "title": "Options",
+        "description": "Announcements (for example with tts.speak) interrupt what the bar is playing. Afterwards the source (TV, HDMI or Bluetooth), volume, mute and standby come back; other streams are not resumed.\n\nThe callback URL is the address under which the bar reaches Home Assistant to report the audio format. Leave it empty unless Home Assistant only serves HTTPS: then enter the address of something the bar reaches over plain http that forwards to Home Assistant, for example {example}.",
+        "data": { "announce_volume": "Announcement volume", "callback_url": "Callback URL" },
+        "data_description": {
+          "announce_volume": "Volume for announcements. 0 keeps the current volume.",
+          "callback_url": "Optional. An IP address is safer than a host name, because the bar may not resolve names. Saving a changed value reloads the integration."
+        }
       }
+    },
+    "error": {
+      "invalid_url": "Enter an address that starts with http or https, followed by an IP address or host name and optionally a port."
     }
   },
   "entity": {

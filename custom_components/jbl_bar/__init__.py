@@ -19,7 +19,7 @@ from homeassistant.helpers.network import NoURLAvailableError, get_url
 from homeassistant.helpers.typing import ConfigType
 
 from .api import UPNP_PORT, JBLBarClient, JBLBarError, create_ssl_context, create_upnp_session
-from .const import DOMAIN
+from .const import CONF_CALLBACK_URL, DOMAIN
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import bar_device_info
 
@@ -98,8 +98,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: JBLBarConfigEntry) -> bo
     )
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    callback_option = str(entry.options.get(CONF_CALLBACK_URL, ""))
+
+    async def reload_on_callback_change(hass: HomeAssistant, changed: JBLBarConfigEntry) -> None:
+        """The subscription carries the callback URL, so only a changed URL needs a reload (volume is read live)."""
+        if str(changed.options.get(CONF_CALLBACK_URL, "")) != callback_option:
+            hass.config_entries.async_schedule_reload(changed.entry_id)
+
+    entry.async_on_unload(entry.add_update_listener(reload_on_callback_change))
     # Hintergrund-Task: HA wartet beim Start nicht darauf (die alte Integration hing hier 5 Minuten).
-    callback_url = await _callback_url(hass, host, entry.entry_id)
+    callback_url = await _callback_url(hass, host, entry.entry_id, callback_option)
     entry.async_create_background_task(hass, coordinator.async_run_events(callback_url), f"{DOMAIN}_events_{host}")
     return True
 
@@ -164,17 +172,28 @@ def _own_ip(host: str) -> str:
         return "127.0.0.1"
 
 
-async def _callback_url(hass: HomeAssistant, host: str, entry_id: str) -> str:
-    """Adresse, unter der die Bar HA erreicht: interne URL, sonst die eigene IP auf dem Weg zur Bar."""
+async def _callback_url(hass: HomeAssistant, host: str, entry_id: str, override: str = "") -> str:
+    """Address under which the bar reaches HA: the callback URL option, else the internal URL, else our own IP."""
     path = NOTIFY_PATH.format(entry_id=entry_id)
+    if override:
+        return override.rstrip("/") + path
     try:
         base = get_url(hass, allow_external=False, allow_cloud=False, prefer_external=False)
         url_host = base.split("://", 1)[1].split(":", 1)[0].split("/", 1)[0]
         ip_address(url_host)
-    except (NoURLAvailableError, ValueError, IndexError):
-        pass
+    except (NoURLAvailableError, ValueError, IndexError) as err:
+        # The bar does not resolve host names (no mDNS), so only an IP address is handed to it
+        _LOGGER.debug("The internal URL cannot be used for the callback (%s: %s)", type(err).__name__, err)
     else:
         return base.rstrip("/") + path
     own_ip = await hass.async_add_executor_job(_own_ip, host)
     port = getattr(hass.http, "server_port", None) or 8123
-    return f"http://{own_ip}:{port}{path}"
+    url = f"http://{own_ip}:{port}{path}"
+    if getattr(hass.config.api, "use_ssl", False):
+        _LOGGER.warning(
+            "Home Assistant only serves HTTPS, but the bar is given the plain http address %s, which does not answer: "
+            "the audio format will stay unknown. Set a callback URL in the options of the JBL Bar integration, for "
+            "example the address of a reverse proxy that accepts plain http and forwards to Home Assistant",
+            url.removesuffix(path),
+        )
+    return url

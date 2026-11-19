@@ -25,11 +25,17 @@
   "options": {
     "step": {
       "init": {
-        "title": "Ansagen",
-        "description": "Ansagen (zum Beispiel mit tts.speak) unterbrechen, was die Bar gerade spielt. Danach kommen Quelle (TV, HDMI oder Bluetooth), Lautstärke, Stummschaltung und Standby zurück; andere Streams laufen nicht weiter.",
-        "data": { "announce_volume": "Lautstärke für Ansagen" },
-        "data_description": { "announce_volume": "Lautstärke für Ansagen. 0 behält die aktuelle Lautstärke." }
+        "title": "Optionen",
+        "description": "Ansagen (zum Beispiel mit tts.speak) unterbrechen, was die Bar gerade spielt. Danach kommen Quelle (TV, HDMI oder Bluetooth), Lautstärke, Stummschaltung und Standby zurück; andere Streams laufen nicht weiter.\n\nDie Callback-URL ist die Adresse, unter der die Bar Home Assistant erreicht, um das Audioformat zu melden. Leer lassen, außer Home Assistant spricht nur HTTPS: dann die Adresse von etwas eintragen, das die Bar per http erreicht und das an Home Assistant weiterleitet, zum Beispiel {example}.",
+        "data": { "announce_volume": "Lautstärke für Ansagen", "callback_url": "Callback-URL" },
+        "data_description": {
+          "announce_volume": "Lautstärke für Ansagen. 0 behält die aktuelle Lautstärke.",
+          "callback_url": "Optional. Eine IP-Adresse ist sicherer als ein Hostname, weil die Bar Namen eventuell nicht auflöst. Ein geänderter Wert lädt die Integration neu."
+        }
       }
+    },
+    "error": {
+      "invalid_url": "Eine Adresse eingeben, die mit http oder https beginnt, gefolgt von IP-Adresse oder Hostname und optional einem Port."
     }
   },
   "entity": {

@@ -17,7 +17,8 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from common import FakeBar
 from custom_components.jbl_bar import coordinator as coordinator_module
-from custom_components.jbl_bar.const import CONF_ANNOUNCE_VOLUME
+from custom_components.jbl_bar.api import JBLBarClient
+from custom_components.jbl_bar.const import CONF_ANNOUNCE_VOLUME, CONF_CALLBACK_URL
 
 PLAYER = "media_player.jbl_bar_1000"
 URL = "http://192.0.2.10:8123/local/chime.mp3?a=1&b=2"
@@ -337,6 +338,37 @@ async def test_options_flow(hass: HomeAssistant, setup: MockConfigEntry) -> None
     assert setup.options == {CONF_ANNOUNCE_VOLUME: 25}
     # The option is read at every announcement: the entry is not reloaded
     assert hass.config_entries.async_get_entry(setup.entry_id).runtime_data is coordinator
+
+
+async def test_options_callback_url(
+    hass: HomeAssistant, setup: MockConfigEntry, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A callback URL is checked, stored without the trailing slash, and the entry subscribes again with it."""
+    subscribed: list[str] = []
+    subscribe = JBLBarClient.subscribe
+
+    async def spy(self: JBLBarClient, callback_url: str, seconds: int) -> tuple[str, int]:
+        subscribed.append(callback_url)
+        return await subscribe(self, callback_url, seconds)
+
+    monkeypatch.setattr(JBLBarClient, "subscribe", spy)
+    coordinator = setup.runtime_data
+    result = await hass.config_entries.options.async_init(setup.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_ANNOUNCE_VOLUME: 0.0, CONF_CALLBACK_URL: "soundbar"}
+    )
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {CONF_CALLBACK_URL: "invalid_url"}
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_ANNOUNCE_VOLUME: 0.0, CONF_CALLBACK_URL: " http://192.0.2.20:8080/ "}
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert setup.options == {CONF_ANNOUNCE_VOLUME: 0, CONF_CALLBACK_URL: "http://192.0.2.20:8080"}
+    await hass.async_block_till_done()
+    # The subscription carries the URL, so a changed one reloads the entry
+    assert setup.runtime_data is not coordinator
+    await hass.async_block_till_done()
+    assert subscribed == [f"http://192.0.2.20:8080/api/jbl_bar/notify/{setup.entry_id}"]
 
 
 async def test_announce_after_restart_in_standby(hass: HomeAssistant, bar: FakeBar, setup: MockConfigEntry) -> None:

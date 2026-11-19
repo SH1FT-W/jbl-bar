@@ -1,5 +1,15 @@
 # Changelog
 
+## 26.11.10 – 19.11.2026
+
+- **New: callback URL** under **three dots > Configure**. The bar reports the audio format by calling Home
+  Assistant, and the address handed to it was always `http://<IP>:<port>` (or the internal URL, but only if that is
+  an IP address). With Home Assistant serving HTTPS only, that address does not answer, so the audio format stayed
+  unknown, and Home Assistant refuses an IP address as internal URL in that case. Enter the address of something the
+  bar reaches over plain http that forwards to Home Assistant, for example a reverse proxy, and the integration
+  reloads and subscribes with it. Empty keeps the automatic address (#8).
+- **New: a warning in the log** when Home Assistant serves HTTPS only and no callback URL is set (#8).
+
 ## 26.11.9 – 12.11.2026
 
 - **New: the source sensor names the HDMI input.** `sensor.jbl_bar_1000_source` now shows `hdmi_1`, `hdmi_2` or

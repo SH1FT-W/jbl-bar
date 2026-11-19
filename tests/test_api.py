@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from types import SimpleNamespace
 
 import aiohttp
 from homeassistant.core import HomeAssistant
@@ -12,7 +13,7 @@ import pytest
 from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
 
 from common import HOST
-from custom_components.jbl_bar import _callback_url, api
+from custom_components.jbl_bar import _LOGGER, _callback_url, api
 from custom_components.jbl_bar.api import (
     JBLBarClient,
     JBLBarCommandError,
@@ -97,6 +98,40 @@ async def test_callback_url(hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch
     # Hostname statt IP: die Bar löst kein mDNS auf → eigene IP auf dem Weg zur Bar
     await async_process_ha_core_config(hass, {"internal_url": "http://homeassistant.local:8123"})
     assert (await _callback_url(hass, HOST, "abc")).startswith("http://192.0.2.99:")
+
+
+async def test_callback_url_option(hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The callback URL from the options wins over the internal URL; a trailing slash is dropped, empty = automatic."""
+    monkeypatch.setattr("custom_components.jbl_bar.socket.socket", FakeSocket)
+    await async_process_ha_core_config(hass, {"internal_url": "http://192.0.2.30:8123"})
+    assert (
+        await _callback_url(hass, HOST, "abc", "http://192.0.2.20:8080/")
+        == "http://192.0.2.20:8080/api/jbl_bar/notify/abc"
+    )
+    assert await _callback_url(hass, HOST, "abc", "") == "http://192.0.2.30:8123/api/jbl_bar/notify/abc"
+
+
+async def test_callback_url_warns_when_ha_serves_only_https(
+    hass: HomeAssistant, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """With its own certificate HA answers nothing on plain http: the automatic address cannot work, say so."""
+    monkeypatch.setattr("custom_components.jbl_bar.socket.socket", FakeSocket)
+    warnings: list[str] = []
+    monkeypatch.setattr(_LOGGER, "warning", lambda message, *args: warnings.append(message % args))
+    # A host name as internal URL is not handed to the bar: the own IP address is used
+    await async_process_ha_core_config(hass, {"internal_url": "http://homeassistant.local:8123"})
+    monkeypatch.setattr(hass.config, "api", SimpleNamespace(use_ssl=False))
+    assert (await _callback_url(hass, HOST, "abc")).startswith("http://192.0.2.99:")
+    assert warnings == []
+    monkeypatch.setattr(hass.config, "api", SimpleNamespace(use_ssl=True))
+    assert (await _callback_url(hass, HOST, "abc")).startswith("http://192.0.2.99:")
+    assert len(warnings) == 1
+    assert "http://192.0.2.99:" in warnings[0]
+    assert "callback URL" in warnings[0]
+    # With a callback URL there is nothing to warn about
+    warnings.clear()
+    await _callback_url(hass, HOST, "abc", "http://192.0.2.20:8080")
+    assert warnings == []
 
 
 def test_ssl_context_is_shared() -> None:
