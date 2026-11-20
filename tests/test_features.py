@@ -1,4 +1,4 @@
-"""Broadcast and Deep Sleep: only on bars that report them, read and written as the JBL One app does."""
+"""Broadcast, Deep Sleep, sound mode: only on bars that report them, read and written as the JBL One app does."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ REAR_VOLUME = "select.jbl_bar_1000_rear_volume"
 POWER_ON = "sensor.jbl_bar_1000_power_on_time"
 PLAYBACK = "sensor.jbl_bar_1000_playback_time"
 AURACAST = "switch.jbl_bar_1000_auracast_quality"
+SOUND_MODE = "select.jbl_bar_1000_sound_mode"
 
 
 async def call(hass: HomeAssistant, domain: str, service: str, entity_id: str, **data) -> None:
@@ -34,6 +35,27 @@ async def test_bar_without_the_features(hass: HomeAssistant, bar: FakeBar, setup
     assert hass.states.get(BROADCAST) is None
     assert hass.states.get(DEEP_SLEEP) is None
     assert bar.commands("getProdSetting") == []
+
+
+async def test_no_sound_mode_without_manual_mode(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    assert hass.states.get(SOUND_MODE) is None
+
+
+@pytest.fixture
+def mk2_bar(bar: FakeBar) -> FakeBar:
+    bar.smart_manual = 1
+    return bar
+
+
+async def test_sound_mode(hass: HomeAssistant, mk2_bar: FakeBar, setup) -> None:
+    """Bar 1300 MK2 (#9): Standard, Music, Movie; choosing one turns smart mode off with the full payload."""
+    state = hass.states.get(SOUND_MODE)
+    assert state.state == "standard"
+    assert state.attributes["options"] == ["standard", "music", "movie"]
+    await call(hass, "select", "select_option", SOUND_MODE, option="movie")
+    assert mk2_bar.commands("setSmartMode") == [{"auto_mode_switch": 0, "manual_mode": 3, "status": "off"}]
+    assert hass.states.get(SOUND_MODE).state == "movie"
+    assert hass.states.get("switch.jbl_bar_1000_smart_mode").state == "off"
 
 
 @pytest.fixture

@@ -79,6 +79,7 @@ class JBLBarState:
     smart_mode: bool | None = None
     # Manual sound mode (1 Standard, 2 Music, 3 Movie) on bars whose getSmartMode reports it (bar 1300 MK2), else None
     smart_manual_mode: int | None = None
+    smart_manual_modes: list[int] = field(default_factory=list)
     pure_voice: bool | None = None
     feedback_tone: bool | None = None
     audio_sync: int | None = None
@@ -322,6 +323,8 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
         if (smart := answers["getSmartMode"]) is not None:
             state.smart_mode = _on(smart.get("status"))
             state.smart_manual_mode = _int(smart.get("manual_mode"))
+            modes = smart.get("support_manual_modes")
+            state.smart_manual_modes = [m for m in map(_int, modes) if m is not None] if isinstance(modes, list) else []
         if (voice := answers["getPureVoiceState"]) is not None:
             state.pure_voice = _on(voice.get("purevoice_state"))
         if (tone := answers["getFeedbackToneConfig"]) is not None:
@@ -393,6 +396,13 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             commands[key] = ("setSmartMode", payload | {"status": "on" if on else "off"})
         command, payload = commands[key]
         await self._write(lambda: self.client.command(command, payload), self._set(**{key: on}))
+
+    async def async_set_sound_mode(self, mode: int) -> None:
+        """Manual sound mode (bar 1300 MK2): a manual mode only plays with smart mode off, so this turns it off."""
+        payload = {"auto_mode_switch": 0, "manual_mode": mode, "status": "off"}
+        await self._write(
+            lambda: self.client.command("setSmartMode", payload), self._set(smart_mode=False, smart_manual_mode=mode)
+        )
 
     async def async_set_audio_sync(self, value: int) -> None:
         await self._write(

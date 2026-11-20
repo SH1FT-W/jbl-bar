@@ -1,4 +1,4 @@
-"""Selects: input source, EQ preset, sleep timer, Broadcast and volume of the rear speakers."""
+"""Selects: input source, EQ preset, sound mode, sleep timer, Broadcast and volume of the rear speakers."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import BROADCAST_MODES, REAR_VOLUME_LEVELS, SLEEP_OPTIONS, SOURCES
+from .const import BROADCAST_MODES, REAR_VOLUME_LEVELS, SLEEP_OPTIONS, SOUND_MODES, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator
 from .entity import JBLBarEntity
 
@@ -20,6 +20,8 @@ async def async_setup_entry(
     entities: list[SelectEntity] = [JBLBarSource(coordinator)]
     if coordinator.supports("getEQList") and coordinator.data.eq_presets:
         entities.append(JBLBarEqPreset(coordinator))
+    if coordinator.supports("getSmartMode") and coordinator.data.smart_manual_mode is not None:
+        entities.append(JBLBarSoundMode(coordinator))
     if coordinator.supports("getSleepTimer"):
         entities.append(JBLBarSleepTimer(coordinator))
     if coordinator.has_feature("flex_listening"):
@@ -68,6 +70,26 @@ class JBLBarEqPreset(JBLBarEntity, SelectEntity):
         eq_id = next((p.eq_id for p in self.coordinator.data.eq_presets.values() if p.name == option), None)
         if eq_id is not None:
             await self._run(self.coordinator.async_set_eq_preset(eq_id))
+
+
+class JBLBarSoundMode(JBLBarEntity, SelectEntity):
+    """Manual sound mode of the smart mode (Standard, Music, Movie), only on bars that report it (bar 1300 MK2)."""
+
+    def __init__(self, coordinator: JBLBarCoordinator) -> None:
+        super().__init__(coordinator, "sound_mode", "select")
+
+    @property
+    def options(self) -> list[str]:
+        supported = self.coordinator.data.smart_manual_modes
+        return [name for mode, name in SOUND_MODES.items() if not supported or mode in supported]
+
+    @property
+    def current_option(self) -> str | None:
+        return SOUND_MODES.get(self.coordinator.data.smart_manual_mode or 0)
+
+    async def async_select_option(self, option: str) -> None:
+        mode = next(mode for mode, name in SOUND_MODES.items() if name == option)
+        await self._run(self.coordinator.async_set_sound_mode(mode))
 
 
 class JBLBarSleepTimer(JBLBarEntity, SelectEntity):

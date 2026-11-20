@@ -33,6 +33,9 @@ BROADCAST_MODES: Final = {"0": "off", "1": "mono", "2": "stereo"}
 # Levels of detached rear speakers. The app menu is a web view outside the APK, so the numbers are inferred.
 REAR_VOLUME_LEVELS: Final = {0: "muted", 1: "low", 2: "medium", 3: "high"}
 
+# Manual sound modes of the smart mode on bars that report them (bar 1300 MK2, #9); read back from the app.
+SOUND_MODES: Final = {1: "standard", 2: "music", 3: "movie"}
+
 AUDIO_SYNC_MAX: Final = 250
 
 # Announcements (media_player.play_media with announce): option for an own volume, 0 = keep the current volume.

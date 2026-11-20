@@ -20,6 +20,7 @@
     "select": {
       "source": { "default": "mdi:import" },
       "eq_preset": { "default": "mdi:tune-variant" },
+      "sound_mode": { "default": "mdi:movie-open-outline" },
       "broadcast": { "default": "mdi:speaker-multiple" },
       "rear_volume": { "default": "mdi:volume-medium" },
       "sleep_timer": { "default": "mdi:power-sleep" }

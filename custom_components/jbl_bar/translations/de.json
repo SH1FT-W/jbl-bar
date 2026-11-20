@@ -67,6 +67,7 @@
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth" }
       },
       "eq_preset": { "name": "EQ-Preset" },
+      "sound_mode": { "name": "Klangmodus", "state": { "standard": "Standard", "music": "Musik", "movie": "Film" } },
       "broadcast": {
         "name": "Broadcast",
         "state": { "off": "Aus", "mono": "Mono", "stereo": "Stereo" }

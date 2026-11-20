@@ -67,6 +67,7 @@
         "state": { "tv": "TV", "hdmi": "HDMI", "bluetooth": "Bluetooth" }
       },
       "eq_preset": { "name": "EQ preset" },
+      "sound_mode": { "name": "Sound mode", "state": { "standard": "Standard", "music": "Music", "movie": "Movie" } },
       "broadcast": {
         "name": "Broadcast",
         "state": { "off": "Off", "mono": "Mono", "stereo": "Stereo" }

@@ -90,6 +90,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `number.jbl_bar_1000_audio_sync` | 0 to 250 ms |
 | `select.jbl_bar_1000_source` | Input: TV, HDMI or Bluetooth, the same as the media player's source |
 | `select.jbl_bar_1000_eq_preset` | JBL SIGNATURE, VOCAL, ENERGETIC, CHILL or your own |
+| `select.jbl_bar_1000_sound_mode` | Sound mode with smart mode off: standard, music or movie. Choosing one turns smart mode off. Only on bars that report it (Bar 1300 MK2). |
 | `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
 | `select.jbl_bar_1000_broadcast` | Broadcast of detached rear speakers: off, mono or stereo. Only on bars that report the feature. |
 | `select.jbl_bar_1000_rear_volume` | Volume of the detached rear speakers: muted, low, medium or high. Unavailable while they are docked. |

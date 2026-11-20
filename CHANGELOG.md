@@ -5,6 +5,8 @@
 - **Fixed: smart mode could not be switched on the Bar 1300 MK2.** That bar rejects the command unless it also gets
   the manual sound mode, so the switch now sends the full set (`auto_mode_switch`, `manual_mode`, `status`) on bars
   that report the manual mode, and keeps the manual mode as it is (#9).
+- **New: sound mode** as `select.jbl_bar_1000_sound_mode` (standard, music or movie), on bars that report it, such as
+  the Bar 1300 MK2. A manual sound mode only plays with smart mode off, so choosing one turns smart mode off (#9).
 
 ## 26.11.10 – 19.11.2026
 
