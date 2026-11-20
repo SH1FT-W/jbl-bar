@@ -77,6 +77,8 @@ class JBLBarState:
     eq_active_id: str | None = None
     night_mode: bool | None = None
     smart_mode: bool | None = None
+    # Manual sound mode (1 Standard, 2 Music, 3 Movie) on bars whose getSmartMode reports it (bar 1300 MK2), else None
+    smart_manual_mode: int | None = None
     pure_voice: bool | None = None
     feedback_tone: bool | None = None
     audio_sync: int | None = None
@@ -319,6 +321,7 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             state.night_mode = _on(night.get("status"))
         if (smart := answers["getSmartMode"]) is not None:
             state.smart_mode = _on(smart.get("status"))
+            state.smart_manual_mode = _int(smart.get("manual_mode"))
         if (voice := answers["getPureVoiceState"]) is not None:
             state.pure_voice = _on(voice.get("purevoice_state"))
         if (tone := answers["getFeedbackToneConfig"]) is not None:
@@ -384,6 +387,10 @@ class JBLBarCoordinator(DataUpdateCoordinator[JBLBarState]):
             "feedback_tone": ("setFeedbackToneConfig", {"status": "on" if on else "off"}),
             "deep_sleep": ("setProdSetting", {"DeepSleep": "1" if on else "0"}),
         }
+        if key == "smart_mode" and self.data is not None and self.data.smart_manual_mode is not None:
+            # Bar 1300 MK2 (#9): rejects setSmartMode as "unknown command" unless all three fields are sent
+            payload = {"auto_mode_switch": int(on), "manual_mode": self.data.smart_manual_mode}
+            commands[key] = ("setSmartMode", payload | {"status": "on" if on else "off"})
         command, payload = commands[key]
         await self._write(lambda: self.client.command(command, payload), self._set(**{key: on}))
 

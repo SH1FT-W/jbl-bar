@@ -66,6 +66,9 @@ class FakeBar:
         # Like the test bar: neither Broadcast nor Deep Sleep reported (getProdSetting is only asked when they are)
         self.features: dict[str, Any] = {"user_eq": {"support": "true"}, "smart_mode": {"support": "true"}}
         self.prod: dict[str, str] = {}
+        # Like the bar 1300 MK2 (#9): getSmartMode also reports the manual mode, and setSmartMode answers
+        # "unknown command" unless auto_mode_switch, manual_mode and status are all sent
+        self.smart_manual: int | None = None
         self.rears: list[dict[str, Any]] = [
             {"capicity": 93, "channel": "left", "charging": False, "docked": True, "status": "online"},
             {"capicity": 96, "channel": "right", "charging": True, "docked": False, "status": "offline"},
@@ -165,7 +168,11 @@ class FakeBar:
         payload = json.loads(unquote_plus(fields["payload"])) if "payload" in fields else None
         self._tick()
         self.calls.append((name, payload))
-        if name in self.unknown:
+        if name in self.unknown or (
+            name == "setSmartMode"
+            and self.smart_manual is not None
+            and not {"auto_mode_switch", "manual_mode", "status"} <= set(payload)
+        ):
             return AiohttpClientMockResponse(method, url, text="unknown command")
         return AiohttpClientMockResponse(method, url, json=self._answer(name, payload))
 
@@ -188,7 +195,16 @@ class FakeBar:
             "getMediaSourceStatus": {"media_source": s["selected"], "media_status": "stopped"},
             "getEQList": {"active_eq_id": s["eq_active"], "eq_list": EQ_LIST},
             "getPersonalListeningMode": {"status": s["night"]},
-            "getSmartMode": {"status": s["smart"]},
+            "getSmartMode": {"status": s["smart"]}
+            | (
+                {}
+                if self.smart_manual is None
+                else {
+                    "auto_mode_switch": int(s["smart"] == "on"),
+                    "manual_mode": self.smart_manual,
+                    "support_manual_modes": [1, 2, 3],
+                }
+            ),
             "getPureVoiceState": {"purevoice_state": s["voice"]},
             "getFeedbackToneConfig": {"status": s["tone"]},
             "getAudioSync": {"audio_sync": s["sync"]},
@@ -211,6 +227,8 @@ class FakeBar:
                 s["night"] = payload["status"]
             case "setSmartMode":
                 s["smart"] = payload["status"]
+                if "manual_mode" in payload:
+                    self.smart_manual = payload["manual_mode"]
             case "setPureVoiceState":
                 s["voice"] = payload["purevoice_state"]
             case "setFeedbackToneConfig":

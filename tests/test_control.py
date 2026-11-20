@@ -110,6 +110,20 @@ async def test_switches(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     assert bar.commands("setPowerState") == [{"power_state": "1"}]
 
 
+async def test_smart_mode_full_payload(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    """Bar 1300 MK2 (#9): setSmartMode needs auto_mode_switch, manual_mode and status, manual_mode stays."""
+    bar.smart_manual = 3
+    setup.runtime_data._slow_due = True  # settings are read in the slow round
+    await setup.runtime_data.async_refresh()
+    await call(hass, "switch", "turn_off", "switch.jbl_bar_1000_smart_mode")
+    assert bar.commands("setSmartMode") == [{"auto_mode_switch": 0, "manual_mode": 3, "status": "off"}]
+    assert bar.state["smart"] == "off"
+    assert hass.states.get("switch.jbl_bar_1000_smart_mode").state == "off"
+    await call(hass, "switch", "turn_on", "switch.jbl_bar_1000_smart_mode")
+    assert bar.commands("setSmartMode")[-1] == {"auto_mode_switch": 1, "manual_mode": 3, "status": "on"}
+    assert hass.states.get("switch.jbl_bar_1000_smart_mode").state == "on"
+
+
 async def test_eq(hass: HomeAssistant, bar: FakeBar, setup) -> None:
     await call(hass, "select", "select_option", "select.jbl_bar_1000_eq_preset", option="VOCAL")
     sent = bar.commands("setActiveEQ")[-1]

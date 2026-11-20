@@ -21,6 +21,10 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   stumm/leise/mittel/laut abgeleitet (App-Menü ist eine Webansicht außerhalb des APK); abgenommen an der Test-Bar
   (OneOS 3.0) in beide Richtungen geprüft: Setzen aus HA wirkt, Änderung in der App erscheint in HA.
   `setAtmosConfig` ändert nichts → Atmos-Stufe nur per Taste `keyAtmosLevel`.
+- Smart Mode an der Bar 1300 MK2 (OneOS 4.0, Issue #9, vom Melder gemessen): `getSmartMode` meldet zusätzlich
+  `auto_mode_switch` (0/1), `manual_mode` (1 Standard, 2 Music, 3 Movie) und `support_manual_modes`; `setSmartMode`
+  antwortet „unknown command“, solange nicht alle drei Felder (`auto_mode_switch`, `manual_mode`, `status`) dabei sind.
+  „unknown command“ heißt dort also auch „Felder fehlen“. Der Schalter schickt alle drei, sobald `manual_mode` gemeldet wird.
 - Volle Befehlsliste der App: `EnumCommandMapping` (164 Befehle) + `d9`-Request-Klassen; die Bar 1000 kennt nur einen
   Teil (`getFeatureSupport`), unbekannte Befehle landen in `coordinator.unsupported` und werden nicht mehr gefragt.
 - Wiedergabe von URLs (`media_player.play_media`) über AVTransport: belegt nur aus `description.xml` der Test-Bar

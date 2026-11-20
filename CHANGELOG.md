@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: smart mode could not be switched on the Bar 1300 MK2.** That bar rejects the command unless it also gets
+  the manual sound mode, so the switch now sends the full set (`auto_mode_switch`, `manual_mode`, `status`) on bars
+  that report the manual mode, and keeps the manual mode as it is (#9).
+
 ## 26.11.10 – 19.11.2026
 
 - **New: callback URL** under **three dots > Configure**. The bar reports the audio format by calling Home
