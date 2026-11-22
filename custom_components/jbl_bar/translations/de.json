@@ -98,7 +98,7 @@
     },
     "switch": {
       "power": { "name": "Ein/Aus" },
-      "night_mode": { "name": "Nachtmodus" },
+      "night_mode": { "name": "Nacht-Hörfunktion" },
       "smart_mode": { "name": "Smart Mode" },
       "pure_voice": { "name": "PureVoice" },
       "feedback_tone": { "name": "Bestätigungstöne" },

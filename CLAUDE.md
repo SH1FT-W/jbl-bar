@@ -15,6 +15,9 @@ entwickelt und geprüft an einer Bar 1000 (der Test-Bar).
   `NOTICE`).
 - **`power_state` ist verdreht: "0" = an, "1" = Standby** (Lesen und `setPowerState`).
 - Quelle: `getMediaSourceStatus` = gewählter Eingang (auch im Leerlauf), `getStreamingStatus` = was gerade ankommt.
+- Nachtmodus-Schalter = „Night Listening“ der App (JBL One 2.9.4, `NightListeningActivity` → `setPersonalListeningMode`,
+  Issue #10): Bar und Sub stumm, nur die abgenommenen Rears spielen. Die Bar schaltet es laut App selbst ab, wenn sie
+  ausgeht, nach 10 Min. ohne Ton und beim Einschalten von Broadcast. Name daher „Night listening“ / „Nacht-Hörfunktion“.
 - Wirken nachweislich: setAudioSync (0–250), setActiveEQ, setPersonalListeningMode, setPureVoiceState, setSmartMode,
   setFeedbackToneConfig, setPowerState, setMediaSource. setSleepTimer wirkt nur im Betrieb, im Standby ignoriert.
   setRearSpeakerVolume ändert nichts, solange die Rears angedockt sind → Auswahl nur abgenommen verfügbar. Stufen 0–3 =

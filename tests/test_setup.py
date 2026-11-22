@@ -78,7 +78,9 @@ async def test_entities_and_ids(hass: HomeAssistant, setup) -> None:
     assert player.attributes["source"] == "TV"
     assert player.attributes["friendly_name"] == "JBL BAR 1000"
     # Übersetzte Namen, IDs bleiben trotzdem englisch/alt
-    assert hass.states.get("switch.jbl_bar_1000_nightmode").attributes["friendly_name"] == "JBL BAR 1000 Nachtmodus"
+    assert (
+        hass.states.get("switch.jbl_bar_1000_nightmode").attributes["friendly_name"] == "JBL BAR 1000 Nacht-Hörfunktion"
+    )
     assert hass.states.get("number.jbl_bar_1000_1000hz").attributes["friendly_name"] == "JBL BAR 1000 EQ 1000 Hz"
 
 

@@ -27,7 +27,7 @@ Made for the **JBL Bar series with JBL One** (Bar 300, 500, 700, 800, 1000, 1300
 | Volume, mute, source (TV, HDMI, Bluetooth) | ✓ | ✓ |
 | Play, pause, skip, title, artist and cover while streaming | ✓ | ✓ |
 | EQ preset and all 7 bands | ✓ | ✓ |
-| Night mode, Smart mode, PureVoice, feedback tones | ✓ | ✓ |
+| Night listening, Smart mode, PureVoice, feedback tones | ✓ | ✓ |
 | Audio sync (up to 250 ms) | ✓ | ✓ |
 | Sleep timer (15 minutes to 2 hours) | ✓ | only while on |
 | Dolby Atmos and audio format, pushed instantly | ✓ | |
@@ -147,6 +147,7 @@ data:
 - **Rear volume** only works with the rears detached, so its select is unavailable while they are docked. The bar remembers the last level.
 - **Source HDMI** wakes the bar even when nothing is connected to the HDMI input.
 - **HDMI 1 to 3** only switch to an input with an active device. If nothing is connected there or the device is off, the bar stays on the current input. Next HDMI input skips such inputs as well.
+- **Night listening** (`switch.jbl_bar_1000_nightmode`) mutes the bar and subwoofer so only the detached rears play. The bar turns it off by itself when it is switched off, after 10 minutes without audio input, or when Broadcast is turned on. For a schedule, also switch it on whenever the bar turns on during that time.
 - **Changes from the remote** show up within 10 seconds. Only the audio format arrives instantly.
 - **Announcements** interrupt everything, including the TV sound. Changes made during one are overwritten by the restore, and a restart or reload during one restores nothing.
 
