@@ -94,6 +94,7 @@ IDs for a bar named "JBL Bar 1000", the same as in `jbl_integration`. Names are 
 | `select.jbl_bar_1000_sleep_timer` | Sleep timer, the remaining time as an attribute |
 | `select.jbl_bar_1000_broadcast` | Broadcast of detached rear speakers: off, mono or stereo. Only on bars that report the feature. |
 | `select.jbl_bar_1000_rear_volume` | Volume of the detached rear speakers: muted, low, medium or high. Unavailable while they are docked. |
+| `sensor.jbl_bar_1000_rear_volume` | The rear volume the bar remembers, also while the rears are docked (diagnostic). |
 | `switch.jbl_bar_1000_deep_sleep` | Deep sleep. Only on bars that report the feature. |
 | `sensor.jbl_bar_1000_power_on_time`, `_playback_time` | The bar's lifetime counters. Only on bars that report them. |
 | `sensor.jbl_bar_1000_source`, `_audio_format`, `_atmos_level` | Selected input (HDMI 1 to 3 when the bar names the input), incoming format (for example ATMOS / DDP / 6ch / 48 kHz), Atmos level |
