@@ -10,7 +10,7 @@ from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import SOURCES
+from .const import REAR_VOLUME_LEVELS, SOURCES
 from .coordinator import JBLBarConfigEntry, JBLBarCoordinator, JBLBarState, _int
 from .entity import JBLBarEntity, async_track_rears, rear_device_info
 
@@ -63,6 +63,16 @@ SENSORS = (
         key="atmos_level",
         value=lambda s: s.atmos_level,
         command="getAtmosLevel",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    # The level the rears play at once detached. The select is unavailable while they are docked (the bar ignores
+    # setRearSpeakerVolume then), but the bar keeps reporting the remembered level, so show it here.
+    JBLBarSensorDescription(
+        key="rear_volume",
+        device_class=SensorDeviceClass.ENUM,
+        options=list(REAR_VOLUME_LEVELS.values()),
+        value=lambda s: None if s.rear_volume is None else REAR_VOLUME_LEVELS.get(s.rear_volume),
+        command="getRearSpeakerVolume",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     # Lifetime counters of the bar in minutes (a running bar counted one per minute)
