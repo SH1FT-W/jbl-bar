@@ -31,7 +31,8 @@
       "power_on_time": { "default": "mdi:timer-outline" },
       "playback_time": { "default": "mdi:play-circle-outline" },
       "audio_format": { "default": "mdi:waveform" },
-      "atmos_level": { "default": "mdi:dolby" }
+      "atmos_level": { "default": "mdi:dolby" },
+      "rear_volume": { "default": "mdi:volume-medium" }
     },
     "switch": {
       "power": { "default": "mdi:power" },
