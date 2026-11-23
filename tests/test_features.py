@@ -180,3 +180,27 @@ async def test_no_rear_volume_without_the_command(hass: HomeAssistant, bar: Fake
 )
 def test_prod_value(answer: dict, expected: str | None) -> None:
     assert _prod_value(answer, "FlexListening") == expected
+
+
+REAR_VOLUME_SENSOR = "sensor.jbl_bar_1000_rear_volume"
+
+
+async def test_rear_volume_sensor_while_docked(hass: HomeAssistant, volume_bar: FakeBar, setup) -> None:
+    """The select is unavailable with the rears docked, the sensor still shows the remembered level."""
+    assert hass.states.get(REAR_VOLUME).state == "unavailable"
+    state = hass.states.get(REAR_VOLUME_SENSOR)
+    assert state.state == "high"
+    assert state.attributes["options"] == ["muted", "low", "medium", "high"]
+
+
+async def test_rear_volume_sensor_follows_the_select(hass: HomeAssistant, detached_bar: FakeBar, setup) -> None:
+    await call(hass, "select", "select_option", REAR_VOLUME, option="low")
+    assert hass.states.get(REAR_VOLUME_SENSOR).state == "low"
+
+
+async def test_rear_volume_sensor_unknown_level(hass: HomeAssistant, odd_volume_bar: FakeBar, setup) -> None:
+    assert hass.states.get(REAR_VOLUME_SENSOR).state == "unknown"
+
+
+async def test_no_rear_volume_sensor_without_the_command(hass: HomeAssistant, bar: FakeBar, setup) -> None:
+    assert hass.states.get(REAR_VOLUME_SENSOR) is None

@@ -94,6 +94,10 @@
       "playback_time": { "name": "Playback time" },
       "audio_format": { "name": "Audio format" },
       "atmos_level": { "name": "Atmos level" },
+      "rear_volume": {
+        "name": "Rear volume",
+        "state": { "muted": "Muted", "low": "Low", "medium": "Medium", "high": "High" }
+      },
       "rear_battery": { "name": "Battery" }
     },
     "switch": {

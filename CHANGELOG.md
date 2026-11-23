@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **New: rear volume sensor** `sensor.jbl_bar_1000_rear_volume`. The rear volume select stays unavailable while the
+  rears are docked, because the bar ignores the setting then, but the bar keeps reporting the level it remembered.
+  The sensor shows that level (muted, low, medium or high) at all times, so a dashboard can show it with the rears
+  docked.
 - **Renamed: Night mode is now Night listening** (Nacht-Hörfunktion in German), the name the JBL One app uses for the
   same setting (`setPersonalListeningMode`): bar and subwoofer muted, only the detached rears play. The entity ID
   `switch.jbl_bar_1000_nightmode` stays the same (#10).
